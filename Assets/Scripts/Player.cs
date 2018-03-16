@@ -9,11 +9,11 @@ public class Player : MonoBehaviour {
     GameObject weapon;
     GameObject eChip;
     GameObject discharger;
-    Rigidbody2D rb;
+    protected Rigidbody2D rb;
     protected Animator anim;
-    SpriteRenderer sr;
+    protected SpriteRenderer sr;
 
-    protected enum playerState { idle, running, rolling, jumping, walking}
+    protected enum playerState { idle, running, rolling, jumping, walking, sliding}
     protected playerState playerAction;
 
     [SerializeField]
@@ -47,12 +47,26 @@ public class Player : MonoBehaviour {
 
     public void moveLeft()
     {
-        transform.Translate(new Vector2(-1, 0) * speed);
+        //transform.Translate(new Vector2(-1, 0) * speed);
+        rb.AddForce(new Vector2(-500, 0) * speed);
         sr.flipX = true;
     }
     public void moveRight()
     {
-        transform.Translate(new Vector2(1, 0) * speed);
+        //transform.Translate(new Vector2(1, 0) * speed);
+        rb.AddForce(new Vector2(500, 0) * speed);
+        sr.flipX = false;
+    }
+    public void moveLeftJump()
+    {
+        //transform.Translate(new Vector2(-1, 0) * speed);
+        rb.AddForce(new Vector2(-100, 0) * speed);
+        sr.flipX = true;
+    }
+    public void moveRightJump()
+    {
+        //transform.Translate(new Vector2(1, 0) * speed);
+        rb.AddForce(new Vector2(100, 0) * speed);
         sr.flipX = false;
     }
 
@@ -60,11 +74,13 @@ public class Player : MonoBehaviour {
     {
         if (sr.flipX == true)
         {
-            transform.Translate(new Vector2(-1, 0) * speed);
+            //transform.Translate(new Vector2(-1, 0) * speed);
+            rb.AddForce(new Vector2(-500, 0) * speed);
         }
         else
         {
-            transform.Translate(new Vector2(1, 0) * speed);
+            //transform.Translate(new Vector2(1, 0) * speed);
+            rb.AddForce(new Vector2(500, 0) * speed);
         }
     }
 

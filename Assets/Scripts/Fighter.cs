@@ -14,36 +14,44 @@ public class Fighter : Player
 
     private void Update()
     {
-
         if (playerAction == playerState.rolling)
         {
             rollMovement();
             return;
         }
 
+
         if (playerAction == playerState.jumping)
         {
-            if (Physics2D.Raycast(transform.position, -transform.up, 0.19f, 1 << 8))
+            if (rb.velocity.y < 0)
             {
-                playerAction = playerState.idle;
-                Debug.Log("asd");
+                anim.Play("Fighter_fall");
             }
-
         }
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            if (playerAction != playerState.jumping)
+            if (playerAction != playerState.jumping )
             {
+                if (playerAction == playerState.sliding)
+                {
+                    Debug.Log("runu");
+                    anim.Play("Fighter_jump");
+                }
                 playerAction = playerState.jumping;
+                anim.SetBool("WalkTrigger", false);
+                anim.SetBool("RunTrigger", false);
+                rb.drag = 1;
                 jump(4);
             }
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            if (playerAction == playerState.jumping)
+            if (playerAction == playerState.jumping || playerAction == playerState.sliding)
             {
-                moveLeft();
+                if (playerAction == playerState.sliding && sr.flipX == false)
+                    anim.Play("Fighter_fall");
+                moveLeftJump();
             }
             else
             {
@@ -65,9 +73,11 @@ public class Fighter : Player
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            if (playerAction == playerState.jumping)
+            if (playerAction == playerState.jumping || playerAction == playerState.sliding)
             {
-                moveRight();
+                if (playerAction == playerState.sliding && sr.flipX == true)
+                    anim.Play("Fighter_fall");
+                moveRightJump();
             }
             else
             {
@@ -89,12 +99,15 @@ public class Fighter : Player
         }
         else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
         {
-            anim.SetBool("WalkTrigger", false);
-            anim.SetBool("RunTrigger", false);
-            playerAction = playerState.idle;
-            isRunning = false;
+            if (playerAction != playerState.jumping && playerAction != playerState.sliding)
+            {
+                anim.SetBool("WalkTrigger", false);
+                anim.SetBool("RunTrigger", false);
+                playerAction = playerState.idle;
+                isRunning = false;
+            }
         }
-        if (playerAction == playerState.jumping)
+        if (playerAction == playerState.jumping || playerAction == playerState.sliding)
         {
             return;
         }
@@ -123,6 +136,47 @@ public class Fighter : Player
             playerAction = playerState.rolling;
             anim.SetBool("RollTrigger", true);
             roll("Fighter_roll", 0.01f);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.layer == 8)
+        {
+            playerAction = playerState.idle;
+            anim.Play("Figher_idle");
+            rb.drag = 10;
+        }
+        if(collision.collider.gameObject.layer == 9)
+        {
+            if(playerAction == playerState.jumping)
+            {
+                rb.drag = 10;
+                playerAction = playerState.sliding;
+                anim.Play("Fighter_wallSlide");
+            }
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.layer == 8)
+        {
+            if (playerAction != playerState.jumping)
+            {
+                anim.Play("Fighter_fall");
+            }
+            else
+            {
+                anim.Play("Fighter_jump");
+            }
+            rb.drag = 1;
+        }
+        if (collision.collider.gameObject.layer == 9)
+        {
+            if (playerAction == playerState.jumping || playerAction == playerState.sliding)
+            {
+                rb.drag = 1;
+            }
         }
     }
 }
