@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
 
 
     string Class;
@@ -13,9 +14,10 @@ public class Player : MonoBehaviour {
     protected Animator anim;
     protected SpriteRenderer sr;
 
-    protected enum playerState { idle, running, rolling, jumping, walking, sliding}
+    protected enum playerState { idle, running, rolling, jumping, walking, sliding }
     protected playerState playerAction;
 
+    protected float health = 100;
     [SerializeField]
     float power;
     [SerializeField]
@@ -30,6 +32,8 @@ public class Player : MonoBehaviour {
     float defaultSpeed;
     float dashDuration = 0.2f;
     protected bool leftDash, rightDash, isRunning;
+    protected int numbOfJumps;
+    protected bool canRollAgain = true;
 
     public void Initialize()
     {
@@ -38,11 +42,19 @@ public class Player : MonoBehaviour {
         speed = 0.01f;
         anim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
-    } 
+    }
 
     public void jump(float jumpPow)
     {
         rb.AddForce(new Vector2(0, jumpPow), ForceMode2D.Impulse);
+    }
+    public void jumpLeft(float jumpPow)
+    {
+        rb.AddForce(new Vector2(-0.5f, jumpPow), ForceMode2D.Impulse);
+    }
+    public void jumpRight(float jumpPow)
+    {
+        rb.AddForce(new Vector2(0.5f, jumpPow), ForceMode2D.Impulse);
     }
 
     public void moveLeft()
@@ -60,13 +72,13 @@ public class Player : MonoBehaviour {
     public void moveLeftJump()
     {
         //transform.Translate(new Vector2(-1, 0) * speed);
-        rb.AddForce(new Vector2(-100, 0) * speed);
+        rb.AddForce(new Vector2(-100, 0) * 0.05f);
         sr.flipX = true;
     }
     public void moveRightJump()
     {
         //transform.Translate(new Vector2(1, 0) * speed);
-        rb.AddForce(new Vector2(100, 0) * speed);
+        rb.AddForce(new Vector2(100, 0) * 0.05f);
         sr.flipX = false;
     }
 
@@ -86,10 +98,10 @@ public class Player : MonoBehaviour {
 
     public void roll(string rollAnimName, float normSpeed)
     {
+        canRollAgain = false;
         defaultSpeed = normSpeed;
         anim.Play(rollAnimName);
         StartCoroutine("waitForRoll");
-
     }
     public void leftDashCheck()
     {
@@ -114,16 +126,23 @@ public class Player : MonoBehaviour {
         speed = defaultSpeed;
         anim.SetBool("RollTrigger", false);
         playerAction = playerState.idle;
+        StartCoroutine("rollDelay");
+    }
+
+    IEnumerator rollDelay()
+    {
+        yield return new WaitForSeconds(2);
+        canRollAgain = true;
     }
 
     IEnumerator dashDelay(int i)
     {
         yield return new WaitForSeconds(dashDuration);
-        if(i == 1)
+        if (i == 1)
         {
             leftDash = false;
         }
-        if(i == 2)
+        if (i == 2)
         {
             rightDash = false;
         }
