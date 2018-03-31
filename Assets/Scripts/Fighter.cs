@@ -71,19 +71,21 @@ public class Fighter : Player
             }
             else
             {
-                if (isRunning == true)
-                {
-                    playerAction = playerState.running;
-                    speed = 0.03f;
-                    moveLeft();
-                    anim.SetBool("RunTrigger", true);
-                }
-                else
-                {
-                    playerAction = playerState.walking;
-                    speed = 0.01f;
-                    moveLeft();
-                    anim.SetBool("WalkTrigger", true);
+                if(playerAction != playerState.attacking) {
+                    if (isRunning == true)
+                    {
+                        playerAction = playerState.running;
+                        speed = 0.03f;
+                        moveLeft();
+                        anim.SetBool("RunTrigger", true);
+                    }
+                    else
+                    {
+                        playerAction = playerState.walking;
+                        speed = 0.01f;
+                        moveLeft();
+                        anim.SetBool("WalkTrigger", true);
+                    }
                 }
             }
         }
@@ -97,19 +99,21 @@ public class Fighter : Player
             }
             else
             {
-                if (isRunning == true)
-                {
-                    playerAction = playerState.running;
-                    speed = 0.03f;
-                    moveRight();
-                    anim.SetBool("RunTrigger", true);
-                }
-                else
-                {
-                    playerAction = playerState.walking;
-                    speed = 0.01f;
-                    moveRight();
-                    anim.SetBool("WalkTrigger", true);
+                if (playerAction != playerState.attacking) {
+                    if (isRunning == true)
+                    {
+                        playerAction = playerState.running;
+                        speed = 0.03f;
+                        moveRight();
+                        anim.SetBool("RunTrigger", true);
+                    }
+                    else
+                    {
+                        playerAction = playerState.walking;
+                        speed = 0.01f;
+                        moveRight();
+                        anim.SetBool("WalkTrigger", true);
+                    }
                 }
             }
         }
@@ -175,10 +179,14 @@ public class Fighter : Player
         }
         else if (Input.GetKeyDown(KeyCode.V))
         {
-            anim.SetBool("WalkTrigger", false);
-            anim.SetBool("RunTrigger", false);
-            anim.Play("Fighter_punch1");
-            isRunning = false;
+            if (playerAction != playerState.attacking)
+            {
+                anim.SetBool("WalkTrigger", false);
+                anim.SetBool("RunTrigger", false);
+                anim.Play("Fighter_punch1");
+                playerAction = playerState.attacking;
+                isRunning = false;
+            }
 
         }
         /*      else if (Input.GetKeyDown(KeyCode.Space))

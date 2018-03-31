@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     protected Animator anim;
     protected SpriteRenderer sr;
 
-    protected enum playerState { idle, running, rolling, jumping, walking, sliding }
+    protected enum playerState { idle, running, rolling, jumping, walking, sliding, attacking }
     protected playerState playerAction;
 
     protected float health = 100;
@@ -118,6 +118,11 @@ public class Player : MonoBehaviour
             StartCoroutine(dashDelay(2));
             rightDash = true;
         }
+    }
+
+    public void completeAttack()
+    {
+        playerAction = playerState.idle;
     }
 
     IEnumerator waitForRoll()
