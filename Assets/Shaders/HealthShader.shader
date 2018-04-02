@@ -16,11 +16,11 @@ Shader "HealthShader"
 		_ColorMask ("Color Mask", Float) = 15
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
-		_FirstBar("FirstBar", Range( 0 , 1)) = 0.838034
 		_Color0("Color 0", Color) = (0.08855966,0.9264706,0.198355,0)
-		_SecondBar("SecondBar", Range( 0 , 1)) = 0.3559519
 		_Texture("Texture", 2D) = "white" {}
+		_FirstBar("FirstBar", Range( 0 , 1)) = 0.838034
 		_Alpha("Alpha", Range( 0 , 1)) = 0
+		_SecondBar("SecondBar", Range( 0 , 1)) = 0.3559519
 		[HideInInspector] _texcoord( "", 2D ) = "white" {}
 	}
 
@@ -142,22 +142,22 @@ Shader "HealthShader"
 }
 /*ASEBEGIN
 Version=14001
-55;342;1522;788;356.8416;368.7213;1.070473;True;True
-Node;AmplifyShaderEditor.RangedFloatNode;3;-602.5399,222.8294;Float;False;Property;_FirstBar;FirstBar;0;0;0.838034;0;1;0;1;FLOAT;0
+7;29;1522;788;1357.918;233.4127;1.204879;True;True
+Node;AmplifyShaderEditor.RangedFloatNode;3;-602.5399,222.8294;Float;False;Property;_FirstBar;FirstBar;1;0;0.838034;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.TextureCoordinatesNode;1;-1123.74,-132.9846;Float;True;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;7;-644.4611,328.2664;Float;False;Property;_SecondBar;SecondBar;2;0;0.3559519;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;2;-281.8337,-28.76444;Float;True;2;2;0;FLOAT;0.0;False;1;FLOAT;0.0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;7;-644.4611,328.2664;Float;False;Property;_SecondBar;SecondBar;1;0;0.3559519;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;18;-244.4386,309.065;Float;True;2;2;0;FLOAT;0.0;False;1;FLOAT;0.0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FloorOpNode;4;-63.43685,-20.33738;Float;True;1;0;FLOAT;0.0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.OneMinusNode;9;195.3958,-35.64002;Float;True;1;0;FLOAT;0.0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FloorOpNode;19;31.85883,324.4631;Float;True;1;0;FLOAT;0.0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SamplerNode;32;560.6106,-413.9661;Float;True;Property;_Texture;Texture;1;0;Assets/Sprites/HPHUD_mask.png;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0.0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1.0;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.RangedFloatNode;38;588.6614,-194.1617;Float;False;Property;_Alpha;Alpha;2;0;0;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.BlendOpsNode;20;361.7639,161.2051;Float;True;Exclusion;True;2;0;FLOAT;0,0,0,0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ColorNode;11;302.2151,-290.1643;Float;False;Property;_Color0;Color 0;0;0;0.08855966,0.9264706,0.198355,0;0;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SamplerNode;32;560.6106,-413.9661;Float;True;Property;_Texture;Texture;2;0;Assets/Sprites/HPHUD_mask.png;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;6;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0.0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1.0;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;38;588.6614,-194.1617;Float;False;Property;_Alpha;Alpha;3;0;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.DynamicAppendNode;30;765.2555,-92.63105;Float;True;COLOR;4;0;FLOAT;0.0;False;1;FLOAT;0.0;False;2;FLOAT;0.0;False;3;FLOAT;0.0;False;1;COLOR;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;40;951.188,-242.7354;Float;False;2;2;0;FLOAT;0.0;False;1;FLOAT;0.0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.OneMinusNode;21;638.1295,171.6664;Float;True;1;0;FLOAT;0.0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.DynamicAppendNode;30;765.2555,-92.63105;Float;True;COLOR;4;0;FLOAT;0.0;False;1;FLOAT;0.0;False;2;FLOAT;0.0;False;3;FLOAT;0.0;False;1;COLOR;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;25;972.3001,127.6773;Float;True;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.DynamicAppendNode;39;1139.56,-371.8702;Float;False;COLOR;4;0;FLOAT;0.0;False;1;FLOAT;0.0;False;2;FLOAT;0.0;False;3;FLOAT;0.0;False;1;COLOR;0
 Node;AmplifyShaderEditor.BlendOpsNode;37;1165.425,-170.3521;Float;True;Multiply;True;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
@@ -171,13 +171,13 @@ WireConnection;9;0;4;0
 WireConnection;19;0;18;0
 WireConnection;20;0;9;0
 WireConnection;20;1;19;0
+WireConnection;40;0;32;4
+WireConnection;40;1;38;0
+WireConnection;21;0;20;0
 WireConnection;30;0;11;1
 WireConnection;30;1;11;2
 WireConnection;30;2;11;3
 WireConnection;30;3;9;0
-WireConnection;40;0;32;4
-WireConnection;40;1;38;0
-WireConnection;21;0;20;0
 WireConnection;25;0;30;0
 WireConnection;25;1;21;0
 WireConnection;39;0;32;1
@@ -188,4 +188,4 @@ WireConnection;37;0;25;0
 WireConnection;37;1;39;0
 WireConnection;31;0;37;0
 ASEEND*/
-//CHKSM=256B8B8FF4761395F51D39C6E4725F2BD20BE607
+//CHKSM=EC7B59E555B7BA11CC707BB7834649125ECA5F42
