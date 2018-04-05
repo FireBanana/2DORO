@@ -31,7 +31,7 @@ public class Fighter : Player
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            if (playerAction != playerState.jumping)
+            if (playerAction != playerState.jumping && playerAction != playerState.jumpAttacking)
             {
                 if (numbOfJumps < 5)
                 {
@@ -54,16 +54,19 @@ public class Fighter : Player
                     {
                         jump(4);
                     }
+                    if (playerAction == playerState.walking)
+                        rb.drag = 2;
+                    else
+                        rb.drag = 1;
                     playerAction = playerState.jumping;
                     anim.SetBool("WalkTrigger", false);
                     anim.SetBool("RunTrigger", false);
-                    rb.drag = 1;
                 }
             }
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            if (playerAction == playerState.jumping || playerAction == playerState.sliding)
+            if (playerAction == playerState.jumping || playerAction == playerState.sliding || playerAction == playerState.jumpAttacking)
             {
                 if (playerAction == playerState.sliding && sr.flipX == false)
                     anim.Play("Fighter_fall");
@@ -71,7 +74,8 @@ public class Fighter : Player
             }
             else
             {
-                if(playerAction != playerState.attacking) {
+                if (playerAction != playerState.attacking)
+                {
                     if (isRunning == true)
                     {
                         playerAction = playerState.running;
@@ -91,7 +95,7 @@ public class Fighter : Player
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            if (playerAction == playerState.jumping || playerAction == playerState.sliding)
+            if (playerAction == playerState.jumping || playerAction == playerState.sliding || playerAction == playerState.jumpAttacking)
             {
                 if (playerAction == playerState.sliding && sr.flipX == true)
                     anim.Play("Fighter_fall");
@@ -99,7 +103,8 @@ public class Fighter : Player
             }
             else
             {
-                if (playerAction != playerState.attacking) {
+                if (playerAction != playerState.attacking)
+                {
                     if (isRunning == true)
                     {
                         playerAction = playerState.running;
@@ -117,9 +122,19 @@ public class Fighter : Player
                 }
             }
         }
+        if (Input.GetKeyDown(KeyCode.V)) //V ATTACK IF IN AIR
+        {
+            if (playerAction == playerState.jumping)
+            {
+                anim.Play("Fighter_jumpAtk4");
+                playerAction = playerState.jumpAttacking;
+            }
+
+        }
+
         else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
         {
-            if (playerAction != playerState.jumping && playerAction != playerState.sliding)
+            if (playerAction != playerState.jumping && playerAction != playerState.sliding && playerAction != playerState.jumpAttacking)
             {
                 anim.SetBool("WalkTrigger", false);
                 anim.SetBool("RunTrigger", false);
@@ -156,7 +171,7 @@ public class Fighter : Player
             }
         }
 
-        if (playerAction == playerState.jumping || playerAction == playerState.sliding)
+        if (playerAction == playerState.jumping || playerAction == playerState.sliding || playerAction == playerState.jumpAttacking)
         {
             return;
         }
@@ -177,27 +192,26 @@ public class Fighter : Player
             }
             rightDashCheck();
         }
-        else if (Input.GetKeyDown(KeyCode.V))
+        else if (Input.GetKeyDown(KeyCode.V)) //V ATTACK IF NOT IN AIR
         {
             if (playerAction != playerState.attacking)
             {
-                anim.SetBool("WalkTrigger", false);
-                anim.SetBool("RunTrigger", false);
-                anim.Play("Fighter_punch1");
-                playerAction = playerState.attacking;
-                isRunning = false;
+                if (comboDelay == false)
+                {
+                    incrementComboChain();
+                    anim.SetBool("WalkTrigger", false);
+                    anim.SetBool("RunTrigger", false);
+                    anim.Play("Fighter_punch1");
+                    playerAction = playerState.attacking;
+                    isRunning = false;
+                    if (sr.flipX == false)
+                        applyDamageToTrigger(1);
+                    else
+                        applyDamageToTrigger(0);
+                }
             }
 
         }
-        /*      else if (Input.GetKeyDown(KeyCode.Space))
-              {
-                  speed = 0.05f;
-                  anim.SetBool("WalkTrigger", false);
-                  anim.SetBool("RunTrigger", false);
-                  playerAction = playerState.rolling;
-                  anim.SetBool("RollTrigger", true);
-                  roll("Fighter_roll", 0.01f);
-              }*/
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -238,7 +252,7 @@ public class Fighter : Player
             {
                 anim.Play("Fighter_jump");
             }
-            rb.drag = 1;
+                rb.drag = 2;
         }
         if (collision.collider.gameObject.layer == 9)
         {

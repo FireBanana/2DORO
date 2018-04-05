@@ -14,8 +14,9 @@ public class Player : MonoBehaviour
     protected Animator anim;
     protected SpriteRenderer sr;
 
-    protected enum playerState { idle, running, rolling, jumping, walking, sliding, attacking }
+    protected enum playerState { idle, running, rolling, jumping, walking, sliding, attacking, jumpAttacking }
     protected playerState playerAction;
+    public TriggerCheck[] triggerChecks;
 
     protected float health = 100;
     [SerializeField]
@@ -34,6 +35,8 @@ public class Player : MonoBehaviour
     protected bool leftDash, rightDash, isRunning;
     protected int numbOfJumps;
     protected bool canRollAgain = true;
+    protected bool comboDelay = false;
+    int comboChainNumber;
 
     public void Initialize()
     {
@@ -123,6 +126,69 @@ public class Player : MonoBehaviour
     public void completeAttack()
     {
         playerAction = playerState.idle;
+    }
+    public void incrementComboChain()
+    {
+        if (comboChainNumber < 2)
+        {
+            StopCoroutine("resetComboChain");
+            comboChainNumber++;
+        }
+        else
+        {
+            comboDelay = true;
+        }
+        StartCoroutine("resetComboChain");
+    }
+    public void applyDamageToTrigger(int x)
+    {
+        //0 = left
+        //1 = right
+        //2 = top
+        //3 = bottom
+        //4 = bottom right
+        //5 = bottom left
+        //6 = top right
+        //7 = top left
+
+        //punch - left/right
+        //kick - bottom left/ bottom right
+
+        switch (x)
+        {
+            case 0:
+                if(triggerChecks[0].enemyInside == true)
+                {
+                    triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth();
+                }
+                break;
+            case 1:
+                if (triggerChecks[1].enemyInside == true)
+                {
+                    triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth();
+                }
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+        }
+
+    }
+
+    IEnumerator resetComboChain()
+    {
+        yield return new WaitForSeconds(2f);
+        comboChainNumber = 0;
+        comboDelay = false;
     }
 
     IEnumerator waitForRoll()

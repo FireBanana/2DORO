@@ -17,13 +17,12 @@ public class HealthBarHandler : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            currTween.Kill();
-            healthVal = mat.GetFloat("_SecondBar") + 0.1f;
-            currTween = mat.DOFloat(healthVal, "_SecondBar", 0.5f).OnComplete(updateHealthValue);
-        }
+
+    public void healthDepleter()
+    {
+        currTween.Kill();
+        healthVal = mat.GetFloat("_SecondBar") + 0.1f;
+        currTween = mat.DOFloat(healthVal, "_SecondBar", 0.5f).OnComplete(updateHealthValue);
     }
 
     void updateHealthValue()
