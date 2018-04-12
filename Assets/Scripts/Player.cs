@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     protected int numbOfJumps;
     protected bool canRollAgain = true;
     protected bool comboDelay = false;
-    int comboChainNumber;
+    protected int comboChainNumber;
 
     public void Initialize()
     {
@@ -99,8 +99,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void roll(string rollAnimName, float normSpeed)
+    playerState prevState;
+
+    protected void roll(string rollAnimName, float normSpeed, playerState ps)
     {
+        prevState = ps;
         canRollAgain = false;
         defaultSpeed = normSpeed;
         anim.Play(rollAnimName);
@@ -129,14 +132,14 @@ public class Player : MonoBehaviour
     }
     public void incrementComboChain()
     {
+        StopCoroutine("resetComboChain");
         if (comboChainNumber < 2)
         {
-            StopCoroutine("resetComboChain");
             comboChainNumber++;
         }
         else
         {
-            comboDelay = true;
+            comboDelay = true; //used in fighter
         }
         StartCoroutine("resetComboChain");
     }
@@ -157,7 +160,7 @@ public class Player : MonoBehaviour
         switch (x)
         {
             case 0:
-                if(triggerChecks[0].enemyInside == true)
+                if (triggerChecks[0].enemyInside == true)
                 {
                     triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth();
                 }
@@ -186,7 +189,7 @@ public class Player : MonoBehaviour
 
     IEnumerator resetComboChain()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         comboChainNumber = 0;
         comboDelay = false;
     }
@@ -195,8 +198,11 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         speed = defaultSpeed;
+        if (prevState == playerState.jumping)
+            playerAction = playerState.jumping;
+        else
+            playerAction = playerState.idle;
         anim.SetBool("RollTrigger", false);
-        playerAction = playerState.idle;
         StartCoroutine("rollDelay");
     }
 

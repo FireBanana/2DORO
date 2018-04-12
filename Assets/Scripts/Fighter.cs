@@ -61,6 +61,7 @@ public class Fighter : Player
                     playerAction = playerState.jumping;
                     anim.SetBool("WalkTrigger", false);
                     anim.SetBool("RunTrigger", false);
+                    comboChainNumber = 0;
                 }
             }
         }
@@ -92,6 +93,7 @@ public class Fighter : Player
                     }
                 }
             }
+            comboChainNumber = 0;
         }
         else if (Input.GetKey(KeyCode.D))
         {
@@ -121,6 +123,7 @@ public class Fighter : Player
                     }
                 }
             }
+            comboChainNumber = 0;
         }
         if (Input.GetKeyDown(KeyCode.V)) //V ATTACK IF IN AIR
         {
@@ -151,22 +154,25 @@ public class Fighter : Player
                 {
                     if (playerAction == playerState.jumping)
                     {
+                        var ps = playerAction;
                         speed = 0.02f;
                         anim.SetBool("WalkTrigger", false);
                         anim.SetBool("RunTrigger", false);
                         playerAction = playerState.rolling;
                         anim.SetBool("RollTrigger", true);
-                        roll("Fighter_roll", 0.01f);
+                        roll("Fighter_roll", 0.01f, ps);
                     }
                     else
                     {
+                        var ps = playerAction;
                         speed = 0.05f;
                         anim.SetBool("WalkTrigger", false);
                         anim.SetBool("RunTrigger", false);
                         playerAction = playerState.rolling;
                         anim.SetBool("RollTrigger", true);
-                        roll("Fighter_roll", 0.01f);
+                        roll("Fighter_roll", 0.01f, ps);
                     }
+                    comboChainNumber = 0;
                 }
             }
         }
@@ -196,18 +202,33 @@ public class Fighter : Player
         {
             if (playerAction != playerState.attacking)
             {
+                Debug.Log(comboChainNumber);
                 if (comboDelay == false)
                 {
-                    incrementComboChain();
                     anim.SetBool("WalkTrigger", false);
                     anim.SetBool("RunTrigger", false);
-                    anim.Play("Fighter_punch1");
-                    playerAction = playerState.attacking;
-                    isRunning = false;
-                    if (sr.flipX == false)
-                        applyDamageToTrigger(1);
+                    if (comboChainNumber == 2)
+                    {
+                        anim.Play("Fighter_kick1");
+                        playerAction = playerState.attacking;
+                        isRunning = false;
+                        if (sr.flipX == false)
+                            applyDamageToTrigger(1);
+                        else
+                            applyDamageToTrigger(0);
+
+                    }
                     else
-                        applyDamageToTrigger(0);
+                    {
+                        anim.Play("Fighter_punch1");
+                        playerAction = playerState.attacking;
+                        isRunning = false;
+                        if (sr.flipX == false)
+                            applyDamageToTrigger(1);
+                        else
+                            applyDamageToTrigger(0);
+                    }
+                    incrementComboChain();
                 }
             }
 

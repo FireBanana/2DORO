@@ -458,7 +458,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 10, y: -14}
-  m_SizeDelta: {x: 184.3, y: 58.799988}
+  m_SizeDelta: {x: 116, y: 37}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &561025654
 MonoBehaviour:
@@ -1716,15 +1716,15 @@ RectTransform:
   m_GameObject: {fileID: 1208175672}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5705792, y: 1.5705783, z: 1.5705783}
+  m_LocalScale: {x: 1.5261565, y: 1.5261555, z: 1.5261555}
   m_Children: []
   m_Father: {fileID: 561025653}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 10.5, y: 7.2}
-  m_SizeDelta: {x: 86, y: 6}
+  m_AnchoredPosition: {x: 7.6, y: 4.9}
+  m_SizeDelta: {x: 57.11, y: 3.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1208175674
 MonoBehaviour:
@@ -3849,7 +3849,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.08207179, g: 0.16911763, b: 0.16911763, a: 0}
+  m_BackGroundColor: {r: 0.08235294, g: 0.10980392, b: 0.13725491, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
