@@ -129,8 +129,25 @@ public class Fighter : Player
         {
             if (playerAction == playerState.jumping)
             {
-                anim.Play("Fighter_jumpAtk4");
+                anim.Play("Fighter_jumpAtk1");
                 playerAction = playerState.jumpAttacking;
+                if (sr.flipX == false)
+                    performJumpAttackDamage(1); // Does not change in mid air
+                else
+                    performJumpAttackDamage(0);
+            }
+
+        }
+        else if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (playerAction == playerState.jumping)
+            {
+                anim.Play("Fighter_jumpAtk2");
+                playerAction = playerState.jumpAttacking;
+                if (sr.flipX == false)
+                    performJumpAttackDamage(1);
+                else
+                    performJumpAttackDamage(0);
             }
 
         }
@@ -200,9 +217,9 @@ public class Fighter : Player
         }
         else if (Input.GetKeyDown(KeyCode.V)) //V ATTACK IF NOT IN AIR
         {
-            if (playerAction != playerState.attacking)
+            if (playerAction != playerState.attacking  && playerAction != playerState.running)
             {
-                Debug.Log(comboChainNumber);
+               // Debug.Log(comboChainNumber);
                 if (comboDelay == false)
                 {
                     anim.SetBool("WalkTrigger", false);
@@ -230,8 +247,64 @@ public class Fighter : Player
                     }
                     incrementComboChain();
                 }
+            }else if(playerAction == playerState.running)
+            {
+                anim.SetBool("WalkTrigger", false);
+                anim.SetBool("RunTrigger", false);
+                anim.Play("Fighter_dashPunch");
+                playerAction = playerState.attacking;
+                isRunning = false;
+                if (sr.flipX == false)
+                    applyDamageToTrigger(1);
+                else
+                    applyDamageToTrigger(0);
             }
 
+        }
+        else if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (playerAction != playerState.attacking && playerAction != playerState.running)
+            {
+                if (comboDelay == false)
+                {
+                    anim.SetBool("WalkTrigger", false);
+                    anim.SetBool("RunTrigger", false);
+                    if (comboChainNumber2 == 1)
+                    {
+                        anim.Play("Fighter_kick3");
+                        playerAction = playerState.attacking;
+                        isRunning = false;
+                        if (sr.flipX == false)
+                            applyDamageToTrigger(1);
+                        else
+                            applyDamageToTrigger(0);
+
+                    }
+                    else
+                    {
+                        anim.Play("Fighter_punch1");
+                        playerAction = playerState.attacking;
+                        isRunning = false;
+                        if (sr.flipX == false)
+                            applyDamageToTrigger(1);
+                        else
+                            applyDamageToTrigger(0);
+                    }
+                    incrementComboChain2();
+                }
+            }
+            else if (playerAction == playerState.running)
+            {
+                anim.SetBool("WalkTrigger", false);
+                anim.SetBool("RunTrigger", false);
+                anim.Play("Fighter_dashKick");
+                playerAction = playerState.attacking;
+                isRunning = false;
+                if (sr.flipX == false)
+                    applyDamageToTrigger(1);
+                else
+                    applyDamageToTrigger(0);
+            }
         }
     }
 
@@ -250,6 +323,7 @@ public class Fighter : Player
                 rb.drag = 10;
             }
             numbOfJumps = 0;
+            stopJumpAttack();
         }
         if (collision.collider.gameObject.layer == 9)
         {

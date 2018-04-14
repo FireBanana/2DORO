@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     protected int numbOfJumps;
     protected bool canRollAgain = true;
     protected bool comboDelay = false;
-    protected int comboChainNumber;
+    protected int comboChainNumber, comboChainNumber2;
 
     public void Initialize()
     {
@@ -143,7 +143,20 @@ public class Player : MonoBehaviour
         }
         StartCoroutine("resetComboChain");
     }
-    public void applyDamageToTrigger(int x)
+    public void incrementComboChain2()
+    {
+        StopCoroutine("resetComboChain");
+        if (comboChainNumber2 < 1)
+        {
+            comboChainNumber2++;
+        }
+        else
+        {
+            comboDelay = true; //used in fighter
+        }
+        StartCoroutine("resetComboChain");
+    }
+    public bool applyDamageToTrigger(int x)
     {
         //0 = left
         //1 = right
@@ -163,12 +176,14 @@ public class Player : MonoBehaviour
                 if (triggerChecks[0].enemyInside == true)
                 {
                     triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth();
+                    return true;
                 }
                 break;
             case 1:
                 if (triggerChecks[1].enemyInside == true)
                 {
                     triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth();
+                    return true;
                 }
                 break;
             case 2:
@@ -184,13 +199,38 @@ public class Player : MonoBehaviour
             case 7:
                 break;
         }
+        return false;
 
     }
+    int triggerForJump;
+    public void performJumpAttackDamage(int x)
+    {
+        triggerForJump = x;
+        StartCoroutine("checkJumpAttacks");
+    }
 
+    public void stopJumpAttack()
+    {
+        StopCoroutine("checkJumpAttacks");
+    }
+
+    IEnumerator checkJumpAttacks()
+    {
+        bool check = true;
+        while (check)
+        {
+            if (applyDamageToTrigger(triggerForJump))
+            {
+                check = false;
+            }
+            yield return null;
+        }
+    }
     IEnumerator resetComboChain()
     {
         yield return new WaitForSeconds(1.5f);
         comboChainNumber = 0;
+        comboChainNumber2 = 0;
         comboDelay = false;
     }
 
