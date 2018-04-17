@@ -51,8 +51,9 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -104,7 +105,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 9
-      pivot: {x: 0.4612679, y: 0.40962514}
+      pivot: {x: 0.4612679, y: 0.50701344}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -113,12 +114,12 @@ TextureImporter:
       name: player_m_1_Dashkick_1_strip6_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 72
         y: 0
         width: 64
         height: 64
       alignment: 9
-      pivot: {x: 0.4612679, y: 0.4096251}
+      pivot: {x: 0.4612679, y: 0.5070134}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -132,7 +133,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 9
-      pivot: {x: 0.4612679, y: 0.4096251}
+      pivot: {x: 0.4612679, y: 0.5070134}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -146,7 +147,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 9
-      pivot: {x: 0.4612679, y: 0.4096251}
+      pivot: {x: 0.4612679, y: 0.5070134}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -160,7 +161,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 9
-      pivot: {x: 0.4612679, y: 0.4096251}
+      pivot: {x: 0.4612679, y: 0.5070134}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -174,7 +175,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 9
-      pivot: {x: 0.4612679, y: 0.4096251}
+      pivot: {x: 0.4612679, y: 0.5070134}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

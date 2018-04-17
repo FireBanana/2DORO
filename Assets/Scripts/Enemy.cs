@@ -6,9 +6,36 @@ public class Enemy : MonoBehaviour {
 
     public float health;
     public HealthBarHandler healthHandler;
-	
-    public void depleteHealth()
+    Animator anim;
+
+    private void Start()
     {
-        healthHandler.healthDepleter();
+        anim = GetComponent<Animator>();
+    }
+
+    public void depleteHealth(char hurtType)
+    {
+        // healthHandler.healthDepleter();
+        switch (hurtType)
+        {
+            case 'B':
+                anim.Play("Fighter_hurtB");
+                break;
+            case 'C':
+                break;
+            case 'D':
+                break;
+            case 'E':
+                break;
+            case 'K':
+                break;
+            case 'O':
+                break;
+            case 'F':
+                break;
+            case 'G':
+                break;
+        }
+
     }
 }

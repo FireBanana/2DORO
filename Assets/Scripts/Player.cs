@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     protected Animator anim;
     protected SpriteRenderer sr;
 
-    protected enum playerState { idle, running, rolling, jumping, walking, sliding, attacking, jumpAttacking }
+    protected enum playerState { idle, running, rolling, jumping, walking, sliding, attacking, jumpAttacking, hurting }
     protected playerState playerAction;
     public TriggerCheck[] triggerChecks;
 
@@ -59,29 +59,38 @@ public class Player : MonoBehaviour
     {
         rb.AddForce(new Vector2(0.5f, jumpPow), ForceMode2D.Impulse);
     }
+    public void moveSlideJumpLeft()
+    {
+        rb.AddForce(new Vector2(-3, 0));
+    }
+
+    public void moveSlideJumpRight()
+    {
+        rb.AddForce(new Vector2(3, 0));
+    }
 
     public void moveLeft()
     {
-        //transform.Translate(new Vector2(-1, 0) * speed);
-        rb.AddForce(new Vector2(-500, 0) * speed);
+        rb.velocity = new Vector2(-1 * speed, rb.velocity.y);
+        //rb.AddForce(new Vector2(-500, 0) * speed);
         sr.flipX = true;
     }
     public void moveRight()
     {
-        //transform.Translate(new Vector2(1, 0) * speed);
-        rb.AddForce(new Vector2(500, 0) * speed);
+        rb.velocity = new Vector2(1 * speed, rb.velocity.y);
+        //rb.AddForce(new Vector2(500, 0) * speed);
         sr.flipX = false;
     }
     public void moveLeftJump()
     {
-        //transform.Translate(new Vector2(-1, 0) * speed);
-        rb.AddForce(new Vector2(-100, 0) * 0.05f);
+        //rb.AddForce(new Vector2(-100, 0) * 0.05f);
+        rb.velocity = new Vector2(-1 * speed, rb.velocity.y);
         sr.flipX = true;
     }
     public void moveRightJump()
     {
-        //transform.Translate(new Vector2(1, 0) * speed);
-        rb.AddForce(new Vector2(100, 0) * 0.05f);
+        //rb.AddForce(new Vector2(100, 0) * 0.05f);
+        rb.velocity = new Vector2(1 * speed, rb.velocity.y);
         sr.flipX = false;
     }
 
@@ -89,17 +98,16 @@ public class Player : MonoBehaviour
     {
         if (sr.flipX == true)
         {
-            //transform.Translate(new Vector2(-1, 0) * speed);
-            rb.AddForce(new Vector2(-500, 0) * speed);
+          //rb.AddForce(new Vector2(-500, 0) * speed);
+            rb.velocity = new Vector2(-3 , rb.velocity.y);
         }
         else
         {
-            //transform.Translate(new Vector2(1, 0) * speed);
-            rb.AddForce(new Vector2(500, 0) * speed);
+            rb.velocity = new Vector2(3 , rb.velocity.y);
         }
     }
 
-    playerState prevState;
+    protected playerState prevState;
 
     protected void roll(string rollAnimName, float normSpeed, playerState ps)
     {
@@ -140,6 +148,7 @@ public class Player : MonoBehaviour
         else
         {
             comboDelay = true; //used in fighter
+            StartCoroutine("comboDelayer");
         }
         StartCoroutine("resetComboChain");
     }
@@ -153,10 +162,16 @@ public class Player : MonoBehaviour
         else
         {
             comboDelay = true; //used in fighter
+            StartCoroutine("comboDelayer");
         }
         StartCoroutine("resetComboChain");
     }
-    public bool applyDamageToTrigger(int x)
+    int triggerToCheck;
+    public void setTriggerForAttack(int x)
+    {
+        triggerToCheck = x;
+    }
+    public bool applyDamageToTrigger()
     {
         //0 = left
         //1 = right
@@ -170,19 +185,19 @@ public class Player : MonoBehaviour
         //punch - left/right
         //kick - bottom left/ bottom right
 
-        switch (x)
+        switch (triggerToCheck)
         {
             case 0:
                 if (triggerChecks[0].enemyInside == true)
                 {
-                    triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth();
+                    triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth('B');
                     return true;
                 }
                 break;
             case 1:
                 if (triggerChecks[1].enemyInside == true)
                 {
-                    triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth();
+                    triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth('B');
                     return true;
                 }
                 break;
@@ -202,10 +217,9 @@ public class Player : MonoBehaviour
         return false;
 
     }
-    int triggerForJump;
     public void performJumpAttackDamage(int x)
     {
-        triggerForJump = x;
+        triggerToCheck = x;
         StartCoroutine("checkJumpAttacks");
     }
 
@@ -214,12 +228,36 @@ public class Player : MonoBehaviour
         StopCoroutine("checkJumpAttacks");
     }
 
+    public void receiveDamage(char hurtType)
+    {
+        switch (hurtType)
+        {
+            case 'B':
+
+                break;
+            case 'C':
+                break;
+            case 'D':
+                break;
+            case 'E':
+                break;
+            case 'K':
+                break;
+            case 'O':
+                break;
+            case 'F':
+                break;
+            case 'G':
+                break;
+        }
+    }
+
     IEnumerator checkJumpAttacks()
     {
         bool check = true;
         while (check)
         {
-            if (applyDamageToTrigger(triggerForJump))
+            if (applyDamageToTrigger())
             {
                 check = false;
             }
@@ -228,10 +266,17 @@ public class Player : MonoBehaviour
     }
     IEnumerator resetComboChain()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         comboChainNumber = 0;
         comboChainNumber2 = 0;
+    }
+
+    IEnumerator comboDelayer()
+    {
+        yield return new WaitForSeconds(0.3f);
         comboDelay = false;
+        comboChainNumber = 0;
+        comboChainNumber2 = 0;
     }
 
     IEnumerator waitForRoll()
