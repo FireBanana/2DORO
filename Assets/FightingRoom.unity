@@ -341,9 +341,9 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -1.4406631, y: 0.24465269}
-  - {x: -1.4339875, y: 0.26245427}
-  - {x: 1.4123017, y: 0.26014918}
+  - {x: -1.4467797, y: 0.2623149}
+  - {x: -0.01772827, y: 0.26051342}
+  - {x: 1.423595, y: 0.25527254}
 --- !u!1 &727846921
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,7 +752,7 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -1.521487, y: 2.426368}
+  - {x: -1.5126581, y: 2.368981}
   - {x: -1.5223153, y: 0.18066072}
 --- !u!1 &1221037118
 GameObject:
@@ -844,7 +844,7 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: 0.7719003, y: 2.1167605}
+  - {x: 0.7719003, y: 2.0807137}
   - {x: 0.7761916, y: 0.17547393}
 --- !u!1 &1316981632
 GameObject:
@@ -1352,7 +1352,7 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: 1.5461974, y: 2.439742}
+  - {x: 1.5412984, y: 2.3947735}
   - {x: 1.5524337, y: 0.18760753}
 --- !u!1 &2053344468
 GameObject:
@@ -1398,7 +1398,7 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: -0.7551223, y: 2.11067}
+  - {x: -0.7595366, y: 2.0488684}
   - {x: -0.7536843, y: 0.18601799}
 --- !u!4 &2089880965 stripped
 Transform:

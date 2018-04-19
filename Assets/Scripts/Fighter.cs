@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class Fighter : Player
 {
-
-    RaycastHit2D hit;
+    Vector3 touchingPos;
 
     private void Start()
     {
         Initialize();
+        touchingPos = transform.position - new Vector3(0, GetComponent<CapsuleCollider2D>().bounds.extents.y);
     }
 
     private void Update()
     {
+
+
         if (playerAction == playerState.rolling)
         {
             rollMovement();
@@ -68,7 +70,10 @@ public class Fighter : Player
                 if (playerAction == playerState.sliding && sr.flipX == false)
                     anim.Play("Fighter_fall");
                 if (prevState == playerState.sliding)
+                {
                     moveSlideJumpLeft();
+                    sr.flipX = true;
+                }
                 else
                     moveLeftJump();
             }
@@ -101,7 +106,10 @@ public class Fighter : Player
                 if (playerAction == playerState.sliding && sr.flipX == true)
                     anim.Play("Fighter_fall");
                 if (prevState == playerState.sliding)
+                {
                     moveSlideJumpRight();
+                    sr.flipX = false;
+                }
                 else
                     moveRightJump();
             }
@@ -314,23 +322,30 @@ public class Fighter : Player
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        touchingPos = transform.position - new Vector3(0, (GetComponent<CapsuleCollider2D>().bounds.extents.y * 0.5f));
         if (collision.collider.gameObject.layer == 9)
         {
             if (playerAction == playerState.jumping)
             {
-                //rb.drag = 10;
                 playerAction = playerState.sliding;
                 anim.Play("Fighter_wallSlide");
+                prevState = playerState.sliding;
             }
         }
         else if (collision.collider.gameObject.layer == 8)
         {
             if (playerAction != playerState.rolling)
             {
-                playerAction = playerState.idle;
-                anim.Play("Figher_idle");
-                //rb.drag = 10;
-                prevState = playerState.idle;
+                RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 1f, 1<<8);
+
+                if (hit.collider != null)
+                {
+                    playerAction = playerState.idle;
+                    anim.Play("Figher_idle");
+                    prevState = playerState.idle;
+                    anim.SetBool("WalkTrigger", false);
+                    anim.SetBool("RunTrigger", false);
+                }
             }
             else
             {
@@ -338,6 +353,7 @@ public class Fighter : Player
             }
             numbOfJumps = 0;
             stopJumpAttack();
+
         }
     }
     private void OnCollisionExit2D(Collision2D collision)
@@ -352,6 +368,7 @@ public class Fighter : Player
             {
                 anim.Play("Fighter_jump");
             }
+            playerAction = playerState.jumping;
             //rb.drag = 2;
         }
         else if (collision.collider.gameObject.layer == 9)
