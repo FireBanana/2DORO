@@ -9,7 +9,7 @@ QualitySettings:
   - serializedVersion: 2
     name: Low
     pixelLightCount: 2
-    shadows: 2
+    shadows: 0
     shadowResolution: 1
     shadowProjection: 1
     shadowCascades: 2
@@ -20,7 +20,7 @@ QualitySettings:
     shadowmaskMode: 1
     blendWeights: 2
     textureQuality: 0
-    anisotropicTextures: 1
+    anisotropicTextures: 0
     antiAliasing: 0
     softParticles: 0
     softVegetation: 1
@@ -37,7 +37,7 @@ QualitySettings:
   - serializedVersion: 2
     name: Medium
     pixelLightCount: 3
-    shadows: 2
+    shadows: 0
     shadowResolution: 2
     shadowProjection: 1
     shadowCascades: 2
@@ -48,8 +48,8 @@ QualitySettings:
     shadowmaskMode: 1
     blendWeights: 4
     textureQuality: 0
-    anisotropicTextures: 2
-    antiAliasing: 2
+    anisotropicTextures: 0
+    antiAliasing: 0
     softParticles: 1
     softVegetation: 1
     realtimeReflectionProbes: 1
@@ -65,7 +65,7 @@ QualitySettings:
   - serializedVersion: 2
     name: High
     pixelLightCount: 4
-    shadows: 2
+    shadows: 0
     shadowResolution: 2
     shadowProjection: 1
     shadowCascades: 4
@@ -76,8 +76,8 @@ QualitySettings:
     shadowmaskMode: 1
     blendWeights: 4
     textureQuality: 0
-    anisotropicTextures: 2
-    antiAliasing: 2
+    anisotropicTextures: 0
+    antiAliasing: 0
     softParticles: 1
     softVegetation: 1
     realtimeReflectionProbes: 1

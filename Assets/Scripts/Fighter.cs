@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class Fighter : Player
 {
-    Vector3 touchingPos;
 
     private void Start()
     {
         Initialize();
-        touchingPos = transform.position - new Vector3(0, GetComponent<CapsuleCollider2D>().bounds.extents.y);
+        touchingPos = transform.position - new Vector3(0, GetComponent<BoxCollider2D>().bounds.extents.y);
     }
 
     private void Update()
@@ -29,6 +28,11 @@ public class Fighter : Player
             {
                 anim.Play("Fighter_fall");
             }
+        }
+
+        if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            StopCoroutine("runCancelDelay");
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -170,7 +174,7 @@ public class Fighter : Player
                 anim.SetBool("WalkTrigger", false);
                 anim.SetBool("RunTrigger", false);
                 playerAction = playerState.idle;
-                isRunning = false;
+                StartCoroutine("runCancelDelay");
             }
         }
 
@@ -318,11 +322,13 @@ public class Fighter : Player
                     setTriggerForAttack(0);
             }
         }
+        //  Debug.DrawRay(transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f)), -Vector3.up, Color.red);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        touchingPos = transform.position - new Vector3(0, (GetComponent<CapsuleCollider2D>().bounds.extents.y * 0.5f));
+        touchingPos = transform.position - new Vector3((-GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
+        touchingPos2 = transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
         if (collision.collider.gameObject.layer == 9)
         {
             if (playerAction == playerState.jumping)
@@ -336,9 +342,10 @@ public class Fighter : Player
         {
             if (playerAction != playerState.rolling)
             {
-                RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 1f, 1<<8);
+                RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 1f, 1 << 8);
+                RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 1f, 1 << 8);
 
-                if (hit.collider != null)
+                if (hit.collider != null || hit2.collider != null)
                 {
                     playerAction = playerState.idle;
                     anim.Play("Figher_idle");
@@ -360,16 +367,19 @@ public class Fighter : Player
     {
         if (collision.collider.gameObject.layer == 8)
         {
-            if (playerAction != playerState.jumping)
+            if (playerAction != playerState.rolling)
             {
-                anim.Play("Fighter_fall");
+                if (playerAction != playerState.jumping)
+                {
+                    anim.Play("Fighter_fall");
+                }
+                else
+                {
+                    anim.Play("Fighter_jump");
+                }
+                playerAction = playerState.jumping;
+                //rb.drag = 2;
             }
-            else
-            {
-                anim.Play("Fighter_jump");
-            }
-            playerAction = playerState.jumping;
-            //rb.drag = 2;
         }
         else if (collision.collider.gameObject.layer == 9)
         {

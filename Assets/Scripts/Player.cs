@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     protected bool canRollAgain = true;
     protected bool comboDelay = false;
     protected int comboChainNumber, comboChainNumber2;
+    protected Vector3 touchingPos, touchingPos2;
 
     public void Initialize()
     {
@@ -98,12 +99,12 @@ public class Player : MonoBehaviour
     {
         if (sr.flipX == true)
         {
-          //rb.AddForce(new Vector2(-500, 0) * speed);
-            rb.velocity = new Vector2(-3 , rb.velocity.y);
+            //rb.AddForce(new Vector2(-500, 0) * speed);
+            rb.velocity = new Vector2(-3, rb.velocity.y);
         }
         else
         {
-            rb.velocity = new Vector2(3 , rb.velocity.y);
+            rb.velocity = new Vector2(3, rb.velocity.y);
         }
     }
 
@@ -117,6 +118,7 @@ public class Player : MonoBehaviour
         anim.Play(rollAnimName);
         StartCoroutine("waitForRoll");
     }
+
     public void leftDashCheck()
     {
         if (leftDash == false)
@@ -252,6 +254,11 @@ public class Player : MonoBehaviour
         }
     }
 
+    protected IEnumerator runCancelDelay()
+    {
+        yield return new WaitForSeconds(0.6f);
+        isRunning = false;
+    }
     IEnumerator checkJumpAttacks()
     {
         bool check = true;
@@ -288,6 +295,16 @@ public class Player : MonoBehaviour
         else
             playerAction = playerState.idle;
         anim.SetBool("RollTrigger", false);
+
+        touchingPos = transform.position - new Vector3((-GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
+        touchingPos2 = transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
+        RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 1f, 1 << 8);
+        RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 1f, 1 << 8);
+        if (hit.collider == null && hit2.collider == null)
+        {
+            playerAction = playerState.jumping;
+        }
+
         StartCoroutine("rollDelay");
     }
 
