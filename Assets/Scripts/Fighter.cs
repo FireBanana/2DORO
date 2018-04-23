@@ -78,8 +78,9 @@ public class Fighter : Player
                     moveSlideJumpLeft();
                     sr.flipX = true;
                 }
-                else
+                else{
                     moveLeftJump();
+                }
             }
             else
             {
@@ -174,7 +175,12 @@ public class Fighter : Player
                 anim.SetBool("WalkTrigger", false);
                 anim.SetBool("RunTrigger", false);
                 playerAction = playerState.idle;
-                StartCoroutine("runCancelDelay");
+                
+                if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)){
+                    StopCoroutine("runCancelDelay");
+                }else{
+                    StartCoroutine("runCancelDelay");
+                }
             }
         }
 
@@ -322,7 +328,7 @@ public class Fighter : Player
                     setTriggerForAttack(0);
             }
         }
-        //  Debug.DrawRay(transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f)), -Vector3.up, Color.red);
+          Debug.DrawRay(transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f)), -Vector3.up * 0.18f, Color.red);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -331,6 +337,17 @@ public class Fighter : Player
         touchingPos2 = transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
         if (collision.collider.gameObject.layer == 9)
         {
+            if(playerAction == playerState.rolling){
+            RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 0.18f, 1 << 8);
+            RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 0.18f, 1 << 8);
+                if(hit.collider == null && hit2.collider == null){
+                StopCoroutine("waitForRoll");
+                playerAction = playerState.sliding;
+                anim.Play("Fighter_wallSlide");
+                prevState = playerState.sliding;
+                StartCoroutine("rollDelay");
+                }
+            }
             if (playerAction == playerState.jumping)
             {
                 playerAction = playerState.sliding;
@@ -342,8 +359,8 @@ public class Fighter : Player
         {
             if (playerAction != playerState.rolling)
             {
-                RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 1f, 1 << 8);
-                RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 1f, 1 << 8);
+                RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 0.18f, 1 << 8);
+                RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 0.18f, 1 << 8);
 
                 if (hit.collider != null || hit2.collider != null)
                 {

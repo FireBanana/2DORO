@@ -192,14 +192,14 @@ public class Player : MonoBehaviour
             case 0:
                 if (triggerChecks[0].enemyInside == true)
                 {
-                    triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth('B');
+                    triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth('B', -Vector3.right);
                     return true;
                 }
                 break;
             case 1:
                 if (triggerChecks[1].enemyInside == true)
                 {
-                    triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth('B');
+                    triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth('B', Vector3.right);
                     return true;
                 }
                 break;
@@ -256,7 +256,7 @@ public class Player : MonoBehaviour
 
     protected IEnumerator runCancelDelay()
     {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(0.2f);
         isRunning = false;
     }
     IEnumerator checkJumpAttacks()
@@ -286,9 +286,13 @@ public class Player : MonoBehaviour
         comboChainNumber2 = 0;
     }
 
-    IEnumerator waitForRoll()
+    public IEnumerator waitForRoll()
     {
         yield return new WaitForSeconds(0.5f);
+        rollAfterWait();
+    }
+
+    public void rollAfterWait(){
         speed = defaultSpeed;
         if (prevState == playerState.jumping)
             playerAction = playerState.jumping;
@@ -304,11 +308,11 @@ public class Player : MonoBehaviour
         {
             playerAction = playerState.jumping;
         }
-
+        speed = 0.75f;
         StartCoroutine("rollDelay");
     }
 
-    IEnumerator rollDelay()
+    protected IEnumerator rollDelay()
     {
         yield return new WaitForSeconds(2);
         canRollAgain = true;

@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour {
         anim = GetComponent<Animator>();
     }
 
-    public void depleteHealth(char hurtType)
+    public void depleteHealth(char hurtType, Vector3 pushDir)
     {
         // healthHandler.healthDepleter();
         switch (hurtType)
@@ -36,6 +36,6 @@ public class Enemy : MonoBehaviour {
             case 'G':
                 break;
         }
-
+        GetComponent<Rigidbody2D>().AddForce(pushDir, ForceMode2D.Impulse);
     }
 }
