@@ -22,10 +22,13 @@ public class Enemy : MonoBehaviour {
                 anim.Play("Fighter_hurtB");
                 break;
             case 'C':
+            anim.Play("Fighter_hurtC");
                 break;
-            case 'D':
+            case 'J':
+            anim.Play("Fighter_hurtJ");
                 break;
-            case 'E':
+            case 'G':
+            anim.Play("Fighter_hurtG");
                 break;
             case 'K':
                 break;
@@ -33,7 +36,7 @@ public class Enemy : MonoBehaviour {
                 break;
             case 'F':
                 break;
-            case 'G':
+            case 'S':
                 break;
         }
         GetComponent<Rigidbody2D>().AddForce(pushDir, ForceMode2D.Impulse);

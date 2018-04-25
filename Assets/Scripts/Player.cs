@@ -48,6 +48,9 @@ public class Player : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
     }
 
+    public void attackMove(Vector2 dir){
+        rb.AddForce(dir, ForceMode2D.Impulse);
+    }
     public void jump(float jumpPow)
     {
         rb.AddForce(new Vector2(0, jumpPow), ForceMode2D.Impulse);
@@ -169,9 +172,14 @@ public class Player : MonoBehaviour
         StartCoroutine("resetComboChain");
     }
     int triggerToCheck;
-    public void setTriggerForAttack(int x)
+    Vector3 pushDir;
+    char hurtType;
+    
+    public void setTriggerForAttack(int x, Vector3 push, char hurtT)
     {
         triggerToCheck = x;
+        pushDir = push;
+        hurtType = hurtT;
     }
     public bool applyDamageToTrigger()
     {
@@ -192,14 +200,14 @@ public class Player : MonoBehaviour
             case 0:
                 if (triggerChecks[0].enemyInside == true)
                 {
-                    triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth('B', -Vector3.right);
+                    triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
                     return true;
                 }
                 break;
             case 1:
                 if (triggerChecks[1].enemyInside == true)
                 {
-                    triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth('B', Vector3.right);
+                    triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
                     return true;
                 }
                 break;

@@ -250,10 +250,14 @@ public class Fighter : Player
                         anim.Play("Fighter_kick1");
                         playerAction = playerState.attacking;
                         isRunning = false;
-                        if (sr.flipX == false)
-                            setTriggerForAttack(1);
-                        else
-                            setTriggerForAttack(0);
+                        if (sr.flipX == false){
+                            setTriggerForAttack(1, Vector3.right, 'H');
+                            attackMove(Vector2.right);
+                        }
+                        else{
+                            setTriggerForAttack(0, -Vector3.right, 'H');
+                            attackMove(-Vector2.right);
+                        }
 
                     }
                     else
@@ -261,10 +265,22 @@ public class Fighter : Player
                         anim.Play("Fighter_punch1");
                         playerAction = playerState.attacking;
                         isRunning = false;
-                        if (sr.flipX == false)
-                            setTriggerForAttack(1);
-                        else
-                            setTriggerForAttack(0);
+                        if (sr.flipX == false){
+                            if(comboChainNumber == 1){
+                            setTriggerForAttack(1, Vector3.right, 'B');
+                            attackMove(Vector2.right);
+                            }
+                            else
+                            setTriggerForAttack(1, Vector3.zero, 'B');
+                        }
+                        else{
+                         if(comboChainNumber == 1){
+                            setTriggerForAttack(0, Vector3.right, 'B');
+                            attackMove(-Vector2.right);
+                         }
+                            else
+                            setTriggerForAttack(0, Vector3.zero, 'B');
+                        }
                     }
                     incrementComboChain();
                 }
@@ -276,10 +292,14 @@ public class Fighter : Player
                 anim.Play("Fighter_dashPunch");
                 playerAction = playerState.attacking;
                 isRunning = false;
-                if (sr.flipX == false)
-                    setTriggerForAttack(1);
-                else
-                    setTriggerForAttack(0);
+                if (sr.flipX == false){
+                    setTriggerForAttack(1, Vector3.right, 'H');
+                    attackMove(Vector2.right);
+                }
+                else{
+                    setTriggerForAttack(0, Vector3.right, 'H');
+                    attackMove(-Vector2.right);
+                }
             }
 
         }
@@ -296,21 +316,28 @@ public class Fighter : Player
                         anim.Play("Fighter_kick3");
                         playerAction = playerState.attacking;
                         isRunning = false;
-                        if (sr.flipX == false)
-                            setTriggerForAttack(1);
-                        else
-                            setTriggerForAttack(0);
-
+                        if (sr.flipX == false){
+                            setTriggerForAttack(1, Vector3.right, 'J');
+                            attackMove(Vector2.right);
+                        }
+                        else{
+                            setTriggerForAttack(0, -Vector3.right, 'J');
+                            attackMove(-Vector2.right);
+                        }
                     }
                     else
                     {
                         anim.Play("Fighter_punch1");
                         playerAction = playerState.attacking;
                         isRunning = false;
-                        if (sr.flipX == false)
-                            setTriggerForAttack(1);
-                        else
-                            setTriggerForAttack(0);
+                        if (sr.flipX == false){
+                            setTriggerForAttack(1, Vector3.right, 'C');
+                            attackMove(Vector2.right);
+                        }
+                        else{
+                            setTriggerForAttack(0, -Vector3.right, 'C');
+                            attackMove(-Vector2.right);
+                        }
                     }
                     incrementComboChain2();
                 }
@@ -322,13 +349,17 @@ public class Fighter : Player
                 anim.Play("Fighter_dashKick");
                 playerAction = playerState.attacking;
                 isRunning = false;
-                if (sr.flipX == false)
-                    setTriggerForAttack(1);
-                else
-                    setTriggerForAttack(0);
+                if (sr.flipX == false){
+                    setTriggerForAttack(1, Vector3.right, 'G');
+                    attackMove(Vector2.right);
+                }
+                else{
+                    setTriggerForAttack(0, -Vector3.right, 'G');
+                    attackMove(-Vector2.right);
+                }
             }
         }
-          Debug.DrawRay(transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f)), -Vector3.up * 0.18f, Color.red);
+         // Debug.DrawRay(transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f)), -Vector3.up * 0.18f, Color.red);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
