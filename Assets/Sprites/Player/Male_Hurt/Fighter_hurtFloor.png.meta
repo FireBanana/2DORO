@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 25d47959fc54d084da07a3714e12b7c1
-timeCreated: 1523805246
+guid: 17f6e10b4cab94f4e9f6701f7f22b028
+timeCreated: 1524990226
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: player_m_1_getup_Strip4_0
-    21300002: player_m_1_getup_Strip4_1
-    21300004: player_m_1_getup_Strip4_2
-    21300006: player_m_1_getup_Strip4_3
+    21300000: Fighter_hurtFloor_0
+    21300002: Fighter_hurtFloor_1
+    21300004: Fighter_hurtFloor_2
+    21300006: Fighter_hurtFloor_3
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -85,13 +85,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: player_m_1_getup_Strip4_0
+      name: Fighter_hurtFloor_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 70
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -99,13 +99,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: player_m_1_getup_Strip4_1
+      name: Fighter_hurtFloor_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 70
         y: 0
-        width: 64
-        height: 64
+        width: 70
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -113,13 +113,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: player_m_1_getup_Strip4_2
+      name: Fighter_hurtFloor_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 140
         y: 0
-        width: 64
-        height: 64
+        width: 70
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -127,13 +127,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: player_m_1_getup_Strip4_3
+      name: Fighter_hurtFloor_3
       rect:
         serializedVersion: 2
-        x: 192
+        x: 210
         y: 0
-        width: 64
-        height: 64
+        width: 70
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

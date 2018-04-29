@@ -34,10 +34,17 @@ public class Fighter : Player
         {
             StopCoroutine("runCancelDelay");
         }
-
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            if(playerAction == playerState.idle || playerAction == playerState.walking || playerAction == playerState.running)
+            {
+            anim.Play("Fighter_block");
+            playerAction = playerState.blocking;
+            }
+        }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if (playerAction != playerState.jumping && playerAction != playerState.jumpAttacking)
+            if (playerAction != playerState.jumping && playerAction != playerState.jumpAttacking && playerAction != playerState.blocking && playerAction != playerState.attacking)
             {
                 if (numbOfJumps < 5)
                 {
@@ -84,7 +91,7 @@ public class Fighter : Player
             }
             else
             {
-                if (playerAction != playerState.attacking)
+                if (playerAction != playerState.attacking && playerAction != playerState.blocking)
                 {
                     if (isRunning == true)
                     {
@@ -120,7 +127,7 @@ public class Fighter : Player
             }
             else
             {
-                if (playerAction != playerState.attacking)
+                if (playerAction != playerState.attacking && playerAction != playerState.blocking)
                 {
                     if (isRunning == true)
                     {
@@ -140,6 +147,21 @@ public class Fighter : Player
             }
             comboChainNumber = 0;
         }
+        if(Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            if(playerAction == playerState.idle || playerAction == playerState.walking)
+            {
+            if(echipDeployable == true)
+            {
+                playerAction = playerState.attacking;
+                anim.Play("Fighter_EChip1");
+            }
+            else
+            {
+                startEchipDelay();
+            }
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.V)) //V ATTACK IF IN AIR
         {
@@ -148,9 +170,9 @@ public class Fighter : Player
                 anim.Play("Fighter_jumpAtk1");
                 playerAction = playerState.jumpAttacking;
                 if (sr.flipX == false)
-                    performJumpAttackDamage(1); // Does not change in mid air
+                    performJumpAttackDamage(1, Vector2.zero, 'H'); // Does not change in mid air
                 else
-                    performJumpAttackDamage(0);
+                    performJumpAttackDamage(0, Vector2.zero, 'H');
             }
 
         }
@@ -160,17 +182,23 @@ public class Fighter : Player
             {
                 anim.Play("Fighter_jumpAtk2");
                 playerAction = playerState.jumpAttacking;
-                if (sr.flipX == false)
-                    performJumpAttackDamage(1);
-                else
-                    performJumpAttackDamage(0);
+                if (sr.flipX == false){
+                    var hitDir = (2f * Vector2.right) + (-2f *Vector2.up);
+                    attackMove(hitDir);
+                    performJumpAttackDamage(1, Vector3.zero, 'D');
+                }
+                else{
+                    var hitDir = (-2f * Vector2.right) + (-2f *Vector2.up);
+                    attackMove(hitDir);
+                    performJumpAttackDamage(0, Vector3.zero, 'D');
+                }
             }
 
         }
 
         else if (Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.RightArrow))
         {
-            if (playerAction != playerState.jumping && playerAction != playerState.sliding && playerAction != playerState.jumpAttacking)
+            if (playerAction != playerState.jumping && playerAction != playerState.sliding && playerAction != playerState.jumpAttacking && playerAction != playerState.blocking && playerAction != playerState.attacking)
             {
                 anim.SetBool("WalkTrigger", false);
                 anim.SetBool("RunTrigger", false);
@@ -182,6 +210,13 @@ public class Fighter : Player
                     StartCoroutine("runCancelDelay");
                 }
             }
+        }
+        if(Input.GetKeyUp(KeyCode.C)){
+           if(playerAction == playerState.blocking)
+           {
+            anim.Play("Figher_idle");
+           playerAction = playerState.idle;
+           }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -215,7 +250,7 @@ public class Fighter : Player
             }
         }
 
-        if (playerAction == playerState.jumping || playerAction == playerState.sliding || playerAction == playerState.jumpAttacking)
+        if (playerAction == playerState.jumping || playerAction == playerState.sliding || playerAction == playerState.jumpAttacking || playerAction == playerState.blocking)
         {
             return;
         }
@@ -251,11 +286,11 @@ public class Fighter : Player
                         playerAction = playerState.attacking;
                         isRunning = false;
                         if (sr.flipX == false){
-                            setTriggerForAttack(1, Vector3.right, 'H');
+                            setTriggerForAttack(1, Vector3.right + Vector3.up, 'H');
                             attackMove(Vector2.right);
                         }
                         else{
-                            setTriggerForAttack(0, -Vector3.right, 'H');
+                            setTriggerForAttack(0, -Vector3.right + Vector3.up, 'H');
                             attackMove(-Vector2.right);
                         }
 
@@ -317,11 +352,13 @@ public class Fighter : Player
                         playerAction = playerState.attacking;
                         isRunning = false;
                         if (sr.flipX == false){
-                            setTriggerForAttack(1, Vector3.right, 'J');
+                            var hitDir = Vector3.right + (Vector3.up * 4f);
+                            setTriggerForAttack(1, hitDir, 'J');
                             attackMove(Vector2.right);
                         }
                         else{
-                            setTriggerForAttack(0, -Vector3.right, 'J');
+                            var hitDir = -Vector3.right + (Vector3.up * 4f);
+                            setTriggerForAttack(0, hitDir, 'J');
                             attackMove(-Vector2.right);
                         }
                     }
@@ -357,6 +394,23 @@ public class Fighter : Player
                     setTriggerForAttack(0, -Vector3.right, 'G');
                     attackMove(-Vector2.right);
                 }
+            }
+        }
+        else if(Input.GetKeyDown(KeyCode.Z))
+        {
+            if(playerAction == playerState.idle || playerAction == playerState.walking)
+            {
+                 anim.Play("Fighter_special1");
+                        playerAction = playerState.attacking;
+                        isRunning = false;
+                        if (sr.flipX == false){
+                            setTriggerForAttack(1, Vector3.right, 'C');
+                            attackMove(Vector2.right);
+                        }
+                        else{
+                            setTriggerForAttack(0, -Vector3.right, 'C');
+                            attackMove(-Vector2.right);
+                        }
             }
         }
          // Debug.DrawRay(transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f)), -Vector3.up * 0.18f, Color.red);
@@ -407,6 +461,7 @@ public class Fighter : Player
                 prevState = playerState.idle;
             }
             numbOfJumps = 0;
+            specialCombo = 0;
             stopJumpAttack();
 
         }

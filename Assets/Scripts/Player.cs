@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     protected Animator anim;
     protected SpriteRenderer sr;
 
-    protected enum playerState { idle, running, rolling, jumping, walking, sliding, attacking, jumpAttacking, hurting }
+    protected enum playerState { idle, running, rolling, jumping, walking, sliding, attacking, jumpAttacking, hurting, blocking }
     protected playerState playerAction;
     public TriggerCheck[] triggerChecks;
 
@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     float defaultSpeed;
     float dashDuration = 0.2f;
-    protected bool leftDash, rightDash, isRunning;
+    protected bool leftDash, rightDash, isRunning, echipDeployable;
     protected int numbOfJumps;
     protected bool canRollAgain = true;
     protected bool comboDelay = false;
@@ -181,6 +181,49 @@ public class Player : MonoBehaviour
         pushDir = push;
         hurtType = hurtT;
     }
+
+    protected int specialCombo = 0;
+
+    public void specialAttackCombo(){
+        if(specialCombo == 0){
+            if(sr.flipX == true){
+                var hitDir = (Vector3.up * 4f) + (-Vector3.right * 1.5f); 
+                attackMove(-Vector3.right);
+                setTriggerForAttack(0, hitDir, 'N');
+                applyDamageToTrigger();
+            }else{
+                var hitDir = (Vector3.up * 4f) + (Vector3.right * 1.5f); 
+                setTriggerForAttack(1, hitDir, 'N');
+                attackMove(Vector3.right);
+                applyDamageToTrigger();
+            }
+            specialCombo++;
+        }else if(specialCombo == 1){
+            playerAction = playerState.rolling;
+            if(sr.flipX == true){
+
+            }else{
+                
+            }
+            specialCombo++;
+        }else if(specialCombo == 2){
+            playerAction = playerState.attacking;
+            rb.velocity = Vector3.zero;
+            if(sr.flipX == true){
+                var hitDir = (Vector3.up * 4f) + (-Vector3.right * 1.5f); 
+                attackMove(-Vector3.right);
+                setTriggerForAttack(0, hitDir, 'O');
+                applyDamageToTrigger();
+            }else{
+                var hitDir = (Vector3.up * 4f) + (Vector3.right * 1.5f);
+                setTriggerForAttack(1, hitDir, 'O');
+                attackMove(Vector3.right);
+                applyDamageToTrigger();
+            }
+            specialCombo = 0;
+        }
+
+    }
     public bool applyDamageToTrigger()
     {
         //0 = left
@@ -200,15 +243,23 @@ public class Player : MonoBehaviour
             case 0:
                 if (triggerChecks[0].enemyInside == true)
                 {
+                    if(triggerChecks[0].enemyObject.GetComponent<Enemy>().canBeHurt == true)
+                    {
                     triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
+                    triggerChecks[0].enemyObject.GetComponent<SpriteRenderer>().flipX = false;
                     return true;
+                    }
                 }
                 break;
             case 1:
                 if (triggerChecks[1].enemyInside == true)
                 {
+                    if(triggerChecks[1].enemyObject.GetComponent<Enemy>().canBeHurt == true)
+                    {
                     triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
+                    triggerChecks[1].enemyObject.GetComponent<SpriteRenderer>().flipX = true;
                     return true;
+                    }
                 }
                 break;
             case 2:
@@ -227,9 +278,11 @@ public class Player : MonoBehaviour
         return false;
 
     }
-    public void performJumpAttackDamage(int x)
+    public void performJumpAttackDamage(int x, Vector2 push, char hurtT)
     {
         triggerToCheck = x;
+        pushDir = push;
+        hurtType = hurtT;
         StartCoroutine("checkJumpAttacks");
     }
 
@@ -269,15 +322,17 @@ public class Player : MonoBehaviour
     }
     IEnumerator checkJumpAttacks()
     {
-        bool check = true;
-        while (check)
+        var time = 0f; 
+        while (time < 0.3f)
         {
             if (applyDamageToTrigger())
             {
-                check = false;
+                time = 0.3f;
             }
+            time += Time.deltaTime;
             yield return null;
         }
+        playerAction = playerState.jumping;
     }
     IEnumerator resetComboChain()
     {
@@ -320,6 +375,11 @@ public class Player : MonoBehaviour
         StartCoroutine("rollDelay");
     }
 
+    protected void startEchipDelay(){
+        echipDeployable = true;
+        StartCoroutine("echipDelayer");
+    }
+
     protected IEnumerator rollDelay()
     {
         yield return new WaitForSeconds(2);
@@ -337,6 +397,10 @@ public class Player : MonoBehaviour
         {
             rightDash = false;
         }
+    }
+    IEnumerator echipDelayer(){
+        yield return new WaitForSeconds(0.5f);
+        echipDeployable = false;
     }
 
 }

@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour {
     public float health;
     public HealthBarHandler healthHandler;
     Animator anim;
+    bool flyingHurt = false;
+    public bool canBeHurt = true;
 
     private void Start()
     {
@@ -25,20 +27,45 @@ public class Enemy : MonoBehaviour {
             anim.Play("Fighter_hurtC");
                 break;
             case 'J':
+            flyingHurt = true;
             anim.Play("Fighter_hurtJ");
                 break;
             case 'G':
+            canBeHurt = false;
             anim.Play("Fighter_hurtG");
                 break;
-            case 'K':
+            case 'H':
+            canBeHurt = false;
+            flyingHurt = true;
+            anim.Play("Fighter_hurtH");
+                break;
+            case 'D':
+            anim.Play("Fighter_hurtD");
+                break;
+            case 'N':
+            flyingHurt = true;
+            anim.Play("Fighter_hurtN");
                 break;
             case 'O':
-                break;
-            case 'F':
-                break;
-            case 'S':
+            flyingHurt = true;
+            anim.Play("Fighter_hurtO");
                 break;
         }
         GetComponent<Rigidbody2D>().AddForce(pushDir, ForceMode2D.Impulse);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.collider.gameObject.layer == 8){
+        if(flyingHurt == true){
+            canBeHurt = false;
+            anim.Play("Fighter_hurtFloor");
+            flyingHurt = false;
+        }
+        }
+    }
+
+    public void canNowBeHurt(){
+        canBeHurt = true;
     }
 }
