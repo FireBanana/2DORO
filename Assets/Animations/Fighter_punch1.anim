@@ -89,7 +89,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.4
-    functionName: completeAttack
+    functionName: checkComboStack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

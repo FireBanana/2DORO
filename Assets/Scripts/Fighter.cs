@@ -30,16 +30,16 @@ public class Fighter : Player
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             StopCoroutine("runCancelDelay");
         }
-        if(Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C))
         {
-            if(playerAction == playerState.idle || playerAction == playerState.walking || playerAction == playerState.running)
+            if (playerAction == playerState.idle || playerAction == playerState.walking || playerAction == playerState.running)
             {
-            anim.Play("Fighter_block");
-            playerAction = playerState.blocking;
+                anim.Play("Fighter_block");
+                playerAction = playerState.blocking;
             }
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -85,7 +85,8 @@ public class Fighter : Player
                     moveSlideJumpLeft();
                     sr.flipX = true;
                 }
-                else{
+                else
+                {
                     moveLeftJump();
                 }
             }
@@ -109,7 +110,8 @@ public class Fighter : Player
                     }
                 }
             }
-            comboChainNumber = 0;
+            if (combo1Stack.Count == 0 && combo2Stack.Count == 0)
+                comboChainNumber = 0;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
@@ -145,21 +147,22 @@ public class Fighter : Player
                     }
                 }
             }
-            comboChainNumber = 0;
+            if (combo1Stack.Count == 0 && combo2Stack.Count == 0)
+                comboChainNumber = 0;
         }
-        if(Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if(playerAction == playerState.idle || playerAction == playerState.walking)
+            if (playerAction == playerState.idle || playerAction == playerState.walking)
             {
-            if(echipDeployable == true)
-            {
-                playerAction = playerState.attacking;
-                anim.Play("Fighter_EChip1");
-            }
-            else
-            {
-                startEchipDelay();
-            }
+                if (echipDeployable == true)
+                {
+                    playerAction = playerState.attacking;
+                    anim.Play("Fighter_EChip1");
+                }
+                else
+                {
+                    startEchipDelay();
+                }
             }
         }
 
@@ -182,13 +185,15 @@ public class Fighter : Player
             {
                 anim.Play("Fighter_jumpAtk2");
                 playerAction = playerState.jumpAttacking;
-                if (sr.flipX == false){
-                    var hitDir = (2f * Vector2.right) + (-2f *Vector2.up);
+                if (sr.flipX == false)
+                {
+                    var hitDir = (2f * Vector2.right) + (-2f * Vector2.up);
                     attackMove(hitDir);
                     performJumpAttackDamage(1, Vector3.zero, 'D');
                 }
-                else{
-                    var hitDir = (-2f * Vector2.right) + (-2f *Vector2.up);
+                else
+                {
+                    var hitDir = (-2f * Vector2.right) + (-2f * Vector2.up);
                     attackMove(hitDir);
                     performJumpAttackDamage(0, Vector3.zero, 'D');
                 }
@@ -203,20 +208,24 @@ public class Fighter : Player
                 anim.SetBool("WalkTrigger", false);
                 anim.SetBool("RunTrigger", false);
                 playerAction = playerState.idle;
-                
-                if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)){
+
+                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+                {
                     StopCoroutine("runCancelDelay");
-                }else{
+                }
+                else
+                {
                     StartCoroutine("runCancelDelay");
                 }
             }
         }
-        if(Input.GetKeyUp(KeyCode.C)){
-           if(playerAction == playerState.blocking)
-           {
-            anim.Play("Figher_idle");
-           playerAction = playerState.idle;
-           }
+        if (Input.GetKeyUp(KeyCode.C))
+        {
+            if (playerAction == playerState.blocking)
+            {
+                anim.Play("Figher_idle");
+                playerAction = playerState.idle;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -285,12 +294,14 @@ public class Fighter : Player
                         anim.Play("Fighter_kick1");
                         playerAction = playerState.attacking;
                         isRunning = false;
-                        if (sr.flipX == false){
-                            setTriggerForAttack(1, Vector3.right + Vector3.up, 'H');
+                        if (sr.flipX == false)
+                        {
+                            setTriggerForAttack(1, Vector3.right + Vector3.up, 'H', "kick1");
                             attackMove(Vector2.right);
                         }
-                        else{
-                            setTriggerForAttack(0, -Vector3.right + Vector3.up, 'H');
+                        else
+                        {
+                            setTriggerForAttack(0, -Vector3.right + Vector3.up, 'H', "kick1");
                             attackMove(-Vector2.right);
                         }
 
@@ -300,21 +311,25 @@ public class Fighter : Player
                         anim.Play("Fighter_punch1");
                         playerAction = playerState.attacking;
                         isRunning = false;
-                        if (sr.flipX == false){
-                            if(comboChainNumber == 1){
-                            setTriggerForAttack(1, Vector3.right, 'B');
-                            attackMove(Vector2.right);
+                        if (sr.flipX == false)
+                        {
+                            if (comboChainNumber == 1)
+                            {
+                                setTriggerForAttack(1, Vector3.right, 'B', "punch1");
+                                attackMove(Vector2.right);
                             }
                             else
-                            setTriggerForAttack(1, Vector3.zero, 'B');
+                                setTriggerForAttack(1, Vector3.zero, 'B', "punch1");
                         }
-                        else{
-                         if(comboChainNumber == 1){
-                            setTriggerForAttack(0, Vector3.right, 'B');
-                            attackMove(-Vector2.right);
-                         }
+                        else
+                        {
+                            if (comboChainNumber == 1)
+                            {
+                                setTriggerForAttack(0, Vector3.right, 'B', "punch1");
+                                attackMove(-Vector2.right);
+                            }
                             else
-                            setTriggerForAttack(0, Vector3.zero, 'B');
+                                setTriggerForAttack(0, Vector3.zero, 'B', "punch1");
                         }
                     }
                     incrementComboChain();
@@ -327,14 +342,21 @@ public class Fighter : Player
                 anim.Play("Fighter_dashPunch");
                 playerAction = playerState.attacking;
                 isRunning = false;
-                if (sr.flipX == false){
-                    setTriggerForAttack(1, Vector3.right, 'H');
+                if (sr.flipX == false)
+                {
+                    setTriggerForAttack(1, Vector3.right, 'H', "dashpunch");
                     attackMove(Vector2.right);
                 }
-                else{
-                    setTriggerForAttack(0, Vector3.right, 'H');
+                else
+                {
+                    setTriggerForAttack(0, Vector3.right, 'H', "dashpunch");
                     attackMove(-Vector2.right);
                 }
+            }
+            else if (playerAction == playerState.attacking)
+            {
+                stackIDToCheck = 1;
+                addToComboStack(1);
             }
 
         }
@@ -351,14 +373,16 @@ public class Fighter : Player
                         anim.Play("Fighter_kick3");
                         playerAction = playerState.attacking;
                         isRunning = false;
-                        if (sr.flipX == false){
+                        if (sr.flipX == false)
+                        {
                             var hitDir = Vector3.right + (Vector3.up * 4f);
-                            setTriggerForAttack(1, hitDir, 'J');
+                            setTriggerForAttack(1, hitDir, 'J', "kick3");
                             attackMove(Vector2.right);
                         }
-                        else{
+                        else
+                        {
                             var hitDir = -Vector3.right + (Vector3.up * 4f);
-                            setTriggerForAttack(0, hitDir, 'J');
+                            setTriggerForAttack(0, hitDir, 'J', "kick3");
                             attackMove(-Vector2.right);
                         }
                     }
@@ -367,12 +391,14 @@ public class Fighter : Player
                         anim.Play("Fighter_punch1");
                         playerAction = playerState.attacking;
                         isRunning = false;
-                        if (sr.flipX == false){
-                            setTriggerForAttack(1, Vector3.right, 'C');
+                        if (sr.flipX == false)
+                        {
+                            setTriggerForAttack(1, Vector3.right, 'C', "punch1");
                             attackMove(Vector2.right);
                         }
-                        else{
-                            setTriggerForAttack(0, -Vector3.right, 'C');
+                        else
+                        {
+                            setTriggerForAttack(0, -Vector3.right, 'C', "punch1");
                             attackMove(-Vector2.right);
                         }
                     }
@@ -386,34 +412,43 @@ public class Fighter : Player
                 anim.Play("Fighter_dashKick");
                 playerAction = playerState.attacking;
                 isRunning = false;
-                if (sr.flipX == false){
-                    setTriggerForAttack(1, Vector3.right, 'G');
+                if (sr.flipX == false)
+                {
+                    setTriggerForAttack(1, Vector3.right, 'G', "dashkick");
                     attackMove(Vector2.right);
                 }
-                else{
-                    setTriggerForAttack(0, -Vector3.right, 'G');
+                else
+                {
+                    setTriggerForAttack(0, -Vector3.right, 'G', "dashkick");
+                    attackMove(-Vector2.right);
+                }
+            }
+            else if (playerAction == playerState.attacking)
+            {
+                stackIDToCheck = 2;
+                addToComboStack(2);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (playerAction == playerState.idle || playerAction == playerState.walking)
+            {
+                anim.Play("Fighter_special1");
+                playerAction = playerState.attacking;
+                isRunning = false;
+                if (sr.flipX == false)
+                {
+                    setTriggerForAttack(1, Vector3.right, 'C', "special");
+                    attackMove(Vector2.right);
+                }
+                else
+                {
+                    setTriggerForAttack(0, -Vector3.right, 'C', "special");
                     attackMove(-Vector2.right);
                 }
             }
         }
-        else if(Input.GetKeyDown(KeyCode.Z))
-        {
-            if(playerAction == playerState.idle || playerAction == playerState.walking)
-            {
-                 anim.Play("Fighter_special1");
-                        playerAction = playerState.attacking;
-                        isRunning = false;
-                        if (sr.flipX == false){
-                            setTriggerForAttack(1, Vector3.right, 'C');
-                            attackMove(Vector2.right);
-                        }
-                        else{
-                            setTriggerForAttack(0, -Vector3.right, 'C');
-                            attackMove(-Vector2.right);
-                        }
-            }
-        }
-         // Debug.DrawRay(transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f)), -Vector3.up * 0.18f, Color.red);
+        // Debug.DrawRay(transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f)), -Vector3.up * 0.18f, Color.red);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -422,15 +457,17 @@ public class Fighter : Player
         touchingPos2 = transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
         if (collision.collider.gameObject.layer == 9)
         {
-            if(playerAction == playerState.rolling){
-            RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 0.18f, 1 << 8);
-            RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 0.18f, 1 << 8);
-                if(hit.collider == null && hit2.collider == null){
-                StopCoroutine("waitForRoll");
-                playerAction = playerState.sliding;
-                anim.Play("Fighter_wallSlide");
-                prevState = playerState.sliding;
-                StartCoroutine("rollDelay");
+            if (playerAction == playerState.rolling)
+            {
+                RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 0.18f, 1 << 8);
+                RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 0.18f, 1 << 8);
+                if (hit.collider == null && hit2.collider == null)
+                {
+                    StopCoroutine("waitForRoll");
+                    playerAction = playerState.sliding;
+                    anim.Play("Fighter_wallSlide");
+                    prevState = playerState.sliding;
+                    StartCoroutine("rollDelay");
                 }
             }
             if (playerAction == playerState.jumping)

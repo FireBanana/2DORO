@@ -48,7 +48,8 @@ public class Player : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
     }
 
-    public void attackMove(Vector2 dir){
+    public void attackMove(Vector2 dir)
+    {
         rb.AddForce(dir, ForceMode2D.Impulse);
     }
     public void jump(float jumpPow)
@@ -152,6 +153,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+            combo1Stack.Clear();
             comboDelay = true; //used in fighter
             StartCoroutine("comboDelayer");
         }
@@ -166,6 +168,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+            combo2Stack.Clear();
             comboDelay = true; //used in fighter
             StartCoroutine("comboDelayer");
         }
@@ -174,49 +177,66 @@ public class Player : MonoBehaviour
     int triggerToCheck;
     Vector3 pushDir;
     char hurtType;
-    
-    public void setTriggerForAttack(int x, Vector3 push, char hurtT)
+    string hitAttack;
+
+    public void setTriggerForAttack(int x, Vector3 push, char hurtT, string attkName)
     {
         triggerToCheck = x;
         pushDir = push;
         hurtType = hurtT;
+        hitAttack = attkName;
     }
 
     protected int specialCombo = 0;
 
-    public void specialAttackCombo(){
-        if(specialCombo == 0){
-            if(sr.flipX == true){
-                var hitDir = (Vector3.up * 4f) + (-Vector3.right * 1.5f); 
+    public void specialAttackCombo()
+    {
+        if (specialCombo == 0)
+        {
+            if (sr.flipX == true)
+            {
+                var hitDir = (Vector3.up * 4f) + (-Vector3.right * 1.5f);
                 attackMove(-Vector3.right);
-                setTriggerForAttack(0, hitDir, 'N');
+                setTriggerForAttack(0, hitDir, 'N', "special1");
                 applyDamageToTrigger();
-            }else{
-                var hitDir = (Vector3.up * 4f) + (Vector3.right * 1.5f); 
-                setTriggerForAttack(1, hitDir, 'N');
+            }
+            else
+            {
+                var hitDir = (Vector3.up * 4f) + (Vector3.right * 1.5f);
+                setTriggerForAttack(1, hitDir, 'N', "special1");
                 attackMove(Vector3.right);
                 applyDamageToTrigger();
             }
             specialCombo++;
-        }else if(specialCombo == 1){
+        }
+        else if (specialCombo == 1)
+        {
             playerAction = playerState.rolling;
-            if(sr.flipX == true){
+            if (sr.flipX == true)
+            {
 
-            }else{
-                
+            }
+            else
+            {
+
             }
             specialCombo++;
-        }else if(specialCombo == 2){
+        }
+        else if (specialCombo == 2)
+        {
             playerAction = playerState.attacking;
             rb.velocity = Vector3.zero;
-            if(sr.flipX == true){
-                var hitDir = (Vector3.up * 4f) + (-Vector3.right * 1.5f); 
+            if (sr.flipX == true)
+            {
+                var hitDir = (Vector3.up * 4f) + (-Vector3.right * 1.5f);
                 attackMove(-Vector3.right);
-                setTriggerForAttack(0, hitDir, 'O');
+                setTriggerForAttack(0, hitDir, 'O', "special2");
                 applyDamageToTrigger();
-            }else{
+            }
+            else
+            {
                 var hitDir = (Vector3.up * 4f) + (Vector3.right * 1.5f);
-                setTriggerForAttack(1, hitDir, 'O');
+                setTriggerForAttack(1, hitDir, 'O', "special2");
                 attackMove(Vector3.right);
                 applyDamageToTrigger();
             }
@@ -243,22 +263,24 @@ public class Player : MonoBehaviour
             case 0:
                 if (triggerChecks[0].enemyInside == true)
                 {
-                    if(triggerChecks[0].enemyObject.GetComponent<Enemy>().canBeHurt == true)
+                    if (triggerChecks[0].enemyObject.GetComponent<Enemy>().canBeHurt == true)
                     {
-                    triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
-                    triggerChecks[0].enemyObject.GetComponent<SpriteRenderer>().flipX = false;
-                    return true;
+                        triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
+                        triggerChecks[0].enemyObject.GetComponent<SpriteRenderer>().flipX = false;
+                        createHitEffect(hitAttack);
+                        return true;
                     }
                 }
                 break;
             case 1:
                 if (triggerChecks[1].enemyInside == true)
                 {
-                    if(triggerChecks[1].enemyObject.GetComponent<Enemy>().canBeHurt == true)
+                    if (triggerChecks[1].enemyObject.GetComponent<Enemy>().canBeHurt == true)
                     {
-                    triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
-                    triggerChecks[1].enemyObject.GetComponent<SpriteRenderer>().flipX = true;
-                    return true;
+                        triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
+                        triggerChecks[1].enemyObject.GetComponent<SpriteRenderer>().flipX = true;
+                        createHitEffect(hitAttack);
+                        return true;
                     }
                 }
                 break;
@@ -322,11 +344,19 @@ public class Player : MonoBehaviour
     }
     IEnumerator checkJumpAttacks()
     {
-        var time = 0f; 
+        var time = 0f;
         while (time < 0.3f)
         {
             if (applyDamageToTrigger())
             {
+                if (hurtType == 'D')
+                {
+                    var dir = triggerChecks[triggerToCheck].enemyObject.transform.position - transform.position;
+                    dir.Normalize();
+                    rb.velocity = Vector3.zero;
+                    rb.AddForce(dir * -1f, ForceMode2D.Impulse);
+                    Debug.Log(dir);
+                }
                 time = 0.3f;
             }
             time += Time.deltaTime;
@@ -355,7 +385,186 @@ public class Player : MonoBehaviour
         rollAfterWait();
     }
 
-    public void rollAfterWait(){
+    protected Stack<bool> combo1Stack = new Stack<bool>();
+    protected Stack<bool> combo2Stack = new Stack<bool>();
+    public int stackIDToCheck;
+
+    public void addToComboStack(int stackID)
+    {
+        if (stackID == 1)
+        {
+            combo1Stack.Push(true);
+        }
+        else if (stackID == 2)
+        {
+            combo2Stack.Push(true);
+        }
+    }
+    public void checkComboStack() //Ends before last frame
+    {
+        if (stackIDToCheck == 1)
+        {
+            if (combo2Stack.Count > 0){
+                combo2Stack.Clear();
+                combo1Stack.Clear();
+            }
+            else
+            {
+                if (combo1Stack.Count > 0)
+                {
+                    combo1Stack.Pop();
+
+                    if (comboDelay == false)
+                    {
+                        anim.SetBool("WalkTrigger", false);
+                        anim.SetBool("RunTrigger", false);
+                        if (comboChainNumber == 2)
+                        {
+                            anim.Play("Fighter_kick1");
+                            playerAction = playerState.attacking;
+                            isRunning = false;
+                            if (sr.flipX == false)
+                            {
+                                setTriggerForAttack(1, Vector3.right + Vector3.up, 'H', "kick1");
+                                attackMove(Vector2.right);
+                            }
+                            else
+                            {
+                                setTriggerForAttack(0, -Vector3.right + Vector3.up, 'H', "kick1");
+                                attackMove(-Vector2.right);
+                            }
+
+                        }
+                        else
+                        {
+                            anim.Play("Fighter_punch1");
+                            playerAction = playerState.attacking;
+                            isRunning = false;
+                            if (sr.flipX == false)
+                            {
+                                if (comboChainNumber == 1)
+                                {
+                                    setTriggerForAttack(1, Vector3.right, 'B', "punch1");
+                                    attackMove(Vector2.right);
+                                }
+                                else
+                                    setTriggerForAttack(1, Vector3.zero, 'B', "punch1");
+                            }
+                            else
+                            {
+                                if (comboChainNumber == 1)
+                                {
+                                    setTriggerForAttack(0, Vector3.right, 'B', "punch1");
+                                    attackMove(-Vector2.right);
+                                }
+                                else
+                                    setTriggerForAttack(0, Vector3.zero, 'B', "punch1");
+                            }
+                        }
+                        incrementComboChain();
+                    }
+                }
+            }
+        }
+        else if (stackIDToCheck == 2)
+        {
+            if (combo1Stack.Count > 0)
+            {
+                combo1Stack.Clear();
+                combo2Stack.Clear();
+            }
+            else
+            {
+                if (combo2Stack.Count > 0)
+                {
+                    combo2Stack.Pop();
+
+                    if (comboDelay == false)
+                    {
+                        anim.SetBool("WalkTrigger", false);
+                        anim.SetBool("RunTrigger", false);
+                        if (comboChainNumber2 == 1)
+                        {
+                            anim.Play("Fighter_kick3");
+                            playerAction = playerState.attacking;
+                            isRunning = false;
+                            if (sr.flipX == false)
+                            {
+                                var hitDir = Vector3.right + (Vector3.up * 4f);
+                                setTriggerForAttack(1, hitDir, 'J', "kick3");
+                                attackMove(Vector2.right);
+                            }
+                            else
+                            {
+                                var hitDir = -Vector3.right + (Vector3.up * 4f);
+                                setTriggerForAttack(0, hitDir, 'J', "kick3");
+                                attackMove(-Vector2.right);
+                            }
+                        }
+                        else
+                        {
+                            anim.Play("Fighter_punch1");
+                            playerAction = playerState.attacking;
+                            isRunning = false;
+                            if (sr.flipX == false)
+                            {
+                                setTriggerForAttack(1, Vector3.right, 'C', "punch1");
+                                attackMove(Vector2.right);
+                            }
+                            else
+                            {
+                                setTriggerForAttack(0, -Vector3.right, 'C', "punch1");
+                                attackMove(-Vector2.right);
+                            }
+                        }
+                        incrementComboChain2();
+                    }
+                }
+            }
+        }
+        if(combo1Stack.Count == 0 && combo2Stack.Count == 0)
+        completeAttack();
+    }
+    
+    public GameObject hitEffectObject;
+    public void createHitEffect(string attackName)
+    {
+    //  punch1 0.188 0.108
+    // dashkick 0.197 -0.115
+    // dashpunch 0.177 0.103
+    // jumpatk1 0.199 -0.055
+    // jumpatk2 0.11  -0.135
+    // kick1 0.186 0.025
+    // kick3 0.151 0.111
+    // special 0.093 0.226      0.141 0.144
+
+    switch(attackName){
+
+        case "punch1":
+        hitEffectObject.transform.localPosition = new Vector2(0.188f, 0.108f);
+        hitEffectObject.GetComponent<Animator>().Play("hitEffect");
+        break;
+        case "dashkick":
+        break;
+        case "dashpunch":
+        break;
+        case "jumpatk1":
+        break;
+        case "jumpatk2":
+        break;
+        case "kick1":
+        break;
+        case "kick3":
+        break;
+        case "special":
+        break;
+
+    }
+
+    }
+
+    public void rollAfterWait()
+    {
         speed = defaultSpeed;
         if (prevState == playerState.jumping)
             playerAction = playerState.jumping;
@@ -375,7 +584,8 @@ public class Player : MonoBehaviour
         StartCoroutine("rollDelay");
     }
 
-    protected void startEchipDelay(){
+    protected void startEchipDelay()
+    {
         echipDeployable = true;
         StartCoroutine("echipDelayer");
     }
@@ -398,7 +608,8 @@ public class Player : MonoBehaviour
             rightDash = false;
         }
     }
-    IEnumerator echipDelayer(){
+    IEnumerator echipDelayer()
+    {
         yield return new WaitForSeconds(0.5f);
         echipDeployable = false;
     }
