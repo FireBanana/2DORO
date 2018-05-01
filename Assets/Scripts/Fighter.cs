@@ -108,10 +108,11 @@ public class Fighter : Player
                         moveLeft();
                         anim.SetBool("WalkTrigger", true);
                     }
+                     if (combo1Stack.Count == 0 && combo2Stack.Count == 0)
+                comboChainNumber = 0;
                 }
             }
-            if (combo1Stack.Count == 0 && combo2Stack.Count == 0)
-                comboChainNumber = 0;
+           
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
@@ -145,10 +146,11 @@ public class Fighter : Player
                         moveRight();
                         anim.SetBool("WalkTrigger", true);
                     }
+                    if (combo1Stack.Count == 0 && combo2Stack.Count == 0)
+                comboChainNumber = 0;
                 }
             }
-            if (combo1Stack.Count == 0 && combo2Stack.Count == 0)
-                comboChainNumber = 0;
+            
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
@@ -284,7 +286,6 @@ public class Fighter : Player
         {
             if (playerAction != playerState.attacking && playerAction != playerState.running)
             {
-                // Debug.Log(comboChainNumber);
                 if (comboDelay == false)
                 {
                     anim.SetBool("WalkTrigger", false);

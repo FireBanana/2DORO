@@ -198,14 +198,23 @@ public class Player : MonoBehaviour
                 var hitDir = (Vector3.up * 4f) + (-Vector3.right * 1.5f);
                 attackMove(-Vector3.right);
                 setTriggerForAttack(0, hitDir, 'N', "special1");
-                applyDamageToTrigger();
+                if (applyDamageToTrigger())
+                {
+                    var newObj = Instantiate(hitEffectObject);
+                    newObj.transform.position = transform.localPosition + new Vector3(-0.052f, 0.279f);
+                    newObj.GetComponent<SpriteRenderer>().flipX = true;
+                }
             }
             else
             {
                 var hitDir = (Vector3.up * 4f) + (Vector3.right * 1.5f);
                 setTriggerForAttack(1, hitDir, 'N', "special1");
                 attackMove(Vector3.right);
-                applyDamageToTrigger();
+                if(applyDamageToTrigger())
+                {
+                    var newObj = Instantiate(hitEffectObject);
+                    newObj.transform.position = transform.localPosition + new Vector3(0.052f, 0.279f);
+                }
             }
             specialCombo++;
         }
@@ -231,14 +240,23 @@ public class Player : MonoBehaviour
                 var hitDir = (Vector3.up * 4f) + (-Vector3.right * 1.5f);
                 attackMove(-Vector3.right);
                 setTriggerForAttack(0, hitDir, 'O', "special2");
-                applyDamageToTrigger();
+                if(applyDamageToTrigger())
+                {
+                    var newObj = Instantiate(hitEffectObject);
+                    newObj.transform.position = transform.localPosition + new Vector3(-0.157f, 0.157f);
+                    newObj.GetComponent<SpriteRenderer>().flipX = true;
+                }
             }
             else
             {
                 var hitDir = (Vector3.up * 4f) + (Vector3.right * 1.5f);
                 setTriggerForAttack(1, hitDir, 'O', "special2");
                 attackMove(Vector3.right);
-                applyDamageToTrigger();
+                if(applyDamageToTrigger())
+                {
+                    var newObj = Instantiate(hitEffectObject);
+                    newObj.transform.position = transform.localPosition + new Vector3(0.157f, 0.157f);
+                }
             }
             specialCombo = 0;
         }
@@ -391,175 +409,220 @@ public class Player : MonoBehaviour
 
     public void addToComboStack(int stackID)
     {
-        if (stackID == 1)
+        if (stackID == 1 && combo2Stack.Count == 0)
         {
             combo1Stack.Push(true);
         }
-        else if (stackID == 2)
+        else if (stackID == 2 && combo1Stack.Count == 0)
         {
             combo2Stack.Push(true);
         }
     }
     public void checkComboStack() //Ends before last frame
     {
-        if (stackIDToCheck == 1)
+        if (combo1Stack.Count == 0 && combo2Stack.Count == 0)
         {
-            if (combo2Stack.Count > 0){
-                combo2Stack.Clear();
-                combo1Stack.Clear();
-            }
-            else
+            completeAttack();
+        }
+        if (combo1Stack.Count > 0)
+        {
+            combo1Stack.Pop();
+            #region punches
+            if (comboDelay == false)
             {
-                if (combo1Stack.Count > 0)
+                anim.SetBool("WalkTrigger", false);
+                anim.SetBool("RunTrigger", false);
+                if (comboChainNumber == 2)
                 {
-                    combo1Stack.Pop();
-
-                    if (comboDelay == false)
+                    anim.Play("Fighter_kick1");
+                    playerAction = playerState.attacking;
+                    isRunning = false;
+                    if (sr.flipX == false)
                     {
-                        anim.SetBool("WalkTrigger", false);
-                        anim.SetBool("RunTrigger", false);
-                        if (comboChainNumber == 2)
-                        {
-                            anim.Play("Fighter_kick1");
-                            playerAction = playerState.attacking;
-                            isRunning = false;
-                            if (sr.flipX == false)
-                            {
-                                setTriggerForAttack(1, Vector3.right + Vector3.up, 'H', "kick1");
-                                attackMove(Vector2.right);
-                            }
-                            else
-                            {
-                                setTriggerForAttack(0, -Vector3.right + Vector3.up, 'H', "kick1");
-                                attackMove(-Vector2.right);
-                            }
+                        setTriggerForAttack(1, Vector3.right + Vector3.up, 'H', "kick1");
+                        attackMove(Vector2.right);
+                    }
+                    else
+                    {
+                        setTriggerForAttack(0, -Vector3.right + Vector3.up, 'H', "kick1");
+                        attackMove(-Vector2.right);
+                    }
 
+                }
+                else
+                {
+                    anim.Play("Fighter_punch1");
+                    playerAction = playerState.attacking;
+                    isRunning = false;
+                    if (sr.flipX == false)
+                    {
+                        if (comboChainNumber == 1)
+                        {
+                            setTriggerForAttack(1, Vector3.right, 'B', "punch1");
+                            attackMove(Vector2.right);
                         }
                         else
-                        {
-                            anim.Play("Fighter_punch1");
-                            playerAction = playerState.attacking;
-                            isRunning = false;
-                            if (sr.flipX == false)
-                            {
-                                if (comboChainNumber == 1)
-                                {
-                                    setTriggerForAttack(1, Vector3.right, 'B', "punch1");
-                                    attackMove(Vector2.right);
-                                }
-                                else
-                                    setTriggerForAttack(1, Vector3.zero, 'B', "punch1");
-                            }
-                            else
-                            {
-                                if (comboChainNumber == 1)
-                                {
-                                    setTriggerForAttack(0, Vector3.right, 'B', "punch1");
-                                    attackMove(-Vector2.right);
-                                }
-                                else
-                                    setTriggerForAttack(0, Vector3.zero, 'B', "punch1");
-                            }
-                        }
-                        incrementComboChain();
+                            setTriggerForAttack(1, Vector3.zero, 'B', "punch1");
                     }
-                }
-            }
-        }
-        else if (stackIDToCheck == 2)
-        {
-            if (combo1Stack.Count > 0)
-            {
-                combo1Stack.Clear();
-                combo2Stack.Clear();
-            }
-            else
-            {
-                if (combo2Stack.Count > 0)
-                {
-                    combo2Stack.Pop();
-
-                    if (comboDelay == false)
+                    else
                     {
-                        anim.SetBool("WalkTrigger", false);
-                        anim.SetBool("RunTrigger", false);
-                        if (comboChainNumber2 == 1)
+                        if (comboChainNumber == 1)
                         {
-                            anim.Play("Fighter_kick3");
-                            playerAction = playerState.attacking;
-                            isRunning = false;
-                            if (sr.flipX == false)
-                            {
-                                var hitDir = Vector3.right + (Vector3.up * 4f);
-                                setTriggerForAttack(1, hitDir, 'J', "kick3");
-                                attackMove(Vector2.right);
-                            }
-                            else
-                            {
-                                var hitDir = -Vector3.right + (Vector3.up * 4f);
-                                setTriggerForAttack(0, hitDir, 'J', "kick3");
-                                attackMove(-Vector2.right);
-                            }
+                            setTriggerForAttack(0, Vector3.right, 'B', "punch1");
+                            attackMove(-Vector2.right);
                         }
                         else
-                        {
-                            anim.Play("Fighter_punch1");
-                            playerAction = playerState.attacking;
-                            isRunning = false;
-                            if (sr.flipX == false)
-                            {
-                                setTriggerForAttack(1, Vector3.right, 'C', "punch1");
-                                attackMove(Vector2.right);
-                            }
-                            else
-                            {
-                                setTriggerForAttack(0, -Vector3.right, 'C', "punch1");
-                                attackMove(-Vector2.right);
-                            }
-                        }
-                        incrementComboChain2();
+                            setTriggerForAttack(0, Vector3.zero, 'B', "punch1");
                     }
                 }
+                incrementComboChain();
             }
+            #endregion
         }
-        if(combo1Stack.Count == 0 && combo2Stack.Count == 0)
-        completeAttack();
+        else if (combo2Stack.Count > 0)
+        {
+            combo2Stack.Pop();
+            #region punches
+            if (comboDelay == false)
+            {
+                anim.SetBool("WalkTrigger", false);
+                anim.SetBool("RunTrigger", false);
+                if (comboChainNumber2 == 1)
+                {
+                    anim.Play("Fighter_kick3");
+                    playerAction = playerState.attacking;
+                    isRunning = false;
+                    if (sr.flipX == false)
+                    {
+                        var hitDir = Vector3.right + (Vector3.up * 4f);
+                        setTriggerForAttack(1, hitDir, 'J', "kick3");
+                        attackMove(Vector2.right);
+                    }
+                    else
+                    {
+                        var hitDir = -Vector3.right + (Vector3.up * 4f);
+                        setTriggerForAttack(0, hitDir, 'J', "kick3");
+                        attackMove(-Vector2.right);
+                    }
+                }
+                else
+                {
+                    anim.Play("Fighter_punch1");
+                    playerAction = playerState.attacking;
+                    isRunning = false;
+                    if (sr.flipX == false)
+                    {
+                        setTriggerForAttack(1, Vector3.right, 'C', "punch1");
+                        attackMove(Vector2.right);
+                    }
+                    else
+                    {
+                        setTriggerForAttack(0, -Vector3.right, 'C', "punch1");
+                        attackMove(-Vector2.right);
+                    }
+                }
+                incrementComboChain2();
+            }
+            #endregion
+        }
     }
-    
+
     public GameObject hitEffectObject;
     public void createHitEffect(string attackName)
     {
-    //  punch1 0.188 0.108
-    // dashkick 0.197 -0.115
-    // dashpunch 0.177 0.103
-    // jumpatk1 0.199 -0.055
-    // jumpatk2 0.11  -0.135
-    // kick1 0.186 0.025
-    // kick3 0.151 0.111
-    // special 0.093 0.226      0.141 0.144
+        //  punch1 0.188 0.108
+        // dashkick 0.197 -0.115
+        // dashpunch 0.177 0.103
+        // jumpatk1 0.199 -0.055
+        // jumpatk2 0.11  -0.135
+        // kick1 0.186 0.025
+        // kick3 0.151 0.111
+        // special 0.093 0.226      0.141 0.144
 
-    switch(attackName){
+        switch (attackName)
+        {
 
-        case "punch1":
-        hitEffectObject.transform.localPosition = new Vector2(0.188f, 0.108f);
-        hitEffectObject.GetComponent<Animator>().Play("hitEffect");
-        break;
-        case "dashkick":
-        break;
-        case "dashpunch":
-        break;
-        case "jumpatk1":
-        break;
-        case "jumpatk2":
-        break;
-        case "kick1":
-        break;
-        case "kick3":
-        break;
-        case "special":
-        break;
+            case "punch1":
+                var newObj = Instantiate(hitEffectObject);
+                if (sr.flipX == false)
+                    newObj.transform.position = transform.localPosition + new Vector3(0.188f, 0.108f);
+                else
+                {
+                    newObj.transform.position = transform.localPosition + new Vector3(-0.188f, 0.108f);
+                    newObj.GetComponent<SpriteRenderer>().flipX = true;
+                }
+                break;
 
-    }
+            case "dashkick":
+                var newObj1 = Instantiate(hitEffectObject);
+                if (sr.flipX == false)
+                    newObj1.transform.position = transform.localPosition + new Vector3(0.197f, -0.115f);
+                else
+                {
+                    newObj1.transform.position = transform.localPosition + new Vector3(-0.197f, -0.115f);
+                    newObj1.GetComponent<SpriteRenderer>().flipX = true;
+                }
+                break;
+
+            case "dashpunch":
+                var newObj3 = Instantiate(hitEffectObject);
+                if (sr.flipX == false)
+                    newObj3.transform.position = transform.localPosition + new Vector3(0.177f, 0.103f);
+                else
+                {
+                    newObj3.transform.position = transform.localPosition + new Vector3(-0.177f, 0.103f);
+                    newObj3.GetComponent<SpriteRenderer>().flipX = true;
+                }
+                break;
+
+            case "jumpatk1":
+                var newObj4 = Instantiate(hitEffectObject);
+                if (sr.flipX == false)
+                    newObj4.transform.position = transform.localPosition + new Vector3(0.199f, -0.055f);
+                else
+                {
+                    newObj4.transform.position = transform.localPosition + new Vector3(-0.199f, -0.055f);
+                    newObj4.GetComponent<SpriteRenderer>().flipX = true;
+                }
+                break;
+
+            case "jumpatk2":
+                var newObj5 = Instantiate(hitEffectObject);
+                if (sr.flipX == false)
+                    newObj5.transform.position = transform.localPosition + new Vector3(0.11f, -0.135f);
+                else
+                {
+                    newObj5.transform.position = transform.localPosition + new Vector3(-0.11f, -0.135f);
+                    newObj5.GetComponent<SpriteRenderer>().flipX = true;
+                }
+                break;
+
+            case "kick1":
+                var newObj6 = Instantiate(hitEffectObject);
+                if (sr.flipX == false)
+                    newObj6.transform.position = transform.localPosition + new Vector3(0.186f, 0.025f);
+                else
+                {
+                    newObj6.transform.position = transform.localPosition + new Vector3(-0.186f, 0.025f);
+                    newObj6.GetComponent<SpriteRenderer>().flipX = true;
+                }
+                break;
+
+            case "kick3":
+                var newObj7 = Instantiate(hitEffectObject);
+                if (sr.flipX == false)
+                    newObj7.transform.position = transform.localPosition + new Vector3(0.151f, 0.111f);
+                else
+                {
+                    newObj7.transform.position = transform.localPosition + new Vector3(-0.151f, 0.111f);
+                    newObj7.GetComponent<SpriteRenderer>().flipX = true;
+                }
+                break;
+
+            case "special":
+                break;
+
+        }
 
     }
 
