@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 8
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -39,6 +39,7 @@ RenderSettings:
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -54,11 +55,10 @@ LightmapSettings:
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 9
+    serializedVersion: 10
     m_Resolution: 2
     m_BakeResolution: 40
-    m_TextureWidth: 1024
-    m_TextureHeight: 1024
+    m_AtlasSize: 1024
     m_AO: 0
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
@@ -214,11 +214,11 @@ RectTransform:
   m_Father: {fileID: 201059124}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -261, y: -148}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 10.999939, y: 58}
   m_SizeDelta: {x: 256, y: 38}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &92430770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -273,7 +273,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1247884663}
+      - m_Target: {fileID: 1719390440}
         m_MethodName: changeUsername
         m_Mode: 0
         m_Arguments:
@@ -457,11 +457,11 @@ RectTransform:
   m_Father: {fileID: 201059124}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -84.29999, y: -147.4}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 271.2, y: 62.59996}
   m_SizeDelta: {x: 89, y: 30}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &258632638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -501,7 +501,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1247884663}
+      - m_Target: {fileID: 1719390440}
         m_MethodName: authorizePlayer
         m_Mode: 1
         m_Arguments:
@@ -840,7 +840,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1247884662}
   - component: {fileID: 1247884661}
-  - component: {fileID: 1247884663}
   - component: {fileID: 1247884660}
   - component: {fileID: 1247884659}
   m_Layer: 0
@@ -913,17 +912,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1247884663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1247884658}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee6c6d8fab5ee38428af86fad2eaad37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1305940065
 GameObject:
   m_ObjectHideFlags: 0
@@ -956,11 +944,11 @@ RectTransform:
   m_Father: {fileID: 201059124}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -84.3, y: -189.7}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 271.2, y: 20.299942}
   m_SizeDelta: {x: 89, y: 30}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1305940067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1000,7 +988,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1247884663}
+      - m_Target: {fileID: 1719390440}
         m_MethodName: createNewPlayer
         m_Mode: 1
         m_Arguments:
@@ -1081,7 +1069,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 11, y: 17.18686}
+  m_AnchoredPosition: {x: 10.999939, y: 17.186844}
   m_SizeDelta: {x: 256, y: 38}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1424581756
@@ -1138,7 +1126,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1247884663}
+      - m_Target: {fileID: 1719390440}
         m_MethodName: changePassword
         m_Mode: 0
         m_Arguments:
@@ -1490,6 +1478,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1719390439}
   - component: {fileID: 1719390438}
+  - component: {fileID: 1719390440}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -1522,3 +1511,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1719390440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1719390437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee6c6d8fab5ee38428af86fad2eaad37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chatmanager: {fileID: 0}

@@ -1,25 +1,56 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChatManager : MonoBehaviour
 {
 
-    // Use this for initialization
-    void Start()
+    Queue<GameObject> messageQueue = new Queue<GameObject>();
+    public GameObject chatTemplate;
+    public GameObject chatContainer;
+    public PlayerAuthenticator playerAuth;
+    public int maxMessages = 6;
+    string writtenMessage;
+    public string username;
+
+    public void updateMessage(string mssg)
     {
-        GameSparks.Api.Messages.ScriptMessage.Listener = message =>
-        {
-
-            if (!message.HasErrors)
-            {
-                Debug.Log(message.BaseData.JSON);
-            }
-			else
-			Debug.Log(message.Errors);
-
-        };
+        writtenMessage = mssg;
     }
 
-    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            //addChatMessage(username, writtenMessage);
+            playerAuth.sendMessageToAll(username, writtenMessage);
+        }
+    }
+
+    public void addChatMessage(string name, string message)
+    {
+
+        var newMessage = Instantiate(chatTemplate);
+
+        newMessage.transform.SetParent(chatContainer.transform, worldPositionStays: false);
+        newMessage.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
+        newMessage.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0);
+
+        foreach (GameObject g in messageQueue)
+        {
+            g.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, 33);
+        }
+
+        messageQueue.Enqueue(newMessage);
+
+        newMessage.GetComponent<Text>().text = name + ": " + message;
+
+        if (messageQueue.Count >= maxMessages)
+        {
+            var lastMessage = messageQueue.Dequeue();
+            Destroy(lastMessage);
+        }
+
+    }
 }

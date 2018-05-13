@@ -13,8 +13,11 @@ public class PlayerAuthenticator : MonoBehaviour
     bool gameSparksAvailable;
     string username, password;
     string matchID = null;
+    public ChatManager chatmanager;
+
     void Start()
     {
+        SceneManager.activeSceneChanged += setListenersOnSceneChange;
         Application.runInBackground = true;
         GameSparks.Core.GS.GameSparksAvailable = available =>
         {
@@ -103,12 +106,22 @@ public class PlayerAuthenticator : MonoBehaviour
             if (!response.HasErrors)
             {
                 Debug.Log("Matchmaking request succedful");
-                matchUpdatedListener();
-                startChatListener();
+                SceneManager.LoadScene("FightingRoom");
+                //
             }
             else
                 Debug.LogError(response.Errors.JSON);
         });
+    }
+
+    public void setListenersOnSceneChange(Scene old, Scene news)
+    {
+        if (chatmanager == null)
+            chatmanager = GameObject.Find("ChatInput").GetComponent<ChatManager>();
+        chatmanager.username = username;
+        chatmanager.playerAuth = this;
+        matchUpdatedListener();
+        startChatListener();
     }
 
     void matchUpdatedListener()
@@ -126,7 +139,10 @@ public class PlayerAuthenticator : MonoBehaviour
 
             if (!message.HasErrors)
             {
-                Debug.Log(message.Data.GetString("Message"));
+                Debug.Log("got message");
+                var mssg = message.Data.GetString("Message");
+                var dname = message.Data.GetString("displayName");
+                chatmanager.addChatMessage(dname, mssg);
             }
             else
                 Debug.Log(message.Errors);
@@ -134,14 +150,15 @@ public class PlayerAuthenticator : MonoBehaviour
         };
     }
 
-    public void sendMessageToAll()
+    public void sendMessageToAll(string leName, string leMessage)
     {
+        Debug.Log(matchID);
         if (matchID == null)
             return;
 
         new GameSparks.Api.Requests.LogEventRequest()
          .SetEventKey("Chat_ToAll")
-         .SetEventAttribute("Message", "lolgay")
+         .SetEventAttribute(leName, leMessage)
          .SetEventAttribute("MatchID", matchID)
          .Send(response =>
          {
