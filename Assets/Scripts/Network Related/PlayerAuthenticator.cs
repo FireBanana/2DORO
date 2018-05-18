@@ -97,6 +97,7 @@ public class PlayerAuthenticator : MonoBehaviour
 
     public void joinLobby()
     {
+        matchFoundListener();
         new GameSparks.Api.Requests.MatchmakingRequest()
         .SetMatchShortCode("LOB")
         .SetSkill(0)
@@ -107,11 +108,19 @@ public class PlayerAuthenticator : MonoBehaviour
             {
                 Debug.Log("Matchmaking request succedful");
                 SceneManager.LoadScene("FightingRoom");
-                //
             }
             else
                 Debug.LogError(response.Errors.JSON);
         });
+    }
+
+    public void matchFoundListener()
+    {
+        GameSparks.Api.Messages.MatchFoundMessage.Listener = message =>
+        {
+            if (!message.HasErrors)
+                matchID = message.MatchId;
+        };
     }
 
     public void setListenersOnSceneChange(Scene old, Scene news)
@@ -158,11 +167,11 @@ public class PlayerAuthenticator : MonoBehaviour
 
         new GameSparks.Api.Requests.LogEventRequest()
          .SetEventKey("Chat_ToAll")
-         .SetEventAttribute(leName, leMessage)
+         .SetEventAttribute("Message", leMessage)
          .SetEventAttribute("MatchID", matchID)
          .Send(response =>
          {
-             Debug.LogError("Message sending unsuccesful");
+
          });
     }
 
