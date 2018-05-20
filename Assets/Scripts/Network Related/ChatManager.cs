@@ -10,6 +10,7 @@ public class ChatManager : MonoBehaviour
     public GameObject chatTemplate;
     public GameObject chatContainer;
     public PlayerAuthenticator playerAuth;
+    public InputField inpF;
     public int maxMessages = 6;
     string writtenMessage;
     public string username;
@@ -23,8 +24,12 @@ public class ChatManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            //addChatMessage(username, writtenMessage);
+            if (writtenMessage == null)
+                return;
             playerAuth.sendMessageToAll(username, writtenMessage);
+            inpF.Select();
+            inpF.text = "";
+            writtenMessage = null;
         }
     }
 
@@ -39,7 +44,7 @@ public class ChatManager : MonoBehaviour
 
         foreach (GameObject g in messageQueue)
         {
-            g.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, 33);
+            g.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, 20);
         }
 
         messageQueue.Enqueue(newMessage);

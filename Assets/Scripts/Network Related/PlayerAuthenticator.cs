@@ -6,6 +6,7 @@ using GameSparks.Api.Requests;
 using GameSparks.Api.Responses;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class PlayerAuthenticator : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PlayerAuthenticator : MonoBehaviour
     string username, password;
     string matchID = null;
     public ChatManager chatmanager;
+    public GameObject dialogBox;
+    public Text dialogText;
 
     void Start()
     {
@@ -40,6 +43,26 @@ public class PlayerAuthenticator : MonoBehaviour
     public void changePassword(string pass)
     {
         password = pass;
+    }
+
+    int captchaNumb1, captchaNumb2;
+
+    public void runCaptcha()
+    {
+        dialogBox.SetActive(true);
+        captchaNumb1 = Random.Range(0, 9);
+        captchaNumb2 = Random.Range(0, 9);
+        string dialogTxt = "What is " + captchaNumb1.ToString() + " + " + captchaNumb2.ToString() + "?";
+        dialogText.text = dialogTxt;
+        dialogBox.GetComponent<RectTransform>().DOAnchorPosY(30, 1);
+    }
+
+    public void verifyCaptcha(int ans)
+    {
+        if(ans == (captchaNumb1 + captchaNumb2))
+        {
+            createNewPlayer();
+        }
     }
 
     public void createNewPlayer()

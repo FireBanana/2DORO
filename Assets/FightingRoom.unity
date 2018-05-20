@@ -1981,6 +1981,8 @@ MonoBehaviour:
   chatTemplate: {fileID: 1510795500777000, guid: 069a6824722f1984b95eb2cd1c224b26,
     type: 2}
   chatContainer: {fileID: 690772468}
+  playerAuth: {fileID: 0}
+  inpF: {fileID: 1671065338}
   maxMessages: 6
   username: 
 --- !u!1 &1686134873
