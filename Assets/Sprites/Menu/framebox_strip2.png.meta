@@ -100,16 +100,16 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 53
-        height: 76
+        width: 106
+        height: 152
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aaac41882d5e0d945a43b1582e9d70ee
+      spriteID: f2c92560dc155154ca820ee34c281007
       vertices: []
       indices: 
       edges: []
@@ -118,18 +118,18 @@ TextureImporter:
       name: framebox_strip2_1
       rect:
         serializedVersion: 2
-        x: 53
+        x: 106
         y: 0
-        width: 53
-        height: 76
+        width: 106
+        height: 152
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4b7406ee1af51814f8cf59fa6596f2db
+      spriteID: 37b9758cdf65c58409cff4d31ebeef81
       vertices: []
       indices: 
       edges: []

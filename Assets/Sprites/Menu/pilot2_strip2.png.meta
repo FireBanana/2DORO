@@ -89,8 +89,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 35
+        width: 64
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -98,7 +98,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd86a2576f9072c4caf3ebc42d64b2a1
+      spriteID: e7310b13744a3b946b25f9e6bc39370e
       vertices: []
       indices: 
       edges: []
@@ -107,10 +107,10 @@ TextureImporter:
       name: pilot2_strip2_1
       rect:
         serializedVersion: 2
-        x: 34
+        x: 68
         y: 0
-        width: 32
-        height: 35
+        width: 64
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,7 +118,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5cf55590047e69f43bbd75fea53d293f
+      spriteID: 82b6af66090b3714db4d4b158bdd4d99
       vertices: []
       indices: 
       edges: []

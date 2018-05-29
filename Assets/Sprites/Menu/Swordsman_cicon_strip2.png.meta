@@ -98,10 +98,10 @@ TextureImporter:
       name: Swordsman_cicon_strip2_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
-        width: 34
-        height: 35
+        x: 4
+        y: 4
+        width: 68
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -109,7 +109,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: db7bd47316b03764fb04b8af0ec5bd99
+      spriteID: 8a01da1d2ee1c984991b2b654692a5d7
       vertices: []
       indices: 
       edges: []
@@ -118,10 +118,10 @@ TextureImporter:
       name: Swordsman_cicon_strip2_1
       rect:
         serializedVersion: 2
-        x: 40
-        y: 2
-        width: 34
-        height: 35
+        x: 80
+        y: 4
+        width: 68
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,7 +129,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f674fffc1c3b6644b93b680c73d7f229
+      spriteID: ae794b10ce0943d4caa71c45cf80158b
       vertices: []
       indices: 
       edges: []

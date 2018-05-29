@@ -98,10 +98,10 @@ TextureImporter:
       name: navy_cicon_strip2_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
-        width: 34
-        height: 35
+        x: 4
+        y: 4
+        width: 68
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -109,7 +109,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c56a03ae32ec22b46b2641ba8e0c5e2b
+      spriteID: 8dc1b69cc3f120a4cb1c96cea89df4bc
       vertices: []
       indices: 
       edges: []
@@ -118,10 +118,10 @@ TextureImporter:
       name: navy_cicon_strip2_1
       rect:
         serializedVersion: 2
-        x: 40
-        y: 2
-        width: 34
-        height: 35
+        x: 80
+        y: 4
+        width: 68
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,7 +129,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6f9ed36ca1a9ef84cb8d5307f326b5b9
+      spriteID: 96ad04e4e17c8844dae70b00ea5b0a30
       vertices: []
       indices: 
       edges: []

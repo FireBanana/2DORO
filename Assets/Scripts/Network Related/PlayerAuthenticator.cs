@@ -18,6 +18,9 @@ public class PlayerAuthenticator : MonoBehaviour
     public GameObject dialogBox;
     public Text dialogText;
 
+    //character creation
+    CharacterSelectionButton[] activeButtons = new CharacterSelectionButton[3];
+
     void Start()
     {
         SceneManager.activeSceneChanged += setListenersOnSceneChange;
@@ -59,11 +62,38 @@ public class PlayerAuthenticator : MonoBehaviour
 
     public void verifyCaptcha(int ans)
     {
-        if(ans == (captchaNumb1 + captchaNumb2))
+        if (ans == (captchaNumb1 + captchaNumb2))
         {
             createNewPlayer();
         }
     }
+
+    public void characterEdited(CharacterSelectionButton newButton, int row)
+    {
+        if (row == 1)
+        {
+            if (activeButtons[0] != null)
+                activeButtons[0].changeToNonSelected();
+            newButton.changeToSelected();
+            activeButtons[0] = newButton;
+        }
+        else if (row == 2)
+        {
+            if (activeButtons[1] != null)
+                activeButtons[1].changeToNonSelected();
+            newButton.changeToSelected();
+            activeButtons[1] = newButton;
+        }
+        else if (row == 3)
+        {
+            if (activeButtons[2] != null)
+                activeButtons[2].changeToNonSelected();
+            newButton.changeToSelected();
+            activeButtons[2] = newButton;
+        }
+    }
+
+    public GameObject characterCreationScreen;
 
     public void createNewPlayer()
     {
@@ -80,10 +110,13 @@ public class PlayerAuthenticator : MonoBehaviour
                 if (response.HasErrors)
                 {
                     Debug.LogError(response.Errors.JSON);
+                    dialogBox.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
                 }
                 else
                 {
                     Debug.Log("Registered");
+                    dialogBox.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
+                    characterCreationScreen.SetActive(true);
                 }
 
             });
@@ -105,8 +138,8 @@ public class PlayerAuthenticator : MonoBehaviour
                 }
                 else
                 {
-                    joinLobby();
-                    //SceneManager.LoadScene("FightingRoom");
+                    //joinLobby();
+                    SceneManager.LoadScene("Chamber");
 
 
                 }
@@ -148,6 +181,8 @@ public class PlayerAuthenticator : MonoBehaviour
 
     public void setListenersOnSceneChange(Scene old, Scene news)
     {
+        if (news.name == "Chamber")
+            return;
         if (chatmanager == null)
             chatmanager = GameObject.Find("ChatInput").GetComponent<ChatManager>();
         chatmanager.username = username;

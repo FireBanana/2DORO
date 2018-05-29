@@ -98,10 +98,10 @@ TextureImporter:
       name: agent_cicon_strip2_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
-        width: 34
-        height: 35
+        x: 4
+        y: 4
+        width: 68
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -109,7 +109,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 14e0e3dc566553d4a8af1339f95e7864
+      spriteID: 2c2e47ce4f6abeb438a3be4d15cbb977
       vertices: []
       indices: 
       edges: []
@@ -118,10 +118,10 @@ TextureImporter:
       name: agent_cicon_strip2_1
       rect:
         serializedVersion: 2
-        x: 40
-        y: 2
-        width: 34
-        height: 35
+        x: 80
+        y: 4
+        width: 68
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,7 +129,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 161a89c1e0cba1944acd263036d8912f
+      spriteID: 46b1f1c11a18675469e3af18e12f09b0
       vertices: []
       indices: 
       edges: []

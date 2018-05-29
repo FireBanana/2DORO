@@ -6,6 +6,7 @@ using Com.LuisPedroFonseca.ProCamera2D;
 
 public class TestingRestartScript : MonoBehaviour {
 
+    public GameObject inventoryMenu;
 
 	void Update () {
         if (Input.GetKeyDown(KeyCode.R))
@@ -15,5 +16,12 @@ public class TestingRestartScript : MonoBehaviour {
         if(Input.GetKeyDown(KeyCode.T)){
             GetComponent<ProCamera2DShake>().Shake();
         }
-	}
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            if (inventoryMenu.activeInHierarchy)
+                inventoryMenu.SetActive(false);
+            else
+                inventoryMenu.SetActive(true);
+        }
+    }
 }

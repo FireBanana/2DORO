@@ -98,10 +98,10 @@ TextureImporter:
       name: fighter_cicon_strip2_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
-        width: 34
-        height: 35
+        x: 4
+        y: 4
+        width: 68
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -109,7 +109,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 81c2b9873b1fe3046b959373cb3f7f7e
+      spriteID: 1b3be77db92d8344699051452dec0918
       vertices: []
       indices: 
       edges: []
@@ -118,10 +118,10 @@ TextureImporter:
       name: fighter_cicon_strip2_1
       rect:
         serializedVersion: 2
-        x: 40
-        y: 2
-        width: 34
-        height: 35
+        x: 80
+        y: 4
+        width: 68
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,7 +129,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3cfe3271a01de004298ec078c294f680
+      spriteID: d21fdfd473d435044b314b50290d2b04
       vertices: []
       indices: 
       edges: []
