@@ -21,7 +21,13 @@ public class TestingRestartScript : MonoBehaviour {
             if (inventoryMenu.activeInHierarchy)
                 inventoryMenu.SetActive(false);
             else
+            {
+                if(PlayerAuthenticator.instance.menuNameText.text == " ")
+                {
+                    PlayerAuthenticator.instance.setInventoryInfo();
+                }
                 inventoryMenu.SetActive(true);
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ public class CharacterSelectionButton : MonoBehaviour
     public int row;
     public PlayerAuthenticator pa;
     Image buttonImage;
+    public string nameID;
 
     void Start()
     {

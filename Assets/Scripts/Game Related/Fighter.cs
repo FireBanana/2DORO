@@ -44,6 +44,11 @@ public class Fighter : Player
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
+            if(isAtDoor == true)
+            {
+                doorScript.fadeOut();
+                return;
+            }
             if (playerAction != playerState.jumping && playerAction != playerState.jumpAttacking && playerAction != playerState.blocking && playerAction != playerState.attacking)
             {
                 if (numbOfJumps < 5)

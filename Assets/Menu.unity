@@ -740,6 +740,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: afb1296e1257a7c48a54957c1e7b0ff3, type: 3}
   row: 2
   pa: {fileID: 1719390440}
+  nameID: SubYeti
 --- !u!1 &201059120
 GameObject:
   m_ObjectHideFlags: 0
@@ -1704,6 +1705,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: 3a489e2f37134434dacc7ccca0d4a155, type: 3}
   row: 1
   pa: {fileID: 1719390440}
+  nameID: 
 --- !u!1 &568038898
 GameObject:
   m_ObjectHideFlags: 0
@@ -2064,6 +2066,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: 9a325c9e410f3894f8e0257237bbebf5, type: 3}
   row: 1
   pa: {fileID: 1719390440}
+  nameID: 
 --- !u!1 &790408152
 GameObject:
   m_ObjectHideFlags: 0
@@ -2345,6 +2348,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: 10544a4648c226c40b9fdbc7ebbda691, type: 3}
   row: 2
   pa: {fileID: 1719390440}
+  nameID: Agent
 --- !u!1 &934868541
 GameObject:
   m_ObjectHideFlags: 0
@@ -2927,6 +2931,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: 860951d32c075b246949be4ee3cd48a0, type: 3}
   row: 2
   pa: {fileID: 1719390440}
+  nameID: Fighter
 --- !u!1 &1221877077
 GameObject:
   m_ObjectHideFlags: 0
@@ -3065,6 +3070,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: 5e92402221e78f14c8cb6d866da8c9c4, type: 3}
   row: 1
   pa: {fileID: 1719390440}
+  nameID: 
 --- !u!1 &1229842678
 GameObject:
   m_ObjectHideFlags: 0
@@ -3203,6 +3209,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: fda561fa2623b184aa6702d2e86a0457, type: 3}
   row: 3
   pa: {fileID: 1719390440}
+  nameID: 
 --- !u!1 &1247884658
 GameObject:
   m_ObjectHideFlags: 0
@@ -3694,6 +3701,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: fbeb1cff31498df44825897619d63c3f, type: 3}
   row: 2
   pa: {fileID: 1719390440}
+  nameID: Navy
 --- !u!1 &1313912529
 GameObject:
   m_ObjectHideFlags: 0
@@ -3980,6 +3988,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: 6e8d424d52033be4aa22326a39ac8108, type: 3}
   row: 1
   pa: {fileID: 1719390440}
+  nameID: 
 --- !u!1 &1424581754
 GameObject:
   m_ObjectHideFlags: 0
@@ -4702,6 +4711,13 @@ MonoBehaviour:
   chatmanager: {fileID: 0}
   dialogBox: {fileID: 1709661285}
   dialogText: {fileID: 165287774}
+  playerClass: 
+  rank: 0
+  points: 0
+  menuNameText: {fileID: 0}
+  menuRankText: {fileID: 0}
+  menuPointsText: {fileID: 0}
+  menuClassText: {fileID: 0}
   characterCreationScreen: {fileID: 316380517}
 --- !u!1 &1740122912
 GameObject:
@@ -4841,6 +4857,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: afa8151a15fe15c4382f095bf093b534, type: 3}
   row: 1
   pa: {fileID: 1719390440}
+  nameID: 
 --- !u!1 &1749706700
 GameObject:
   m_ObjectHideFlags: 0
@@ -4918,7 +4935,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1719390440}
-        m_MethodName: joinLobby
+        m_MethodName: createNewPlayer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5101,6 +5118,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: 1741f1524222d8d478240e5db2a146b4, type: 3}
   row: 2
   pa: {fileID: 1719390440}
+  nameID: Swordsman
 --- !u!1 &1972342835
 GameObject:
   m_ObjectHideFlags: 0
@@ -5239,6 +5257,7 @@ MonoBehaviour:
   nonSelectedSprite: {fileID: 21300002, guid: cb4929a39c46064479ecd0e544b958d9, type: 3}
   row: 1
   pa: {fileID: 1719390440}
+  nameID: 
 --- !u!1 &2054617965
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ using DG.Tweening;
 
 public class PlayerAuthenticator : MonoBehaviour
 {
+    public static PlayerAuthenticator instance;
 
     bool gameSparksAvailable;
     string username, password;
@@ -18,11 +19,22 @@ public class PlayerAuthenticator : MonoBehaviour
     public GameObject dialogBox;
     public Text dialogText;
 
+    public string playerClass;
+    public int rank;
+    public int points;
+
+    public Text menuNameText, menuRankText, menuPointsText, menuClassText;
+
     //character creation
     CharacterSelectionButton[] activeButtons = new CharacterSelectionButton[3];
 
     void Start()
     {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
+
         SceneManager.activeSceneChanged += setListenersOnSceneChange;
         Application.runInBackground = true;
         GameSparks.Core.GS.GameSparksAvailable = available =>
@@ -64,7 +76,8 @@ public class PlayerAuthenticator : MonoBehaviour
     {
         if (ans == (captchaNumb1 + captchaNumb2))
         {
-            createNewPlayer();
+            //createNewPlayer();
+            characterCreationScreen.SetActive(true);
         }
     }
 
@@ -97,6 +110,14 @@ public class PlayerAuthenticator : MonoBehaviour
 
     public void createNewPlayer()
     {
+
+        playerClass = activeButtons[1].nameID;
+        rank = 1;
+        points = 0;
+
+
+        var classData = new GameSparks.Core.GSRequestData().AddString("classData", playerClass);
+
         if (gameSparksAvailable)
         {
             Debug.Log("Registering...");
@@ -104,6 +125,7 @@ public class PlayerAuthenticator : MonoBehaviour
             .SetUserName(username)
             .SetDisplayName(username)
             .SetPassword(password)
+            .SetScriptData(classData)
             .Send(response =>
             {
 
@@ -117,6 +139,7 @@ public class PlayerAuthenticator : MonoBehaviour
                     Debug.Log("Registered");
                     dialogBox.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
                     characterCreationScreen.SetActive(true);
+                    joinLobby();
                 }
 
             });
@@ -138,9 +161,11 @@ public class PlayerAuthenticator : MonoBehaviour
                 }
                 else
                 {
-                    //joinLobby();
-                    SceneManager.LoadScene("Chamber");
-
+                    // joinLobby();
+                    playerClass = response.ScriptData.GetString("class");
+                    rank = (int)response.ScriptData.GetNumber("rank");
+                    points = (int)response.ScriptData.GetNumber("points");
+                    SceneManager.LoadScene("Chamber");             
 
                 }
             });
@@ -163,7 +188,7 @@ public class PlayerAuthenticator : MonoBehaviour
             if (!response.HasErrors)
             {
                 Debug.Log("Matchmaking request succedful");
-                SceneManager.LoadScene("FightingRoom");
+                SceneManager.LoadScene("Chamber");
             }
             else
                 Debug.LogError(response.Errors.JSON);
@@ -182,7 +207,15 @@ public class PlayerAuthenticator : MonoBehaviour
     public void setListenersOnSceneChange(Scene old, Scene news)
     {
         if (news.name == "Chamber")
+        {
+            menuNameText = GameObject.Find("PlayerNameText").GetComponent<Text>();
+            menuRankText = GameObject.Find("RankText").GetComponent<Text>();
+            menuPointsText = GameObject.Find("PointsText").GetComponent<Text>();
+            menuClassText = GameObject.Find("ClassText").GetComponent<Text>();
+            menuNameText.text = " ";
+            GameObject.Find("Inventory").SetActive(false);
             return;
+        }
         if (chatmanager == null)
             chatmanager = GameObject.Find("ChatInput").GetComponent<ChatManager>();
         chatmanager.username = username;
@@ -233,4 +266,15 @@ public class PlayerAuthenticator : MonoBehaviour
          });
     }
 
+    public void setInventoryInfo()
+    {
+        var Lclass = playerClass;
+        var Lrank = rank;
+        var Lpoints = points;
+
+        menuNameText.text = username;
+        menuClassText.text = Lclass;
+        menuRankText.text = Lrank.ToString();
+        menuPointsText.text = Lpoints.ToString();
+    }
 }

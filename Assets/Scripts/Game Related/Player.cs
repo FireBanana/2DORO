@@ -39,6 +39,9 @@ public class Player : MonoBehaviour
     protected int comboChainNumber, comboChainNumber2;
     protected Vector3 touchingPos, touchingPos2;
 
+    public bool isAtDoor = false;
+    public Door doorScript;
+
     public void Initialize()
     {
         playerAction = playerState.idle;
