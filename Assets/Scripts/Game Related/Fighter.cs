@@ -161,6 +161,32 @@ public class Fighter : Player
         {
             if (playerAction == playerState.idle || playerAction == playerState.walking)
             {
+                touchingPos = transform.position - new Vector3((-GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
+                touchingPos2 = transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
+                
+                RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 0.18f, 1 << 8);
+                RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 0.18f, 1 << 8);
+
+                if (hit.collider != null)
+                {
+                    if (hit.collider.tag == "platform")
+                    {
+                        //hit.collider.GetComponent<PlatformEffector2D>().rotationalOffset = 180;
+                        hit.collider.GetComponent<Platform>().startDescendCoRoutine();
+                        playerAction = playerState.jumping;
+                        return;
+                    }
+                }else if(hit2.collider != null)
+                {
+                    if (hit2.collider.tag == "platform")
+                    {
+                        //hit2.collider.GetComponent<PlatformEffector2D>().rotationalOffset = 180;
+                        hit2.collider.GetComponent<Platform>().startDescendCoRoutine();
+                        playerAction = playerState.jumping;
+                        return;
+                    }
+                }
+                
                 if (echipDeployable == true)
                 {
                     playerAction = playerState.attacking;

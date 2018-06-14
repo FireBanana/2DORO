@@ -4,18 +4,17 @@ using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class Door : MonoBehaviour
 {
 
     public GameObject fadeScreen;
     public Transform exitPoint;
+    public bool isLevelChangeDoor;
+    public GameObject levelMenu;
+    public string levelName;
     Fighter fighterScript;
-
-    void Start()
-    {
-
-    }
 
     void OnTriggerEnter2D(Collider2D coll)
     {
@@ -48,6 +47,22 @@ public class Door : MonoBehaviour
 
     public void fadeIn()
     {
+        if (isLevelChangeDoor)
+        {
+            var lvlMan = GameObject.Find("LevelManager");
+            if(lvlMan != null)
+                lvlMan.GetComponent<SetPlayerPositionOnDoor>().setLastPos(fighterScript.transform.position);
+            if (levelMenu != null)
+            {
+                levelMenu.SetActive(true);
+            }
+            else
+            {
+                SceneManager.LoadScene(levelName);
+            }
+
+            return;
+        }
         fadeScreen.GetComponent<Image>().DOFade(0f, 1f).OnComplete(fadeInComplete);
         fighterScript.gameObject.transform.position = exitPoint.position;
         Camera.main.GetComponent<ProCamera2D>().MoveCameraInstantlyToPosition(exitPoint.position);

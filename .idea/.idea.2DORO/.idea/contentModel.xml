@@ -249,13 +249,18 @@
             <e p="ChamberSpecific" t="Include">
               <e p="Door.cs" t="Include" />
             </e>
+            <e p="Common UI" t="Include">
+              <e p="HealthBarHandler.cs" t="Include" />
+              <e p="InventoryMenu.cs" t="Include" />
+              <e p="LevelSelectMenu.cs" t="Include" />
+            </e>
             <e p="Enemy.cs" t="Include" />
             <e p="Fighter.cs" t="Include" />
-            <e p="HealthBarHandler.cs" t="Include" />
             <e p="HitEffectController.cs" t="Include" />
-            <e p="InventoryMenu.cs" t="Include" />
             <e p="MenuDialogBox.cs" t="Include" />
+            <e p="Platform.cs" t="Include" />
             <e p="Player.cs" t="Include" />
+            <e p="SetPlayerPositionOnDoor.cs" t="Include" />
             <e p="TestingRestartScript.cs" t="Include" />
             <e p="TriggerCheck.cs" t="Include" />
           </e>

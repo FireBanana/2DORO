@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/FightingRoom.unity
     guid: edbc1d7e8dd21f5419c68457586f2d8d
+  - enabled: 1
+    path: Assets/Lobby.unity
+    guid: 68149629d9daf0b4ca3c01883bc09e4c
+  - enabled: 1
+    path: Assets/Hallway.unity
+    guid: d3411bcd21cea0c4aafda6192b9be98c
   m_configObjects: {}
