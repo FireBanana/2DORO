@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Hallway.unity
     guid: d3411bcd21cea0c4aafda6192b9be98c
+  - enabled: 1
+    path: Assets/Armory.unity
+    guid: c0ec3029bb6e57b4d8da8022d4ae6df0
   m_configObjects: {}

@@ -156,7 +156,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4092995103895326}
   - component: {fileID: 212523460545434992}
-  - component: {fileID: 50954160267232250}
   - component: {fileID: 95214340359523572}
   - component: {fileID: 114454845424322842}
   - component: {fileID: 70594729445120812}
@@ -292,26 +291,6 @@ Transform:
   m_Father: {fileID: 4092995103895326}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &50954160267232250
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1964971190981132}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 10
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 4
 --- !u!61 &61142283840803926
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -544,6 +523,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114009642611165516
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -608,7 +588,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
+  id: 0
   healthHandler: {fileID: 0}
+  canBeHurt: 1
 --- !u!114 &114501820411701798
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -674,6 +656,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: f9c50fadeebe1ae4aa62c62370408405, type: 2}
   m_StaticBatchInfo:

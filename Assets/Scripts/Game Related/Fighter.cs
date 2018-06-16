@@ -9,6 +9,7 @@ public class Fighter : Player
     {
         Initialize();
         touchingPos = transform.position - new Vector3(0, GetComponent<BoxCollider2D>().bounds.extents.y);
+        PlayerAuthenticator.instance.fighterScript = this;
     }
 
     private void Update()
@@ -44,11 +45,6 @@ public class Fighter : Player
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if(isAtDoor == true)
-            {
-                doorScript.fadeOut();
-                return;
-            }
             if (playerAction != playerState.jumping && playerAction != playerState.jumpAttacking && playerAction != playerState.blocking && playerAction != playerState.attacking)
             {
                 if (numbOfJumps < 5)
@@ -159,6 +155,11 @@ public class Fighter : Player
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
+            if(isAtDoor == true)
+            {
+                doorScript.fadeOut();
+                return;
+            }
             if (playerAction == playerState.idle || playerAction == playerState.walking)
             {
                 touchingPos = transform.position - new Vector3((-GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
@@ -489,7 +490,15 @@ public class Fighter : Player
                 }
             }
         }
-        // Debug.DrawRay(transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f)), -Vector3.up * 0.18f, Color.red);
+    }
+
+    public IEnumerator positionSendToPacket()
+    {
+        while (PlayerAuthenticator.instance.connectedToSession)
+        {
+            yield return new WaitForSeconds(Time.deltaTime * 5);
+            PlayerAuthenticator.instance.sendMovementPacket(transform.position);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

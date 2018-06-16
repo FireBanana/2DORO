@@ -4718,6 +4718,9 @@ MonoBehaviour:
   menuRankText: {fileID: 0}
   menuPointsText: {fileID: 0}
   menuClassText: {fileID: 0}
+  connectedToSession: 0
+  enemyPrefab: {fileID: 1964971190981132, guid: b6de7f4e52bed914a8eeb87039d5ec0e,
+    type: 2}
   characterCreationScreen: {fileID: 316380517}
 --- !u!1 &1740122912
 GameObject:
