@@ -9,10 +9,10 @@ public class TestingRestartScript : MonoBehaviour {
     public GameObject inventoryMenu;
 
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.R))
+      /*  if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene(0);
-        }
+        }*/
         if(Input.GetKeyDown(KeyCode.T)){
             GetComponent<ProCamera2DShake>().Shake();
         }

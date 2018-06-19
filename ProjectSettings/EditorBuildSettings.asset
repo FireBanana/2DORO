@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Armory.unity
     guid: c0ec3029bb6e57b4d8da8022d4ae6df0
+  - enabled: 1
+    path: Assets/TechLab.unity
+    guid: 4c97d82dc6629c948818d3d4210655ee
   m_configObjects: {}

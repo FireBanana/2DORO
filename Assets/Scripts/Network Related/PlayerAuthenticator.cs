@@ -17,6 +17,7 @@ public class PlayerAuthenticator : MonoBehaviour
     bool gameSparksAvailable;
     string username, password;
     string matchID = null;
+    private string userID; //For cloudcode player removal
     public ChatManager chatmanager;
     public GameObject dialogBox;
     public Text dialogText;
@@ -37,7 +38,7 @@ public class PlayerAuthenticator : MonoBehaviour
     public GameObject enemyPrefab;
     Dictionary<int, GameObject> players = new Dictionary<int, GameObject>();
 
-        //character creation
+    //character creation
     CharacterSelectionButton[] activeButtons = new CharacterSelectionButton[3];
 
     void Start()
@@ -134,27 +135,28 @@ public class PlayerAuthenticator : MonoBehaviour
         {
             Debug.Log("Registering...");
             new RegistrationRequest()
-            .SetUserName(username)
-            .SetDisplayName(username)
-            .SetPassword(password)
-            .SetScriptData(classData)
-            .Send(response =>
-            {
-
-                if (response.HasErrors)
+                .SetUserName(username)
+                .SetDisplayName(username)
+                .SetPassword(password)
+                .SetScriptData(classData)
+                .Send(response =>
                 {
-                    Debug.LogError(response.Errors.JSON);
-                    dialogBox.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
-                }
-                else
-                {
-                    Debug.Log("Registered");
-                    dialogBox.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
-                    characterCreationScreen.SetActive(true);
-                    joinLobby();
-                }
 
-            });
+                    if (response.HasErrors)
+                    {
+                        Debug.LogError(response.Errors.JSON);
+                        dialogBox.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
+                    }
+                    else
+                    {
+                        Debug.Log("Registered");
+                        dialogBox.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
+                        characterCreationScreen.SetActive(true);
+                        userID = response.UserId;
+                        SceneManager.LoadScene("Chamber");  
+                    }
+
+                });
         }
     }
 
@@ -163,24 +165,25 @@ public class PlayerAuthenticator : MonoBehaviour
         if (gameSparksAvailable == true)
         {
             new AuthenticationRequest()
-            .SetUserName(username)
-            .SetPassword(password)
-            .Send(response =>
-            {
-                if (response.HasErrors)
+                .SetUserName(username)
+                .SetPassword(password)
+                .Send(response =>
                 {
-                    Debug.LogError(response.Errors.JSON);
-                }
-                else
-                {
-                    // joinLobby();
-                    playerClass = response.ScriptData.GetString("class");
-                    rank = (int)response.ScriptData.GetNumber("rank");
-                    points = (int)response.ScriptData.GetNumber("points");
-                    SceneManager.LoadScene("Chamber");             
+                    if (response.HasErrors)
+                    {
+                        Debug.LogError(response.Errors.JSON);
+                    }
+                    else
+                    {
+                        // joinMatch();
+                        playerClass = response.ScriptData.GetString("class");
+                        rank = (int)response.ScriptData.GetNumber("rank");
+                        points = (int)response.ScriptData.GetNumber("points");
+                        userID = response.UserId;
+                        SceneManager.LoadScene("Chamber");             
 
-                }
-            });
+                    }
+                });
         }
         else
         {
@@ -188,22 +191,22 @@ public class PlayerAuthenticator : MonoBehaviour
         }
     }
 
-    public void joinLobby()
+    public void joinMatch(string shortCode)
     {
         matchFoundListener();
         new GameSparks.Api.Requests.MatchmakingRequest()
-        .SetMatchShortCode("LOB")
-        .SetSkill(0)
-        .Send(response =>
-        {
-
-            if (!response.HasErrors)
+            .SetMatchShortCode(shortCode)
+            .SetSkill(0)
+            .Send(response =>
             {
-                Debug.Log("Matchmaking request succedful");
-            }
-            else
-                Debug.LogError(response.Errors.JSON);
-        });
+
+                if (!response.HasErrors)
+                {
+                    Debug.Log("Matchmaking request succedful");
+                }
+                else
+                    Debug.LogError(response.Errors.JSON);
+            });
     }
 
     public void matchFoundListener()
@@ -216,13 +219,20 @@ public class PlayerAuthenticator : MonoBehaviour
                 port = (int)message.Port;
                 accessToken = message.AccessToken;
                 host = message.Host;
-                createLobbySession();
+                createSession();
             }
         };
     }
 
     public void setListenersOnSceneChange(Scene old, Scene news)
     {
+        if (RTClass != null)
+        {
+            RTClass.Disconnect();
+            players.Clear();
+            removePlayerFromMatch();
+        }
+
         if (news.name == "Chamber")
         {
             menuNameText = GameObject.Find("PlayerNameText").GetComponent<Text>();
@@ -233,11 +243,22 @@ public class PlayerAuthenticator : MonoBehaviour
             GameObject.Find("Inventory").SetActive(false);
             return;
         }
-
         if (news.name == "Hallway")
         {
-            joinLobby();
+            joinMatch("LOB");
         }
+        else if (news.name == "Armory")
+        {
+            joinMatch("ARM");
+        }
+        else if (news.name == "Lobby")
+        {
+            joinMatch("OPCENT");
+        }
+        else if(news.name == "TechLab")
+            joinMatch("TECH");
+        
+        
         if (chatmanager == null)
             chatmanager = GameObject.Find("ChatInput").GetComponent<ChatManager>();
         chatmanager.username = username;
@@ -272,6 +293,15 @@ public class PlayerAuthenticator : MonoBehaviour
         };
     }
 
+    public void removePlayerFromMatch()
+    {
+        new GameSparks.Api.Requests.LogEventRequest()
+            .SetEventKey("REMOVE")
+            .SetEventAttribute("matchID", matchID)
+            .SetEventAttribute("playerID", userID)
+            .Send(response =>{});
+    }
+    
     public void sendMessageToAll(string leName, string leMessage)
     {
         Debug.Log(matchID);
@@ -279,13 +309,13 @@ public class PlayerAuthenticator : MonoBehaviour
             return;
 
         new GameSparks.Api.Requests.LogEventRequest()
-         .SetEventKey("Chat_ToAll")
-         .SetEventAttribute("Message", leMessage)
-         .SetEventAttribute("MatchID", matchID)
-         .Send(response =>
-         {
+            .SetEventKey("Chat_ToAll")
+            .SetEventAttribute("Message", leMessage)
+            .SetEventAttribute("MatchID", matchID)
+            .Send(response =>
+            {
 
-         });
+            });
     }
 
     public void setInventoryInfo()
@@ -302,9 +332,10 @@ public class PlayerAuthenticator : MonoBehaviour
     
     //REALTIME MULTIPLAYER
 
-    public void createLobbySession()
+    public void createSession()
     {
-        RTClass = gameObject.AddComponent<GameSparksRTUnity>();
+        if(RTClass == null)
+            RTClass = gameObject.AddComponent<GameSparksRTUnity>();
         RTClass.Configure(host, port, accessToken, OnPacket: pack => packetReceived(pack),
             OnPlayerConnect: pack => playerConnected(pack),
             OnPlayerDisconnect: pack => playerDisconnected(pack),
@@ -312,28 +343,21 @@ public class PlayerAuthenticator : MonoBehaviour
         RTClass.Connect();
         connectedToSession = true;
         fighterScript.StartCoroutine(fighterScript.positionSendToPacket());
-        StartCoroutine(delayEnemyLoad());
 
     }
 
-    IEnumerator delayEnemyLoad()
+    public void playersReady(bool status)
     {
-        yield return new WaitForSeconds(4);
         foreach (var enemies in RTClass.ActivePeers)
         {
+            print(enemies);
             if (enemies != RTClass.PeerId)
             {
-                print(enemies);
                 var newEnemy = Instantiate(enemyPrefab);
                 newEnemy.GetComponent<Enemy>().id = enemies;
                 players.Add(enemies, newEnemy);
             }
         }
-    }
-
-    public void playersReady(bool status)
-    {
-        
     }
     
     public void playerConnected(int id)
@@ -346,6 +370,9 @@ public class PlayerAuthenticator : MonoBehaviour
 
     public void playerDisconnected(int id)
     {
+        GameObject discPlayer;
+        players.TryGetValue(id, out discPlayer);
+        Destroy(discPlayer);
         players.Remove(id);
         
     }
@@ -356,7 +383,10 @@ public class PlayerAuthenticator : MonoBehaviour
         {
             GameObject enemyToChange;
             players.TryGetValue(pack.Sender, out enemyToChange);
+            if(enemyToChange != null)
             enemyToChange.transform.DOMove((Vector3) pack.Data.GetVector3(1), 0.1f).SetEase(Ease.Linear);
+            else
+                print("Error: No enemy to change");
         }
     }
 

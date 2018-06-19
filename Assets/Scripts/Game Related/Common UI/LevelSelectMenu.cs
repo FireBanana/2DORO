@@ -42,6 +42,13 @@ public class LevelSelectMenu : MonoBehaviour
 					}
 
 					break;
+				case 3:
+					if (SceneManager.GetActiveScene().name != "TechLab")
+					{
+						SceneManager.LoadScene("TechLab");
+					}
+
+					break;
 				case 4:
 					if (SceneManager.GetActiveScene().name != "Armory")
 					{
