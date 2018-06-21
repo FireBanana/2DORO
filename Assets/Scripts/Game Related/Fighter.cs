@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Fighter : Player
 {
-
     private void Start()
     {
         Initialize();
@@ -30,6 +29,9 @@ public class Fighter : Player
                 anim.Play("Fighter_fall");
             }
         }
+        
+        if(isChatting)
+            return;
 
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
         {

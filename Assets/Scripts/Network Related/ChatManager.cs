@@ -13,6 +13,7 @@ public class ChatManager : MonoBehaviour
     public InputField inpF;
     public int maxMessages = 6;
     string writtenMessage;
+    [HideInInspector]
     public string username;
 
     public void updateMessage(string mssg)
@@ -36,11 +37,14 @@ public class ChatManager : MonoBehaviour
     public void addChatMessage(string name, string message)
     {
 
-        var newMessage = Instantiate(chatTemplate);
+        if (string.Equals(message, ""))
+            return;
 
+        var newMessage = Instantiate(chatTemplate);
+        newMessage.SetActive(true);
         newMessage.transform.SetParent(chatContainer.transform, worldPositionStays: false);
         newMessage.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
-        newMessage.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0);
+        newMessage.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0);
 
         foreach (GameObject g in messageQueue)
         {

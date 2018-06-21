@@ -42,6 +42,8 @@ public class Player : MonoBehaviour
     public bool isAtDoor = false;
     public Door doorScript;
 
+    public bool isChatting = false;
+
     public void Initialize()
     {
         playerAction = playerState.idle;

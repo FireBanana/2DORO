@@ -91,6 +91,7 @@ public class PlayerAuthenticator : MonoBehaviour
         {
             //createNewPlayer();
             characterCreationScreen.SetActive(true);
+            dialogBox.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
         }
     }
 
@@ -257,6 +258,13 @@ public class PlayerAuthenticator : MonoBehaviour
         }
         else if(news.name == "TechLab")
             joinMatch("TECH");
+        
+        menuNameText = GameObject.Find("PlayerNameText").GetComponent<Text>();
+        menuRankText = GameObject.Find("RankText").GetComponent<Text>();
+        menuPointsText = GameObject.Find("PointsText").GetComponent<Text>();
+        menuClassText = GameObject.Find("ClassText").GetComponent<Text>();
+        menuNameText.text = " ";
+        GameObject.Find("Inventory").SetActive(false);
         
         
         if (chatmanager == null)

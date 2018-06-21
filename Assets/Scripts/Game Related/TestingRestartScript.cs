@@ -8,11 +8,12 @@ public class TestingRestartScript : MonoBehaviour {
 
     public GameObject inventoryMenu;
 
-	void Update () {
-      /*  if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(0);
-        }*/
+	void Update ()
+	{
+
+	    if (PlayerAuthenticator.instance.fighterScript.isChatting)
+	        return;
+	    
         if(Input.GetKeyDown(KeyCode.T)){
             GetComponent<ProCamera2DShake>().Shake();
         }

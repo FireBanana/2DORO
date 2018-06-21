@@ -250,6 +250,7 @@
               <e p="Door.cs" t="Include" />
             </e>
             <e p="Common UI" t="Include">
+              <e p="ChatToggler.cs" t="Include" />
               <e p="HealthBarHandler.cs" t="Include" />
               <e p="InventoryMenu.cs" t="Include" />
               <e p="LevelSelectMenu.cs" t="Include" />
