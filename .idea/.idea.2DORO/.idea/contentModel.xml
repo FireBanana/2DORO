@@ -246,15 +246,13 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Game Related" t="Include">
-            <e p="ChamberSpecific" t="Include">
-              <e p="Door.cs" t="Include" />
-            </e>
             <e p="Common UI" t="Include">
               <e p="ChatToggler.cs" t="Include" />
               <e p="HealthBarHandler.cs" t="Include" />
               <e p="InventoryMenu.cs" t="Include" />
               <e p="LevelSelectMenu.cs" t="Include" />
             </e>
+            <e p="Door.cs" t="Include" />
             <e p="Enemy.cs" t="Include" />
             <e p="Fighter.cs" t="Include" />
             <e p="HitEffectController.cs" t="Include" />

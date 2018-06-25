@@ -14,6 +14,7 @@ public class Door : MonoBehaviour
     public bool isLevelChangeDoor;
     public GameObject levelMenu;
     public string levelName;
+    public Animator anim;
     Fighter fighterScript;
 
     void OnTriggerEnter2D(Collider2D coll)
@@ -37,6 +38,8 @@ public class Door : MonoBehaviour
 
     public void fadeOut()
     {
+        if(anim!= null)
+            anim.Play("Elevator_Open");
         fadeScreen.SetActive(true);
         fadeScreen.GetComponent<Image>().DOFade(1f, 1f).OnComplete(fadeIn);
         fighterScript.completeAttack();
@@ -49,6 +52,9 @@ public class Door : MonoBehaviour
     {
         if (isLevelChangeDoor)
         {
+            print("prev: " + SceneManager.GetActiveScene().name);
+            PlayerAuthenticator.instance.previousScene = SceneManager.GetActiveScene().name;
+            
             var lvlMan = GameObject.Find("LevelManager");
             if(lvlMan != null)
                 lvlMan.GetComponent<SetPlayerPositionOnDoor>().setLastPos(fighterScript.transform.position);

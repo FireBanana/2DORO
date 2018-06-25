@@ -494,12 +494,108 @@ public class Fighter : Player
         }
     }
 
+    //Multiplayer packet info
+    private playerState previousSentState;
+    private string currentSentAnim;
+    private int playerFlipped;
+
     public IEnumerator positionSendToPacket()
     {
         while (PlayerAuthenticator.instance.connectedToSession)
         {
+            switch (playerAction)
+            {
+                    case playerState.attacking:
+                        if (previousSentState == playerState.attacking)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
+
+                        previousSentState = playerState.attacking;
+                 //       currentSentAnim = "Fighter_punch1";
+                        break;
+                    case playerState.blocking:
+                        if (previousSentState == playerState.blocking)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
+                        previousSentState = playerState.blocking;
+               //         currentSentAnim = "Fighter_block";
+                        break;
+                    case playerState.idle:
+                        if (previousSentState == playerState.idle)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
+                        previousSentState = playerState.idle;
+                        currentSentAnim = "Enemy_idle";
+                        break;
+                    case playerState.jumpAttacking:
+                        if (previousSentState == playerState.jumpAttacking)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
+
+                        previousSentState = playerState.jumpAttacking;
+                   //     currentSentAnim = "Fighter_jumpAtk1";
+                        break;
+                    case playerState.jumping:
+                        if (previousSentState == playerState.jumping)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
+                        previousSentState = playerState.jumping;
+                        currentSentAnim = "Enemy_jump";
+                        break;
+                    case playerState.running:
+                        if (previousSentState == playerState.running)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
+
+                        previousSentState = playerState.running;
+                        currentSentAnim = "Enemy_run";
+                        break;
+                    case playerState.sliding:
+                        if (previousSentState == playerState.sliding)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
+
+                        previousSentState = playerState.sliding;
+                    //    currentSentAnim = "Fighter_wallSlide";
+                        break;
+                    case playerState.walking:
+                        if (previousSentState == playerState.walking)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
+
+                        previousSentState = playerState.walking;
+                        currentSentAnim = "Enemy_walk";
+                        break;
+            }
+
+            switch (sr.flipX)
+            {
+                 case true:
+                     playerFlipped = 1;
+                     break;
+                 case false:
+                     playerFlipped = 0;
+                     break;
+            }
+            
             yield return new WaitForSeconds(Time.deltaTime * 5);
-            PlayerAuthenticator.instance.sendMovementPacket(transform.position);
+            PlayerAuthenticator.instance.sendMovementPacket(transform.position, currentSentAnim, playerFlipped);
         }
     }
 

@@ -68,6 +68,7 @@ public class PlayerAuthenticator : MonoBehaviour
     {
         username = name;
     }
+
     public void changePassword(string pass)
     {
         password = pass;
@@ -154,7 +155,7 @@ public class PlayerAuthenticator : MonoBehaviour
                         dialogBox.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
                         characterCreationScreen.SetActive(true);
                         userID = response.UserId;
-                        SceneManager.LoadScene("Chamber");  
+                        SceneManager.LoadScene("Chamber");
                     }
 
                 });
@@ -165,6 +166,9 @@ public class PlayerAuthenticator : MonoBehaviour
     {
         if (gameSparksAvailable == true)
         {
+            if (username == "Server" ||username ==  "server") //Add error message
+                return;
+            
             new AuthenticationRequest()
                 .SetUserName(username)
                 .SetPassword(password)
@@ -178,10 +182,10 @@ public class PlayerAuthenticator : MonoBehaviour
                     {
                         // joinMatch();
                         playerClass = response.ScriptData.GetString("class");
-                        rank = (int)response.ScriptData.GetNumber("rank");
-                        points = (int)response.ScriptData.GetNumber("points");
+                        rank = (int) response.ScriptData.GetNumber("rank");
+                        points = (int) response.ScriptData.GetNumber("points");
                         userID = response.UserId;
-                        SceneManager.LoadScene("Chamber");             
+                        SceneManager.LoadScene("Chamber");
 
                     }
                 });
@@ -217,7 +221,7 @@ public class PlayerAuthenticator : MonoBehaviour
             if (!message.HasErrors)
             {
                 matchID = message.MatchId;
-                port = (int)message.Port;
+                port = (int) message.Port;
                 accessToken = message.AccessToken;
                 host = message.Host;
                 createSession();
@@ -225,6 +229,7 @@ public class PlayerAuthenticator : MonoBehaviour
         };
     }
 
+    public string previousScene;
     public void setListenersOnSceneChange(Scene old, Scene news)
     {
         if (RTClass != null)
@@ -244,6 +249,7 @@ public class PlayerAuthenticator : MonoBehaviour
             GameObject.Find("Inventory").SetActive(false);
             return;
         }
+
         if (news.name == "Hallway")
         {
             joinMatch("LOB");
@@ -256,17 +262,34 @@ public class PlayerAuthenticator : MonoBehaviour
         {
             joinMatch("OPCENT");
         }
-        else if(news.name == "TechLab")
+        else if (news.name == "TechLab")
             joinMatch("TECH");
+
+        var elev = GameObject.Find("Elevator");
+
+        if (elev != null)
+        {
+            if (previousScene != "Chamber")
+            {
+                print("found");
+                var elevAnim = elev.GetComponent<Animator>();
+                elevAnim.Play("Elevator_Close");
+            }
+        }
+        else
+        {
+            print("not found");
+        }
         
+
         menuNameText = GameObject.Find("PlayerNameText").GetComponent<Text>();
         menuRankText = GameObject.Find("RankText").GetComponent<Text>();
         menuPointsText = GameObject.Find("PointsText").GetComponent<Text>();
         menuClassText = GameObject.Find("ClassText").GetComponent<Text>();
         menuNameText.text = " ";
         GameObject.Find("Inventory").SetActive(false);
-        
-        
+
+
         if (chatmanager == null)
             chatmanager = GameObject.Find("ChatInput").GetComponent<ChatManager>();
         chatmanager.username = username;
@@ -279,7 +302,19 @@ public class PlayerAuthenticator : MonoBehaviour
     {
         GameSparks.Api.Messages.MatchUpdatedMessage.Listener = message =>
         {
+            if (message.HasErrors)
+            {
+                print(message.Errors.JSON);
+                return;
+            }
+
             matchID = message.MatchId;
+          /*  foreach (var player in message.AddedPlayers)
+            {
+                sendMessageToAll("Server", player + " has connected to the game.");
+            }*/
+            sendMessageToAll("Server", message.ScriptData.GetString("newPlayer") + " has connected to the game.");
+            
         };
     }
 
@@ -307,12 +342,11 @@ public class PlayerAuthenticator : MonoBehaviour
             .SetEventKey("REMOVE")
             .SetEventAttribute("matchID", matchID)
             .SetEventAttribute("playerID", userID)
-            .Send(response =>{});
+            .Send(response => { });
     }
-    
+
     public void sendMessageToAll(string leName, string leMessage)
     {
-        Debug.Log(matchID);
         if (matchID == null)
             return;
 
@@ -320,10 +354,7 @@ public class PlayerAuthenticator : MonoBehaviour
             .SetEventKey("Chat_ToAll")
             .SetEventAttribute("Message", leMessage)
             .SetEventAttribute("MatchID", matchID)
-            .Send(response =>
-            {
-
-            });
+            .Send(response => { });
     }
 
     public void setInventoryInfo()
@@ -337,12 +368,12 @@ public class PlayerAuthenticator : MonoBehaviour
         menuRankText.text = Lrank.ToString();
         menuPointsText.text = Lpoints.ToString();
     }
-    
+
     //REALTIME MULTIPLAYER
 
     public void createSession()
     {
-        if(RTClass == null)
+        if (RTClass == null)
             RTClass = gameObject.AddComponent<GameSparksRTUnity>();
         RTClass.Configure(host, port, accessToken, OnPacket: pack => packetReceived(pack),
             OnPlayerConnect: pack => playerConnected(pack),
@@ -367,13 +398,13 @@ public class PlayerAuthenticator : MonoBehaviour
             }
         }
     }
-    
+
     public void playerConnected(int id)
     {
         var newEnemy = Instantiate(enemyPrefab);
         newEnemy.GetComponent<Enemy>().id = id;
         players.Add(id, newEnemy);
-        print("player connected");
+
     }
 
     public void playerDisconnected(int id)
@@ -382,7 +413,7 @@ public class PlayerAuthenticator : MonoBehaviour
         players.TryGetValue(id, out discPlayer);
         Destroy(discPlayer);
         players.Remove(id);
-        
+
     }
 
     public void packetReceived(RTPacket pack)
@@ -391,20 +422,46 @@ public class PlayerAuthenticator : MonoBehaviour
         {
             GameObject enemyToChange;
             players.TryGetValue(pack.Sender, out enemyToChange);
-            if(enemyToChange != null)
-            enemyToChange.transform.DOMove((Vector3) pack.Data.GetVector3(1), 0.1f).SetEase(Ease.Linear);
+            if (enemyToChange != null)
+            {
+                //Movement code
+                enemyToChange.transform.DOMove((Vector3) pack.Data.GetVector3(1), Time.deltaTime * 5).SetEase(Ease.Linear);
+                
+                //Animation code
+                if (!string.Equals(pack.Data.GetString(2), "null"))
+                {
+                    print(pack.Data.GetString(2));
+                    enemyToChange.GetComponent<Animator>().Play(pack.Data.GetString(2), 0);
+                }
+
+                //Sprite flip code
+                if (pack.Data.GetInt(3) == 0)
+                {
+                    if (enemyToChange.GetComponent<SpriteRenderer>().flipX)
+                        enemyToChange.GetComponent<SpriteRenderer>().flipX = false;
+
+                }
+                else if (pack.Data.GetInt(3) == 1)
+                {
+                    if (!enemyToChange.GetComponent<SpriteRenderer>().flipX)
+                        enemyToChange.GetComponent<SpriteRenderer>().flipX = true;
+                }
+            }
             else
                 print("Error: No enemy to change");
         }
     }
 
-    public void sendMovementPacket(Vector3 pos)
-    {
-        using (RTData data = RTData.Get())
+    public void sendMovementPacket(Vector3 pos, string animName, int isFlipped)
         {
-            data.SetVector3(1, pos);
-            RTClass.SendData(100, GameSparksRT.DeliveryIntent.RELIABLE, data);
+            using (RTData data = RTData.Get())
+            {
+                data.SetVector3(1, pos);
+                data.SetString(2, animName);
+                data.SetInt(3, isFlipped);
+                RTClass.SendData(100, GameSparksRT.DeliveryIntent.RELIABLE, data);
+            }
         }
+
     }
 
-}

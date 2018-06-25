@@ -45,6 +45,8 @@ public class ChatManager : MonoBehaviour
         newMessage.transform.SetParent(chatContainer.transform, worldPositionStays: false);
         newMessage.GetComponent<RectTransform>().anchorMin = new Vector2(0, 0);
         newMessage.GetComponent<RectTransform>().anchorMax = new Vector2(1f, 0);
+        if(name == "Server")
+            newMessage.GetComponent<Text>().color = Color.blue;
 
         foreach (GameObject g in messageQueue)
         {

@@ -569,7 +569,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (sr.flipX == true)
+            if (sr.flipX)
             {
                 rb.velocity = rb.velocity - Vector2.right;
             }
@@ -592,6 +592,7 @@ public class Player : MonoBehaviour
             touchingPos2 = transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
             RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 0.18f, 1 << 8);
             RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 0.18f, 1 << 8);
+            
             if (hit.collider != null || hit2.collider != null)
             {
                 playerAction = playerState.idle;
@@ -606,7 +607,6 @@ public class Player : MonoBehaviour
 
 
         }
-        Debug.Log("ran");
 
     }
     IEnumerator resetComboChain()
