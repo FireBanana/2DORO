@@ -313,7 +313,6 @@ public class PlayerAuthenticator : MonoBehaviour
             {
                 sendMessageToAll("Server", player + " has connected to the game.");
             }*/
-            sendMessageToAll("Server", message.ScriptData.GetString("newPlayer") + " has connected to the game.");
             
         };
     }
@@ -325,10 +324,24 @@ public class PlayerAuthenticator : MonoBehaviour
 
             if (!message.HasErrors)
             {
-                Debug.Log("got message");
-                var mssg = message.Data.GetString("Message");
-                var dname = message.Data.GetString("displayName");
-                chatmanager.addChatMessage(dname, mssg);
+                print("received");
+                if (message.ExtCode == "joined")
+                {
+                    var playerName = message.Data.GetString("playerName");
+                    chatmanager.addChatMessage("Server", playerName + " has joined the room.");
+                }
+
+                else if (message.ExtCode == "left")
+                {
+                    var playerName = message.Data.GetString("playerName");
+                    chatmanager.addChatMessage("Server", playerName + " has left the room.");
+                }
+                else
+                {
+                    var mssg = message.Data.GetString("Message");
+                    var dname = message.Data.GetString("displayName");
+                    chatmanager.addChatMessage(dname, mssg);
+                }
             }
             else
                 Debug.Log(message.Errors);
@@ -355,6 +368,22 @@ public class PlayerAuthenticator : MonoBehaviour
             .SetEventAttribute("Message", leMessage)
             .SetEventAttribute("MatchID", matchID)
             .Send(response => { });
+    }
+
+    public void sendLoginNotification(string status)
+    {
+        if (matchID == null)
+            return;
+
+        new GameSparks.Api.Requests.LogEventRequest()
+            .SetEventKey("PlayerJoined")
+            .SetEventAttribute("MatchId", matchID)
+            .SetEventAttribute("Status", status)
+            .Send(response =>
+            {
+                if(response.HasErrors)
+                    print(response.Errors.JSON);
+            });
     }
 
     public void setInventoryInfo()
@@ -397,6 +426,7 @@ public class PlayerAuthenticator : MonoBehaviour
                 players.Add(enemies, newEnemy);
             }
         }
+        sendLoginNotification("joined");
     }
 
     public void playerConnected(int id)

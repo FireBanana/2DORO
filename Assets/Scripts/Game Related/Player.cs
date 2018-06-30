@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     protected Animator anim;
     protected SpriteRenderer sr;
 
-    protected enum playerState { idle, running, rolling, jumping, walking, sliding, attacking, jumpAttacking, hurting, blocking }
+    protected enum playerState { idle, running, rolling, jumping, walking, sliding, attacking, jumpAttacking, hurting, blocking, braking }
     protected playerState playerAction;
     public TriggerCheck[] triggerChecks;
 
@@ -39,10 +39,11 @@ public class Player : MonoBehaviour
     protected int comboChainNumber, comboChainNumber2;
     protected Vector3 touchingPos, touchingPos2;
 
-    public bool isAtDoor = false;
+    public bool isAtDoor;
     public Door doorScript;
 
-    public bool isChatting = false;
+    public bool isChatting;
+    public bool isAllowedToFight;
 
     public void Initialize()
     {

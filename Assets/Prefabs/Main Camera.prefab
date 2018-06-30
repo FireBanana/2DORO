@@ -23,9 +23,9 @@ GameObject:
   - component: {fileID: 124225495160619922}
   - component: {fileID: 81795826323990724}
   - component: {fileID: 114735974078018588}
-  - component: {fileID: 114950532778630154}
-  - component: {fileID: 114329645804421684}
-  - component: {fileID: 114014705007914944}
+  - component: {fileID: 114378505532836880}
+  - component: {fileID: 114671315768076176}
+  - component: {fileID: 114978999420966842}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -40,7 +40,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1156803973939248}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.989, y: -0.242, z: -10}
+  m_LocalPosition: {x: -3.3, y: -0.19, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -66,7 +66,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 1.92
+  orthographic size: 1.8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -78,7 +78,7 @@ Camera:
   m_HDR: 1
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
+  m_ForceIntoRT: 1
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -89,38 +89,7 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1156803973939248}
   m_Enabled: 1
---- !u!114 &114014705007914944
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1156803973939248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ac0ec3d6ad5f4a3d9d184bc3773a3a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ProCamera2D: {fileID: 114735974078018588}
-  Strength: {x: 0.02, y: 0}
-  Duration: 0.2
-  Vibrato: 15
-  Randomness: 0
-  Smoothness: 0
-  InitialAngle: -1
-  UseRandomInitialAngle: 1
-  Rotation: {x: 0, y: 0, z: 0}
-  IgnoreTimeScale: 0
-  ShakePresets:
-  - Name: ShakePreset0
-    Strength: {x: 0.02, y: 0, z: 0}
-    Duration: 0.2
-    Vibrato: 15
-    Randomness: 0
-    Smoothness: 0
-    InitialAngle: -1
-    Rotation: {x: 0, y: 0, z: 0}
-    IgnoreTimeScale: 0
---- !u!114 &114329645804421684
+--- !u!114 &114378505532836880
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -140,7 +109,23 @@ MonoBehaviour:
   SnapCameraToGrid: 1
   DrawGrid: 1
   GridColor: {r: 1, g: 1, b: 1, a: 0.1}
-  GridDensity: Infinity
+  GridDensity: 1.9999999
+--- !u!114 &114671315768076176
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1156803973939248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sharedProfile: {fileID: 11400000, guid: a77bb62c3d76710459d73837b5b3c61c, type: 2}
+  isGlobal: 1
+  blendDistance: 0
+  weight: 1
+  priority: 0
 --- !u!114 &114735974078018588
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -172,7 +157,7 @@ MonoBehaviour:
   IsCameraPositionTopBounded: 0
   IsCameraPositionBottomBounded: 0
   GameCamera: {fileID: 20448101984765954}
---- !u!114 &114950532778630154
+--- !u!114 &114978999420966842
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -180,10 +165,56 @@ MonoBehaviour:
   m_GameObject: {fileID: 1156803973939248}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38dc1b2a752760045b44bb8cbea492b5, type: 3}
+  m_Script: {fileID: 11500000, guid: 948f4100a11a5c24981795d21301da5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryMenu: {fileID: 0}
+  volumeTrigger: {fileID: 4860581288848412}
+  volumeLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  stopNaNPropagation: 1
+  antialiasingMode: 2
+  temporalAntialiasing:
+    jitterSpread: 0.75
+    sharpness: 0.25
+    stationaryBlending: 0.95
+    motionBlending: 0.85
+  subpixelMorphologicalAntialiasing:
+    quality: 2
+  fastApproximateAntialiasing:
+    fastMode: 0
+    keepAlpha: 0
+  fog:
+    enabled: 1
+    excludeSkybox: 1
+  debugLayer:
+    lightMeter:
+      width: 512
+      height: 256
+      showCurves: 1
+    histogram:
+      width: 512
+      height: 256
+      channel: 3
+    waveform:
+      exposure: 0.12
+      height: 256
+    vectorscope:
+      size: 256
+      exposure: 0.12
+    overlaySettings:
+      linearDepth: 0
+      motionColorIntensity: 4
+      motionGridSize: 64
+      colorBlindnessType: 0
+      colorBlindnessStrength: 1
+  m_Resources: {fileID: 11400000, guid: d82512f9c8e5d4a4d938b575d47f88d4, type: 2}
+  m_ShowToolkit: 0
+  m_ShowCustomSorter: 0
+  breakBeforeColorGrading: 0
+  m_BeforeTransparentBundles: []
+  m_BeforeStackBundles: []
+  m_AfterStackBundles: []
 --- !u!124 &124225495160619922
 Behaviour:
   m_ObjectHideFlags: 1

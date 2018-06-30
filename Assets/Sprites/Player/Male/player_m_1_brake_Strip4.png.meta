@@ -1,9 +1,11 @@
 fileFormatVersion: 2
-guid: 3ef8f4e1dd07c79409ac2a22228e6edc
+guid: cf6f302942de5f946a4ccceb36502bea
 TextureImporter:
   fileIDToRecycleName:
-    21300000: newchat_strip2_0
-    21300002: newchat_strip2_1
+    21300000: player_m_1_brake_Strip4_0
+    21300002: player_m_1_brake_Strip4_1
+    21300004: player_m_1_brake_Strip4_2
+    21300006: player_m_1_brake_Strip4_3
   externalObjects: {}
   serializedVersion: 5
   mipmaps:
@@ -80,28 +82,17 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
     androidETC2FallbackOverride: 0
-  - serializedVersion: 2
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: newchat_strip2_0
+      name: player_m_1_brake_Strip4_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 398
-        height: 52
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -109,19 +100,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f447f040ff895b9428ee94943fd3a8bd
+      spriteID: b4910a0845739d7428c3fc312258e5b5
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: newchat_strip2_1
+      name: player_m_1_brake_Strip4_1
       rect:
         serializedVersion: 2
-        x: 398
+        x: 64
         y: 0
-        width: 398
-        height: 52
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -129,7 +120,47 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9fdb10ca54ed58c4481e7174f40c7ef2
+      spriteID: 250f13b48aad2c6409ec199df022165a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_m_1_brake_Strip4_2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 441072de617ef68488bfce9d08786b8f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: player_m_1_brake_Strip4_3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dab9250f525ce5c488bb0f65dd66337a
       vertices: []
       indices: 
       edges: []
@@ -137,7 +168,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 7356b6f4d54b4d140ac23e809256c494
+    spriteID: f17fb5365e272d5469f196bcc948ac51
     vertices: []
     indices: 
     edges: []

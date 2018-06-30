@@ -54,6 +54,8 @@ public class Door : MonoBehaviour
         {
             print("prev: " + SceneManager.GetActiveScene().name);
             PlayerAuthenticator.instance.previousScene = SceneManager.GetActiveScene().name;
+            if (SceneManager.GetActiveScene().name != "Chamber")
+            PlayerAuthenticator.instance.sendLoginNotification("left");
             
             var lvlMan = GameObject.Find("LevelManager");
             if(lvlMan != null)
