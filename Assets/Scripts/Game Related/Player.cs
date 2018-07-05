@@ -45,6 +45,8 @@ public class Player : MonoBehaviour
     public bool isChatting;
     public bool isAllowedToFight;
 
+    protected bool touchingWall, touchingFloor; //States which show when touching a wall or floor
+
     public void Initialize()
     {
         playerAction = playerState.idle;

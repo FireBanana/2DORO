@@ -214,6 +214,33 @@ public class PlayerAuthenticator : MonoBehaviour
             });
     }
 
+    public void searchBattleMatches()
+    {
+        new GameSparks.Api.Requests.MatchmakingRequest()
+            .SetMatchShortCode("BATTLE")
+            .SetSkill(0)
+            .Send(response =>
+            {
+
+                if (!response.HasErrors)
+                {
+                    Debug.Log("Matchmaking request succedful");
+                }
+                else
+                    Debug.LogError(response.Errors.JSON);
+            });
+        
+        new GameSparks.Api.Requests.FindPendingMatchesRequest()
+            .SetMatchShortCode("BATTLE")
+            .Send(response =>
+            {
+                foreach (var match in response.PendingMatches)
+                {
+                    
+                }
+            });
+    }
+    
     public void matchFoundListener()
     {
         GameSparks.Api.Messages.MatchFoundMessage.Listener = message =>
@@ -309,10 +336,6 @@ public class PlayerAuthenticator : MonoBehaviour
             }
 
             matchID = message.MatchId;
-          /*  foreach (var player in message.AddedPlayers)
-            {
-                sendMessageToAll("Server", player + " has connected to the game.");
-            }*/
             
         };
     }

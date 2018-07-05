@@ -11,8 +11,17 @@ public class TestingRestartScript : MonoBehaviour {
 	void Update ()
 	{
 
+	    if (PlayerAuthenticator.instance == null)
+	    {
+	        print("Player Authenticator does not exist");
+	        return;
+	    }
+
 	    if (PlayerAuthenticator.instance.fighterScript.isChatting)
 	        return;
+	    
+	    if(Input.GetKeyDown(KeyCode.P))						//Search matches for fighting
+	        PlayerAuthenticator.instance.searchBattleMatches();
 	    
         if(Input.GetKeyDown(KeyCode.T)){
             GetComponent<ProCamera2DShake>().Shake();

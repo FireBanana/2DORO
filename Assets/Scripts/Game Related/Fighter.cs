@@ -8,7 +8,10 @@ public class Fighter : Player
     {
         Initialize();
         touchingPos = transform.position - new Vector3(0, GetComponent<BoxCollider2D>().bounds.extents.y);
-        PlayerAuthenticator.instance.fighterScript = this;
+        if (PlayerAuthenticator.instance != null)
+            PlayerAuthenticator.instance.fighterScript = this;
+        else
+            print("Player Authenticator not found");
     }
 
     private void Update()
@@ -23,7 +26,6 @@ public class Fighter : Player
 
         if (playerAction == playerState.braking)
         {
-            print(rb.velocity.x);
             if ((rb.velocity.x < 0.1f && rb.velocity.x > 0) || (rb.velocity.x > -0.1f && rb.velocity.x < 0))
             {
                 playerAction = playerState.idle;
@@ -58,10 +60,14 @@ public class Fighter : Player
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            if (playerAction == playerState.idle || playerAction == playerState.walking || playerAction == playerState.running || playerAction == playerState.braking)
+            if (isAllowedToFight)
             {
-                anim.Play("Fighter_block");
-                playerAction = playerState.blocking;
+                if (playerAction == playerState.idle || playerAction == playerState.walking ||
+                    playerAction == playerState.running || playerAction == playerState.braking)
+                {
+                    anim.Play("Fighter_block");
+                    playerAction = playerState.blocking;
+                }
             }
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -70,6 +76,12 @@ public class Fighter : Player
             {
                 if (numbOfJumps < 5)
                 {
+                    if (touchingFloor && touchingWall)
+                    {
+                        playerAction = playerState.sliding;
+                        anim.Play("Fighter_wallSlide");
+                        prevState = playerState.sliding;
+                    }
                     if (playerAction == playerState.sliding)
                     {
                         anim.Play("Fighter_jump");
@@ -114,7 +126,7 @@ public class Fighter : Player
             }
             else
             {
-                if (playerAction != playerState.attacking && playerAction != playerState.blocking)
+                if (playerAction != playerState.attacking && playerAction != playerState.blocking && playerAction != playerState.braking)
                 {
                     if (isRunning == true)
                     {
@@ -152,7 +164,7 @@ public class Fighter : Player
             }
             else
             {
-                if (playerAction != playerState.attacking && playerAction != playerState.blocking)
+                if (playerAction != playerState.attacking && playerAction != playerState.blocking && playerAction != playerState.braking)
                 {
                     if (isRunning == true)
                     {
@@ -284,14 +296,11 @@ public class Fighter : Player
         }
         if (Input.GetKeyUp(KeyCode.C))
         {
-            if (isAllowedToFight)
-            {
                 if (playerAction == playerState.blocking)
                 {
                     anim.Play("Figher_idle");
                     playerAction = playerState.idle;
                 }
-            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -651,6 +660,8 @@ public class Fighter : Player
         touchingPos2 = transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
         if (collision.collider.gameObject.layer == 9)
         {
+            touchingWall = true;
+            
             if (playerAction == playerState.rolling)
             {
                 RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 0.18f, 1 << 8);
@@ -673,6 +684,9 @@ public class Fighter : Player
         }
         else if (collision.collider.gameObject.layer == 8)
         {
+
+            touchingFloor = true;
+            
             if (playerAction != playerState.rolling)
             {
                 if (hurtType != 'H')
@@ -705,6 +719,9 @@ public class Fighter : Player
     {
         if (collision.collider.gameObject.layer == 8)
         {
+
+            touchingFloor = false;
+            
             if (playerAction != playerState.rolling)
             {
                 if (playerAction != playerState.jumping)
@@ -721,6 +738,9 @@ public class Fighter : Player
         }
         else if (collision.collider.gameObject.layer == 9)
         {
+
+            touchingWall = false;
+            
             if (playerAction == playerState.jumping || playerAction == playerState.sliding)
             {
                 //rb.drag = 1;
