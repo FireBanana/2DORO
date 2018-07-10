@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using DG.Tweening;
 using GameSparks.RT;
 using DG.Tweening;
+using GameSparks.Core;
 
 public class PlayerAuthenticator : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class PlayerAuthenticator : MonoBehaviour
     public GameObject dialogBox;
     public Text dialogText;
     public Fighter fighterScript;
+    private AudioSource musicPlayer;
+    public AudioClip inGameMusic;
 
     public string playerClass;
     public int rank;
@@ -37,6 +40,8 @@ public class PlayerAuthenticator : MonoBehaviour
     public bool connectedToSession;
     public GameObject enemyPrefab;
     Dictionary<int, GameObject> players = new Dictionary<int, GameObject>();
+
+    public string currentCreatorId;
 
     //character creation
     CharacterSelectionButton[] activeButtons = new CharacterSelectionButton[3];
@@ -60,6 +65,8 @@ public class PlayerAuthenticator : MonoBehaviour
             }
 
         };
+
+        musicPlayer = GetComponent<AudioSource>();
 
     }
 
@@ -156,6 +163,8 @@ public class PlayerAuthenticator : MonoBehaviour
                         characterCreationScreen.SetActive(true);
                         userID = response.UserId;
                         SceneManager.LoadScene("Chamber");
+                        musicPlayer.clip = inGameMusic;
+                        musicPlayer.Play();
                     }
 
                 });
@@ -186,7 +195,8 @@ public class PlayerAuthenticator : MonoBehaviour
                         points = (int) response.ScriptData.GetNumber("points");
                         userID = response.UserId;
                         SceneManager.LoadScene("Chamber");
-
+                        musicPlayer.clip = inGameMusic;
+                        musicPlayer.Play();
                     }
                 });
         }
@@ -204,42 +214,122 @@ public class PlayerAuthenticator : MonoBehaviour
             .SetSkill(0)
             .Send(response =>
             {
-
                 if (!response.HasErrors)
                 {
                     Debug.Log("Matchmaking request succedful");
                 }
                 else
                     Debug.LogError(response.Errors.JSON);
+            });
+    }
+
+    #region BattleMatch
+    public void createBattleMatch()
+    {
+   /*     new GameSparks.Api.Requests.MatchmakingRequest()
+            .SetMatchShortCode("BATTLE")
+            .SetParticipantData( new GSRequestData().AddString("name", username))
+            .SetSkill(0)
+            .Send(response =>
+            {
+                if (!response.HasErrors)
+                {
+                    DataHolder.Instance.roomWaitingScreen.SetActive(true);
+                    var createScreenManager =
+                        DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>();
+                    createScreenManager.setNextAvailableName(username);
+                }
+                else
+                    Debug.LogError(response.Errors.JSON);
+            });*/
+        
+        new GameSparks.Api.Requests.LogEventRequest()
+            .SetEventKey("CREATEMATCH")
+            .SetEventAttribute("Creator" , username)
+            .SetEventAttribute("Mode", "PVP")
+            .SetEventAttribute("PlayerCount", 1)
+            .Send(response =>
+            {
+                if(response.HasErrors)
+                {
+                    print("Error: " + response.Errors.JSON);
+                    return;
+                }
+                
+                var createScreenManager =
+                    DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>();
+                createScreenManager.setNextAvailableName(username);
+                
             });
     }
 
     public void searchBattleMatches()
     {
-        new GameSparks.Api.Requests.MatchmakingRequest()
-            .SetMatchShortCode("BATTLE")
-            .SetSkill(0)
-            .Send(response =>
-            {
 
-                if (!response.HasErrors)
-                {
-                    Debug.Log("Matchmaking request succedful");
-                }
-                else
-                    Debug.LogError(response.Errors.JSON);
-            });
-        
-        new GameSparks.Api.Requests.FindPendingMatchesRequest()
-            .SetMatchShortCode("BATTLE")
+        new GameSparks.Api.Requests.LogEventRequest()
+            .SetEventKey("SEARCHMATCHES")
             .Send(response =>
             {
-                foreach (var match in response.PendingMatches)
+                if(response.HasErrors)
                 {
-                    
+                    print("Error: " + response.Errors.JSON);
+                    return;
                 }
+                
+                var serverBrowserManager = DataHolder.Instance.serverBrowserScreen.GetComponent<ServerBrowserManager>();
+
+                serverBrowserManager.totalMatches = response.ScriptData.GetGSDataList("Matches");
+
+                serverBrowserManager.initializeList();
+                serverBrowserManager.populateInitialList();
             });
     }
+
+    public void joinBattleMatch(string creatorID)
+    {
+        new GameSparks.Api.Requests.LogEventRequest()
+            .SetEventKey("JOINMATCH")
+            .SetEventAttribute("CreatorId" , creatorID)
+            .SetEventAttribute("Name", username)
+            .Send(response =>
+            {
+                if (response.HasErrors)
+                {
+                    print("Error: " + response.Errors.JSON);
+                    return;
+                }
+
+                currentCreatorId = response.ScriptData.GetString("CreatorId");
+                var playerNames = response.ScriptData.GetStringList("Players");
+                
+                DataHolder.Instance.roomWaitingScreen.SetActive(true);
+                
+                var createScreenManager =
+                    DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>();
+
+                foreach (var player in playerNames)
+                {
+                    createScreenManager.setNextAvailableName(player);
+                }
+                
+                createScreenManager.setNextAvailableName(username);
+                
+            });
+    }
+    
+    public void leaveBattleMatch()
+    {
+        new GameSparks.Api.Requests.LogEventRequest()
+            .SetEventKey("LEAVEMATCH")
+            .SetEventAttribute("CreatorId" , username)
+            .SetEventAttribute("PlayerNumb", 1)
+            .Send(response =>
+            {
+                if(response.HasErrors)
+                    print("Error: " + response.Errors.JSON);
+            });
+    }
+    #endregion
     
     public void matchFoundListener()
     {
@@ -359,6 +449,13 @@ public class PlayerAuthenticator : MonoBehaviour
                     var playerName = message.Data.GetString("playerName");
                     chatmanager.addChatMessage("Server", playerName + " has left the room.");
                 }
+                else if (message.ExtCode == "PlayerJoinMatch")
+                {
+                    var nameToAdd = message.Data.GetString("Name");
+                    var createScreenManager =
+                        DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>();
+                    createScreenManager.setNextAvailableName(nameToAdd);
+                }
                 else
                 {
                     var mssg = message.Data.GetString("Message");
@@ -421,7 +518,7 @@ public class PlayerAuthenticator : MonoBehaviour
         menuPointsText.text = Lpoints.ToString();
     }
 
-    //REALTIME MULTIPLAYER
+    #region RealtimeMultiplayer
 
     public void createSession()
     {
@@ -515,6 +612,8 @@ public class PlayerAuthenticator : MonoBehaviour
                 RTClass.SendData(100, GameSparksRT.DeliveryIntent.RELIABLE, data);
             }
         }
+    
+    #endregion
 
     }
 

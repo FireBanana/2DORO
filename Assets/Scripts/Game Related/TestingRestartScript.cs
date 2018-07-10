@@ -19,9 +19,35 @@ public class TestingRestartScript : MonoBehaviour {
 
 	    if (PlayerAuthenticator.instance.fighterScript.isChatting)
 	        return;
-	    
-	    if(Input.GetKeyDown(KeyCode.P))						//Search matches for fighting
-	        PlayerAuthenticator.instance.searchBattleMatches();
+
+		if (Input.GetKeyDown(KeyCode.P)) //Search matches for fighting
+		{
+			if (DataHolder.Instance.roomWaitingScreen.activeInHierarchy)
+			{
+				DataHolder.Instance.roomWaitingScreen.SetActive(false);
+				return;
+			}
+			else
+			{
+				DataHolder.Instance.roomWaitingScreen.SetActive(true);
+				PlayerAuthenticator.instance.createBattleMatch();
+			}
+		}
+		    
+		if (Input.GetKeyDown(KeyCode.L))
+		{
+			if (DataHolder.Instance.serverBrowserScreen.activeInHierarchy)
+			{
+				DataHolder.Instance.serverBrowserScreen.SetActive(false);
+				return;
+			}
+			else
+			{
+				DataHolder.Instance.serverBrowserScreen.SetActive(true);
+			}
+			PlayerAuthenticator.instance.searchBattleMatches();
+		}
+			
 	    
         if(Input.GetKeyDown(KeyCode.T)){
             GetComponent<ProCamera2DShake>().Shake();
