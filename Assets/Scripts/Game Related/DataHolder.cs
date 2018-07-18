@@ -8,6 +8,7 @@ public class DataHolder : MonoBehaviour
 
 	public GameObject roomWaitingScreen; //The screen where players connect;
 	public GameObject serverBrowserScreen;
+	public Fighter fighter;
 	public AudioClip buttonClickSound;
 	private AudioSource soundMaker;
 	

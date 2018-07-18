@@ -41,7 +41,9 @@ public class PlayerAuthenticator : MonoBehaviour
     public GameObject enemyPrefab;
     Dictionary<int, GameObject> players = new Dictionary<int, GameObject>();
 
+    //Current match details
     public string currentCreatorId;
+    public int currentPlayerNumb;
 
     //character creation
     CharacterSelectionButton[] activeButtons = new CharacterSelectionButton[3];
@@ -67,7 +69,7 @@ public class PlayerAuthenticator : MonoBehaviour
         };
 
         musicPlayer = GetComponent<AudioSource>();
-
+        startChatListener(); //DIRTY REMOVE CHAMBER BELOW
     }
 
     // Update is called once per frame
@@ -226,22 +228,6 @@ public class PlayerAuthenticator : MonoBehaviour
     #region BattleMatch
     public void createBattleMatch()
     {
-   /*     new GameSparks.Api.Requests.MatchmakingRequest()
-            .SetMatchShortCode("BATTLE")
-            .SetParticipantData( new GSRequestData().AddString("name", username))
-            .SetSkill(0)
-            .Send(response =>
-            {
-                if (!response.HasErrors)
-                {
-                    DataHolder.Instance.roomWaitingScreen.SetActive(true);
-                    var createScreenManager =
-                        DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>();
-                    createScreenManager.setNextAvailableName(username);
-                }
-                else
-                    Debug.LogError(response.Errors.JSON);
-            });*/
         
         new GameSparks.Api.Requests.LogEventRequest()
             .SetEventKey("CREATEMATCH")
@@ -259,7 +245,10 @@ public class PlayerAuthenticator : MonoBehaviour
                 var createScreenManager =
                     DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>();
                 createScreenManager.setNextAvailableName(username);
-                
+
+                currentCreatorId = userID;
+                currentPlayerNumb = 1;
+
             });
     }
 
@@ -299,34 +288,44 @@ public class PlayerAuthenticator : MonoBehaviour
                     return;
                 }
 
-                currentCreatorId = response.ScriptData.GetString("CreatorId");
-                var playerNames = response.ScriptData.GetStringList("Players");
-                
+                currentCreatorId = response.ScriptData.GetGSData("responseData").GetString("CreatorId");
+                currentPlayerNumb = (int)response.ScriptData.GetGSData("responseData").GetInt("PlayerCount");
+                var matchDetails = response.ScriptData.GetGSData("responseData");
                 DataHolder.Instance.roomWaitingScreen.SetActive(true);
                 
                 var createScreenManager =
                     DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>();
-
-                foreach (var player in playerNames)
-                {
-                    createScreenManager.setNextAvailableName(player);
-                }
                 
-                createScreenManager.setNextAvailableName(username);
+                createScreenManager.cleanSlots();
+                
+                createScreenManager.setNextAvailableName(matchDetails.GetString("Creator"));
+
+                for (int i = 2; i <= matchDetails.GetInt("PlayerCount"); i++)
+                {
+                    createScreenManager.setNextAvailableName(matchDetails.GetGSData("Players").GetString("Player" + i.ToString()));
+                }
                 
             });
     }
     
     public void leaveBattleMatch()
     {
+        
+        print(currentCreatorId + " " + currentPlayerNumb);
         new GameSparks.Api.Requests.LogEventRequest()
             .SetEventKey("LEAVEMATCH")
-            .SetEventAttribute("CreatorId" , username)
-            .SetEventAttribute("PlayerNumb", 1)
+            .SetEventAttribute("CreatorId" , currentCreatorId)
+            .SetEventAttribute("PlayerNumb", currentPlayerNumb)
             .Send(response =>
             {
-                if(response.HasErrors)
+                if (response.HasErrors)
+                {
                     print("Error: " + response.Errors.JSON);
+                    return;
+                }
+                
+                DataHolder.Instance.roomWaitingScreen.SetActive(false);
+
             });
     }
     #endregion
@@ -435,9 +434,11 @@ public class PlayerAuthenticator : MonoBehaviour
         GameSparks.Api.Messages.ScriptMessage.Listener = message =>
         {
 
+         //   if (SceneManager.GetActiveScene().name == "Chamber") //VERY DIRTY
+          //      return;
+
             if (!message.HasErrors)
             {
-                print("received");
                 if (message.ExtCode == "joined")
                 {
                     var playerName = message.Data.GetString("playerName");
@@ -451,10 +452,16 @@ public class PlayerAuthenticator : MonoBehaviour
                 }
                 else if (message.ExtCode == "PlayerJoinMatch")
                 {
+                    print("received");
                     var nameToAdd = message.Data.GetString("Name");
                     var createScreenManager =
                         DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>();
                     createScreenManager.setNextAvailableName(nameToAdd);
+                }
+                else if (message.ExtCode == "PlayerLeftMatch")
+                {
+                    DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>().removeName((int)message.Data.GetInt("PlayerNumb"));
+                    
                 }
                 else
                 {

@@ -10,8 +10,6 @@ public class CreateBattleMenuManager : MonoBehaviour
 	[HideInInspector]
 	public bool[] isSlotUsed;
 
-	public int myPos;
-
 	private void OnEnable()
 	{
 		isSlotUsed = new bool[slots.Length];
@@ -25,9 +23,24 @@ public class CreateBattleMenuManager : MonoBehaviour
 			{
 				isSlotUsed[i] = true;
 				slots[i].GetComponentInChildren<Text>().text = name;
-				myPos = i + 1;
 				return;
 			}
+		}
+	}
+
+	public void removeName(int numb)
+	{
+		numb = numb - 1;
+		slots[numb].GetComponentInChildren<Text>().text = "";
+		isSlotUsed[numb] = false;
+	}
+
+	public void cleanSlots()
+	{
+		for (int i = 0; i < slots.Length; i++)
+		{
+			isSlotUsed[i] = false;
+			slots[i].GetComponentInChildren<Text>().text = "";
 		}
 	}
 }

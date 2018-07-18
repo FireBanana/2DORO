@@ -452,6 +452,7 @@
             <e p="Platform.cs" t="Include" />
             <e p="Player.cs" t="Include" />
             <e p="ServerBrowserManager.cs" t="Include" />
+            <e p="ServerComputer.cs" t="Include" />
             <e p="SetPlayerPositionOnDoor.cs" t="Include" />
             <e p="TestingRestartScript.cs" t="Include" />
             <e p="TriggerCheck.cs" t="Include" />
