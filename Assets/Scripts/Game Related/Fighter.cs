@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Fighter : Player
 {
+    
+    
     private void Start()
     {
         Initialize();
@@ -13,10 +15,12 @@ public class Fighter : Player
         else
             print("Player Authenticator not found");
     }
-
+    
     private void Update()
     {
 
+        if (isHurt)
+            return;
 
         if (playerAction == playerState.rolling)
         {
@@ -243,6 +247,7 @@ public class Fighter : Player
                 if (playerAction == playerState.jumping)
                 {
                     anim.Play("Fighter_jumpAtk1");
+                    currentAttackAnim = "Fighter_jumpAtk1";
                     playerAction = playerState.jumpAttacking;
                     if (sr.flipX == false)
                         performJumpAttackDamage(1, Vector2.zero, 'H'); // Does not change in mid air
@@ -259,6 +264,7 @@ public class Fighter : Player
                 if (playerAction == playerState.jumping)
                 {
                     anim.Play("Fighter_jumpAtk2");
+                    currentAttackAnim = "Enemy_jumpAtk2";
                     playerAction = playerState.jumpAttacking;
                     if (sr.flipX == false)
                     {
@@ -369,8 +375,11 @@ public class Fighter : Player
                     anim.SetBool("RunTrigger", false);
                     if (comboChainNumber == 2)
                     {
-                        anim.Play("Fighter_kick1");
+                     /*   
                         playerAction = playerState.attacking;
+                        currentAttackAnim = "Enemy_kick1";
+                        anim.Play("Fighter_kick1");
+              
                         isRunning = false;
                         if (sr.flipX == false)
                         {
@@ -382,11 +391,12 @@ public class Fighter : Player
                             setTriggerForAttack(0, -Vector3.right + Vector3.up, 'H', "kick1");
                             attackMove(-Vector2.right);
                         }
-
+                        */
                     }
                     else
                     {
                         anim.Play("Fighter_punch1");
+                        currentAttackAnim = "Enemy_punch1";
                         playerAction = playerState.attacking;
                         isRunning = false;
                         if (sr.flipX == false)
@@ -419,6 +429,7 @@ public class Fighter : Player
                 anim.SetBool("WalkTrigger", false);
                 anim.SetBool("RunTrigger", false);
                 anim.Play("Fighter_dashPunch");
+                currentAttackAnim = "Enemy_dashPunch";
                 playerAction = playerState.attacking;
                 isRunning = false;
                 if (sr.flipX == false)
@@ -448,6 +459,7 @@ public class Fighter : Player
                     playerAction = playerState.attacking;
                     dischargeCombo++;
                     anim.Play("Fighter_discharge");
+                    currentAttackAnim = "Enemy_discharge";
                 }
             }
             else if (playerAction != playerState.attacking && playerAction != playerState.running)
@@ -458,7 +470,8 @@ public class Fighter : Player
                     anim.SetBool("RunTrigger", false);
                     if (comboChainNumber2 == 1)
                     {
-                        anim.Play("Fighter_kick3");
+                    /*    anim.Play("Fighter_kick3");
+                        currentAttackAnim = "Enemy_kick3";
                         playerAction = playerState.attacking;
                         isRunning = false;
                         if (sr.flipX == false)
@@ -472,11 +485,12 @@ public class Fighter : Player
                             var hitDir = -Vector3.right + (Vector3.up * 4f);
                             setTriggerForAttack(0, hitDir, 'J', "kick3");
                             attackMove(-Vector2.right);
-                        }
+                        }*/
                     }
                     else
                     {
                         anim.Play("Fighter_punch1");
+                        currentAttackAnim = "Enemy_punch1";
                         playerAction = playerState.attacking;
                         isRunning = false;
                         if (sr.flipX == false)
@@ -499,6 +513,7 @@ public class Fighter : Player
                 anim.SetBool("WalkTrigger", false);
                 anim.SetBool("RunTrigger", false);
                 anim.Play("Fighter_dashKick");
+                currentAttackAnim = "Enemy_dashKick";
                 playerAction = playerState.attacking;
                 isRunning = false;
                 if (sr.flipX == false)
@@ -523,6 +538,7 @@ public class Fighter : Player
             if (playerAction == playerState.idle || playerAction == playerState.walking)
             {
                 anim.Play("Fighter_special1");
+                currentAttackAnim = "Enemy_special1";
                 playerAction = playerState.attacking;
                 isRunning = false;
                 if (sr.flipX == false)
@@ -537,28 +553,32 @@ public class Fighter : Player
                 }
             }
         }
+        print(currentAttackAnim);
     }
 
     //Multiplayer packet info
     private playerState previousSentState;
     private string currentSentAnim;
+    private string previousAttackAnim;
     private int playerFlipped;
 
     public IEnumerator positionSendToPacket()
     {
         while (PlayerAuthenticator.instance.connectedToSession)
         {
+            print(currentAttackAnim);
             switch (playerAction)
             {
                     case playerState.attacking:
-                        if (previousSentState == playerState.attacking)
+                        if (previousSentState == playerState.attacking && previousAttackAnim == currentAttackAnim)
                         {
                             currentSentAnim = "null";
                             break;
                         }
 
                         previousSentState = playerState.attacking;
-                 //       currentSentAnim = "Fighter_punch1";
+                        previousAttackAnim = currentSentAnim;
+                        currentSentAnim = currentAttackAnim;
                         break;
                     case playerState.blocking:
                         if (previousSentState == playerState.blocking)
@@ -567,7 +587,7 @@ public class Fighter : Player
                             break;
                         }
                         previousSentState = playerState.blocking;
-               //         currentSentAnim = "Fighter_block";
+                        currentSentAnim = "Enemy_block";
                         break;
                     case playerState.idle:
                         if (previousSentState == playerState.idle)
@@ -579,14 +599,15 @@ public class Fighter : Player
                         currentSentAnim = "Enemy_idle";
                         break;
                     case playerState.jumpAttacking:
-                        if (previousSentState == playerState.jumpAttacking)
+                        if (previousSentState == playerState.jumpAttacking  && previousAttackAnim == currentAttackAnim)
                         {
                             currentSentAnim = "null";
                             break;
                         }
 
                         previousSentState = playerState.jumpAttacking;
-                   //     currentSentAnim = "Fighter_jumpAtk1";
+                        previousAttackAnim = currentAttackAnim;
+                        currentSentAnim = currentAttackAnim;
                         break;
                     case playerState.jumping:
                         if (previousSentState == playerState.jumping)

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameSparks.Api;
@@ -10,6 +11,8 @@ using DG.Tweening;
 using GameSparks.RT;
 using DG.Tweening;
 using GameSparks.Core;
+using Org.BouncyCastle.Cms;
+using Random = UnityEngine.Random;
 
 public class PlayerAuthenticator : MonoBehaviour
 {
@@ -224,6 +227,7 @@ public class PlayerAuthenticator : MonoBehaviour
                     Debug.LogError(response.Errors.JSON);
             });
     }
+    
 
     #region BattleMatch
     public void createBattleMatch()
@@ -328,6 +332,39 @@ public class PlayerAuthenticator : MonoBehaviour
 
             });
     }
+
+    public void initiateBattleMatch()
+    {
+        new LogEventRequest()
+            .SetEventKey("STARTMATCH")
+            .SetEventAttribute("CreatorId", currentCreatorId)
+            .Send(response =>
+            {
+                if (response.HasErrors)
+                {
+                    print(response.Errors.JSON);
+                    return;
+                }
+                SceneManager.LoadScene(2);
+            });
+    }
+
+    public void startBattleMatch(string creatId)
+    {
+        print("seaerching");
+        new MatchmakingRequest()
+            .SetMatchShortCode("BATTLE")
+            .SetMatchGroup(creatId)
+            .SetSkill(0)
+            .Send(response =>
+            {
+                if (response.HasErrors)
+                {
+                    print(response.Errors.JSON);
+                    return;
+                }
+            });
+    }
     #endregion
     
     public void matchFoundListener()
@@ -355,7 +392,11 @@ public class PlayerAuthenticator : MonoBehaviour
             removePlayerFromMatch();
         }
 
-        if (news.name == "Chamber")
+        if (news.name == "FightingRoom")
+        {
+            startBattleMatch(currentCreatorId);
+        }
+        else if (news.name == "Chamber")
         {
             menuNameText = GameObject.Find("PlayerNameText").GetComponent<Text>();
             menuRankText = GameObject.Find("RankText").GetComponent<Text>();
@@ -365,8 +406,7 @@ public class PlayerAuthenticator : MonoBehaviour
             GameObject.Find("Inventory").SetActive(false);
             return;
         }
-
-        if (news.name == "Hallway")
+        else if (news.name == "Hallway")
         {
             joinMatch("LOB");
         }
@@ -423,7 +463,6 @@ public class PlayerAuthenticator : MonoBehaviour
                 print(message.Errors.JSON);
                 return;
             }
-
             matchID = message.MatchId;
             
         };
@@ -434,12 +473,18 @@ public class PlayerAuthenticator : MonoBehaviour
         GameSparks.Api.Messages.ScriptMessage.Listener = message =>
         {
 
-         //   if (SceneManager.GetActiveScene().name == "Chamber") //VERY DIRTY
-          //      return;
-
+            //   if (SceneManager.GetActiveScene().name == "Chamber") //VERY DIRTY
+            //      return;
+               
             if (!message.HasErrors)
             {
-                if (message.ExtCode == "joined")
+                if (message.ExtCode == "Chat")
+                {
+                    var mssg = message.Data.GetString("Message");
+                    var dname = message.Data.GetString("displayName");
+                    chatmanager.addChatMessage(dname, mssg);
+                }
+                else if (message.ExtCode == "joined")
                 {
                     var playerName = message.Data.GetString("playerName");
                     chatmanager.addChatMessage("Server", playerName + " has joined the room.");
@@ -452,7 +497,6 @@ public class PlayerAuthenticator : MonoBehaviour
                 }
                 else if (message.ExtCode == "PlayerJoinMatch")
                 {
-                    print("received");
                     var nameToAdd = message.Data.GetString("Name");
                     var createScreenManager =
                         DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>();
@@ -463,11 +507,11 @@ public class PlayerAuthenticator : MonoBehaviour
                     DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>().removeName((int)message.Data.GetInt("PlayerNumb"));
                     
                 }
-                else
+                else if (message.ExtCode == "StartMatch")
                 {
-                    var mssg = message.Data.GetString("Message");
-                    var dname = message.Data.GetString("displayName");
-                    chatmanager.addChatMessage(dname, mssg);
+                    print("Started match");
+                    currentCreatorId = message.Data.GetString("CreatorId");
+                    SceneManager.LoadScene(2);
                 }
             }
             else
@@ -607,20 +651,35 @@ public class PlayerAuthenticator : MonoBehaviour
             else
                 print("Error: No enemy to change");
         }
+            else if (pack.OpCode == 110)
+        {
+            var hurtType = pack.Data.GetString(1);
+            var dir = (Vector2)pack.Data.GetVector2(2);
+            fighterScript.receiveAttack(Char.Parse(hurtType), dir);
+        }
     }
 
     public void sendMovementPacket(Vector3 pos, string animName, int isFlipped)
+    {
+        using (RTData data = RTData.Get())
         {
-            using (RTData data = RTData.Get())
-            {
-                data.SetVector3(1, pos);
-                data.SetString(2, animName);
-                data.SetInt(3, isFlipped);
-                RTClass.SendData(100, GameSparksRT.DeliveryIntent.RELIABLE, data);
-            }
+            data.SetVector3(1, pos);
+            data.SetString(2, animName);
+            data.SetInt(3, isFlipped);
+            RTClass.SendData(100, GameSparksRT.DeliveryIntent.RELIABLE, data);
         }
+    }
+
+    public void sendDamagePacket(char hurtType, Vector2 hitDir)
+    {
+        using (RTData data = RTData.Get())
+        {
+            data.SetString(1, hurtType.ToString());
+            data.SetVector2(2, hitDir);
+            RTClass.SendData(110, GameSparksRT.DeliveryIntent.RELIABLE, data);
+        }
+    }
     
     #endregion
 
-    }
-
+}

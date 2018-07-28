@@ -5,6 +5,7 @@ using UnityEngine;
 public class ServerComputer : MonoBehaviour
 {
     private bool playerInside;
+    private bool isCreator;
 
     private void Update()
     {
@@ -36,10 +37,12 @@ public class ServerComputer : MonoBehaviour
         }
 
         playerInside = true;
+        isCreator = false;
     }
     
     public void createRoom()
     {
+        isCreator = true;
             DataHolder.Instance.serverBrowserScreen.SetActive(false);
             DataHolder.Instance.roomWaitingScreen.SetActive(true);
             DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>().cleanSlots();
@@ -53,8 +56,15 @@ public class ServerComputer : MonoBehaviour
         PlayerAuthenticator.instance.searchBattleMatches();
     }
 
+    public void initiateMatch()
+    {
+        if(isCreator)
+        PlayerAuthenticator.instance.initiateBattleMatch();
+    }
+
     public void closeMatchOpenBrowser()
     {
+        isCreator = false;
         PlayerAuthenticator.instance.leaveBattleMatch();
         DataHolder.Instance.roomWaitingScreen.SetActive(false);
         openBrowser();

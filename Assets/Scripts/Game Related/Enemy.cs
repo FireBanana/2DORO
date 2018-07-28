@@ -22,40 +22,40 @@ public class Enemy : MonoBehaviour {
         switch (hurtType)
         {
             case 'B':
-                anim.Play("Fighter_hurtB");
+                anim.Play("Enemy_hurtB");
                 break;
             case 'C':
-            anim.Play("Fighter_hurtC");
+            anim.Play("Enemy_hurtC");
                 break;
             case 'J':
             flyingHurt = true;
-            anim.Play("Fighter_hurtJ");
+            anim.Play("Enemy_hurtJ");
                 break;
             case 'G':
             canBeHurt = false;
-            anim.Play("Fighter_hurtG");
+            anim.Play("Enemy_hurtG");
                 break;
             case 'H':
             canBeHurt = false;
             flyingHurt = true;
-            anim.Play("Fighter_hurtH");
+            anim.Play("Enemy_hurtH");
                 break;
             case 'D':
-            anim.Play("Fighter_hurtD");
+            anim.Play("Enemy_hurtD");
                 break;
             case 'N':
             flyingHurt = true;
-            anim.Play("Fighter_hurtN");
+            anim.Play("Enemy_hurtN");
                 break;
             case 'O':
             flyingHurt = true;
-            anim.Play("Fighter_hurtO");
+            anim.Play("Enemy_hurtO");
                 break;
             case 'E':
-            anim.Play("Fighter_hurtE");
+            anim.Play("Enemy_hurtE");
             break;
             case 'F':
-            anim.Play("Fighter_hurtF");
+            anim.Play("Enemy_hurtF");
             break;
         }
         GetComponent<Rigidbody2D>().AddForce(pushDir, ForceMode2D.Impulse);
@@ -66,7 +66,7 @@ public class Enemy : MonoBehaviour {
         if(collision.collider.gameObject.layer == 8){
         if(flyingHurt == true){
             canBeHurt = false;
-            anim.Play("Fighter_hurtFloor");
+            anim.Play("Enemy_hurtFloor");
             flyingHurt = false;
         }
         }

@@ -4771,6 +4771,8 @@ MonoBehaviour:
   connectedToSession: 0
   enemyPrefab: {fileID: 1964971190981132, guid: b6de7f4e52bed914a8eeb87039d5ec0e,
     type: 2}
+  currentCreatorId: 
+  currentPlayerNumb: 0
   characterCreationScreen: {fileID: 316380517}
   previousScene: 
 --- !u!82 &1719390441
@@ -4784,7 +4786,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7f9a6287598ab12438e582519a76b098, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0
   m_Pitch: 1
   Loop: 1
   Mute: 0

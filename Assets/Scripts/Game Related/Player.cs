@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Player : MonoBehaviour
 {
@@ -46,6 +49,7 @@ public class Player : MonoBehaviour
     public bool isAllowedToFight;
 
     protected bool touchingWall, touchingFloor; //States which show when touching a wall or floor
+    protected string currentAttackAnim;
 
     public void Initialize()
     {
@@ -633,6 +637,55 @@ public class Player : MonoBehaviour
         rollAfterWait();
     }
 
+    protected bool isHurt;
+    protected bool flyingHurt;
+
+    public void receiveAttack(char hurtType, Vector3 pushDir)
+    {
+        isHurt = true;
+        // healthHandler.healthDepleter();
+        switch (hurtType)
+        {
+            case 'B':
+                anim.Play("Fighter_hurtB");
+                break;
+            case 'C':
+                anim.Play("Fighter_hurtC");
+                break;
+            case 'J':
+                flyingHurt = true;
+                anim.Play("Fighter_hurtJ");
+                break;
+            case 'G':
+                isHurt = true;
+                anim.Play("Fighter_hurtG");
+                break;
+            case 'H':
+                flyingHurt = true;
+                isHurt = true;
+                anim.Play("Fighter_hurtH");
+                break;
+            case 'D':
+                anim.Play("Fighter_hurtD");
+                break;
+            case 'N':
+                flyingHurt = true;
+                anim.Play("Fighter_hurtN");
+                break;
+            case 'O':
+                flyingHurt = true;
+                anim.Play("Fighter_hurtO");
+                break;
+            case 'E':
+                anim.Play("Fighter_hurtE");
+                break;
+            case 'F':
+                anim.Play("Fighter_hurtF");
+                break;
+        }
+        rb.AddForce(pushDir, ForceMode2D.Impulse);
+    }
+
     protected Stack<bool> combo1Stack = new Stack<bool>();
     protected Stack<bool> combo2Stack = new Stack<bool>();
     public int stackIDToCheck;
@@ -665,6 +718,7 @@ public class Player : MonoBehaviour
                 if (comboChainNumber == 2)
                 {
                     anim.Play("Fighter_kick1");
+                    currentAttackAnim = "Enemy_kick1";
                     playerAction = playerState.attacking;
                     isRunning = false;
                     if (sr.flipX == false)
@@ -682,6 +736,7 @@ public class Player : MonoBehaviour
                 else
                 {
                     anim.Play("Fighter_punch1");
+                    currentAttackAnim = "Enemy_punch1";
                     playerAction = playerState.attacking;
                     isRunning = false;
                     if (sr.flipX == false)
@@ -720,6 +775,7 @@ public class Player : MonoBehaviour
                 if (comboChainNumber2 == 1)
                 {
                     anim.Play("Fighter_kick3");
+                    currentAttackAnim = "Enemy_kick3";
                     playerAction = playerState.attacking;
                     isRunning = false;
                     if (sr.flipX == false)
@@ -738,6 +794,7 @@ public class Player : MonoBehaviour
                 else
                 {
                     anim.Play("Fighter_punch1");
+                    currentAttackAnim = "Enemy_punch1";
                     playerAction = playerState.attacking;
                     isRunning = false;
                     if (sr.flipX == false)
