@@ -436,6 +436,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="Game Related" t="Include">
+            <e p="BattleManager.cs" t="Include" />
             <e p="Common UI" t="Include">
               <e p="ChatToggler.cs" t="Include" />
               <e p="HealthBarHandler.cs" t="Include" />

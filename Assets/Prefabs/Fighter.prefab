@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4968127385716614}
   - component: {fileID: 61526217600300876}
   - component: {fileID: 114607872597814278}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BottomRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4366522021132272}
   - component: {fileID: 61643274090418912}
   - component: {fileID: 114821608807978306}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: TopLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4853589082925092}
   - component: {fileID: 61727310334559696}
   - component: {fileID: 114053926092848462}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BottomArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 4196622723355982}
   - component: {fileID: 61292374825664372}
   - component: {fileID: 114580963230386732}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RightArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 4315633553980328}
   - component: {fileID: 61287344297115100}
   - component: {fileID: 114630107474218444}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: TopRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 4238624436906620}
   - component: {fileID: 61062918188278248}
   - component: {fileID: 114268144071967024}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LeftArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 4182320300773900}
   - component: {fileID: 61781348117836878}
   - component: {fileID: 114970505542878728}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BottomLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 4767181068187802}
   - component: {fileID: 61352345363482816}
   - component: {fileID: 114974087893275510}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: TopArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,11 +159,11 @@ GameObject:
   - component: {fileID: 50981488913939476}
   - component: {fileID: 95682537787886498}
   - component: {fileID: 114864524533821020}
-  - component: {fileID: 70044990938704594}
   - component: {fileID: 61588646718405626}
+  - component: {fileID: 114470778119788224}
   m_Layer: 0
   m_Name: Fighter
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -240,7 +240,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1898142556745172}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.989, y: -0.242, z: 0.08853196}
+  m_LocalPosition: {x: -7.393946, y: -27.427359, z: 0.08853196}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4238624436906620}
@@ -538,21 +538,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.042462587, y: 0.15520868}
   m_EdgeRadius: 0
---- !u!70 &70044990938704594
-CapsuleCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1898142556745172}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.0012436509, y: 0.0142335445}
-  m_Size: {x: 0.18137908, y: 0.38696578}
-  m_Direction: 0
 --- !u!95 &95682537787886498
 Animator:
   serializedVersion: 3
@@ -597,6 +582,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyInside: 0
   enemyObject: {fileID: 0}
+--- !u!114 &114470778119788224
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1898142556745172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38dc1b2a752760045b44bb8cbea492b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryMenu: {fileID: 0}
 --- !u!114 &114580963230386732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -678,7 +675,8 @@ MonoBehaviour:
   isAtDoor: 0
   doorScript: {fileID: 0}
   isChatting: 0
-  isAllowedToFight: 1
+  isAllowedToFight: 0
+  healthBar: {fileID: 0}
   stackIDToCheck: 0
   hitEffectObject: {fileID: 1267745269223248, guid: 36a0de960fe53ae49b37c29821e45f82,
     type: 2}

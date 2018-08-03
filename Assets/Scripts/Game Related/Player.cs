@@ -217,6 +217,7 @@ public class Player : MonoBehaviour
                     var newObj = Instantiate(hitEffectObject);
                     newObj.transform.position = transform.localPosition + new Vector3(-0.052f, 0.279f);
                     newObj.GetComponent<SpriteRenderer>().flipX = true;
+                   // PlayerAuthenticator.instance.sendDamagePacket('N', hitDir);
                 }
                 else
                 {
@@ -226,6 +227,7 @@ public class Player : MonoBehaviour
                         var newObj = Instantiate(hitEffectObject);
                         newObj.transform.position = transform.localPosition + new Vector3(-0.052f, 0.279f);
                         newObj.GetComponent<SpriteRenderer>().flipX = true;
+                      //  PlayerAuthenticator.instance.sendDamagePacket('N', hitDir);
                     }
                 }
             }
@@ -238,6 +240,7 @@ public class Player : MonoBehaviour
                 {
                     var newObj = Instantiate(hitEffectObject);
                     newObj.transform.position = transform.localPosition + new Vector3(0.052f, 0.279f);
+               //     PlayerAuthenticator.instance.sendDamagePacket('N', hitDir);
                 }
                 else
                 {
@@ -246,6 +249,7 @@ public class Player : MonoBehaviour
                     {
                         var newObj = Instantiate(hitEffectObject);
                         newObj.transform.position = transform.localPosition + new Vector3(0.052f, 0.279f);
+                   //     PlayerAuthenticator.instance.sendDamagePacket('N', hitDir);
                     }
                 }
             }
@@ -278,6 +282,7 @@ public class Player : MonoBehaviour
                     var newObj = Instantiate(hitEffectObject);
                     newObj.transform.position = transform.localPosition + new Vector3(-0.157f, 0.157f);
                     newObj.GetComponent<SpriteRenderer>().flipX = true;
+                //    PlayerAuthenticator.instance.sendDamagePacket('O', hitDir);
                 }
             }
             else
@@ -289,6 +294,7 @@ public class Player : MonoBehaviour
                 {
                     var newObj = Instantiate(hitEffectObject);
                     newObj.transform.position = transform.localPosition + new Vector3(0.157f, 0.157f);
+                //    PlayerAuthenticator.instance.sendDamagePacket('O', hitDir);
                 }
             }
             specialCombo = 0;
@@ -307,11 +313,13 @@ public class Player : MonoBehaviour
             {
                 setTriggerForAttack(1, Vector3.zero, 'E', "discharge");
                 applyDamageToTrigger();
+                //   PlayerAuthenticator.instance.sendDamagePacket('E', Vector2.zero);
             }
             else
             {
                 setTriggerForAttack(0, Vector3.zero, 'E', "discharge");
                 applyDamageToTrigger();
+                //    PlayerAuthenticator.instance.sendDamagePacket('E', Vector2.zero);
             }
 
             dischargeCombo++;
@@ -348,6 +356,7 @@ public class Player : MonoBehaviour
             }
             anim.Play("Fighter_dischargeHit");
             applyDamageToTrigger();
+                //PlayerAuthenticator.instance.sendDamagePacket('F', Vector2.zero);
             dischargeCombo++;
         }
         else if (dischargeCombo == 4)
@@ -360,7 +369,9 @@ public class Player : MonoBehaviour
             {
                 setTriggerForAttack(0, Vector3.zero, 'F', "discharge");
             }
+
             applyDamageToTrigger();
+                //PlayerAuthenticator.instance.sendDamagePacket('E', Vector2.zero);
             dischargeCombo++;
         }
         else if (dischargeCombo == 5)
@@ -373,24 +384,41 @@ public class Player : MonoBehaviour
             {
                 setTriggerForAttack(0, Vector3.zero, 'F', "discharge");
             }
+
             applyDamageToTrigger();
+             //   PlayerAuthenticator.instance.sendDamagePacket('F', Vector2.zero);
             dischargeCombo++;
         }
         else if (dischargeCombo == 6)
         {
             if (sr.flipX == false)
             {
-                setTriggerForAttack(1, (Vector3.right * 5f) + (Vector3.up * 5f), 'O', "discharge");
+                setTriggerForAttack(1, (Vector3.right * 2f) + (Vector3.up * 2f), 'O', "discharge");
             }
             else
             {
-                setTriggerForAttack(0, (-Vector3.right * 5f) + (Vector3.up * 5f), 'O', "discharge");
+                setTriggerForAttack(0, (-Vector3.right * 2f) + (Vector3.up * 2f), 'O', "discharge");
             }
 
             applyDamageToTrigger();
+             //   PlayerAuthenticator.instance.sendDamagePacket('O', (-Vector3.right * 5f) + (Vector3.up * 5f));
             dischargeCombo = 0;
         }
     }
+
+    public void triggerTemplate(int id) //For applyDamageToTrigger
+    {
+        if (triggerChecks[id].enemyObject.GetComponent<Enemy>().canBeHurt)
+        {
+            if(hurtType != 'C' || hurtType != 'B')
+                PlayerAuthenticator.instance.pausePackets = true;
+            PlayerAuthenticator.instance.sendDamagePacket(hurtType, pushDir, 5f);
+            triggerChecks[id].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir, 5f); //change damage
+            triggerChecks[id].enemyObject.GetComponent<SpriteRenderer>().flipX = false;
+            createHitEffect(hitAttack);
+        }
+    }
+    
     public bool applyDamageToTrigger()
     {
         //0 = left
@@ -410,13 +438,8 @@ public class Player : MonoBehaviour
             case 0:
                 if (triggerChecks[0].enemyInside == true)
                 {
-                    if (triggerChecks[0].enemyObject.GetComponent<Enemy>().canBeHurt == true)
-                    {
-                        triggerChecks[0].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
-                        triggerChecks[0].enemyObject.GetComponent<SpriteRenderer>().flipX = false;
-                        createHitEffect(hitAttack);
-                        return true;
-                    }
+                    triggerTemplate(0);
+                    return true;
                 }
                 break;
             case 1:
@@ -424,10 +447,9 @@ public class Player : MonoBehaviour
                 {
                     if (triggerChecks[1].enemyObject.GetComponent<Enemy>().canBeHurt == true)
                     {
-                        triggerChecks[1].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
-                        triggerChecks[1].enemyObject.GetComponent<SpriteRenderer>().flipX = true;
-                        createHitEffect(hitAttack);
+                        triggerTemplate(1);
                         return true;
+                    
                     }
                 }
                 break;
@@ -436,9 +458,7 @@ public class Player : MonoBehaviour
                 {
                     if (triggerChecks[2].enemyObject.GetComponent<Enemy>().canBeHurt == true)
                     {
-                        triggerChecks[2].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
-                        triggerChecks[2].enemyObject.GetComponent<SpriteRenderer>().flipX = true;
-                        createHitEffect(hitAttack);
+                        triggerTemplate(2);
                         return true;
                     }
                 }
@@ -448,9 +468,7 @@ public class Player : MonoBehaviour
                 {
                     if (triggerChecks[3].enemyObject.GetComponent<Enemy>().canBeHurt == true)
                     {
-                        triggerChecks[3].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
-                        triggerChecks[3].enemyObject.GetComponent<SpriteRenderer>().flipX = true;
-                        createHitEffect(hitAttack);
+                        triggerTemplate(3);
                         return true;
                     }
                 }
@@ -460,9 +478,7 @@ public class Player : MonoBehaviour
                 {
                     if (triggerChecks[4].enemyObject.GetComponent<Enemy>().canBeHurt == true)
                     {
-                        triggerChecks[4].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
-                        triggerChecks[4].enemyObject.GetComponent<SpriteRenderer>().flipX = true;
-                        createHitEffect(hitAttack);
+                        triggerTemplate(4);
                         return true;
                     }
                 }
@@ -472,9 +488,7 @@ public class Player : MonoBehaviour
                 {
                     if (triggerChecks[5].enemyObject.GetComponent<Enemy>().canBeHurt == true)
                     {
-                        triggerChecks[5].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
-                        triggerChecks[5].enemyObject.GetComponent<SpriteRenderer>().flipX = true;
-                        createHitEffect(hitAttack);
+                        triggerTemplate(5);
                         return true;
                     }
                 }
@@ -484,9 +498,7 @@ public class Player : MonoBehaviour
                 {
                     if (triggerChecks[6].enemyObject.GetComponent<Enemy>().canBeHurt == true)
                     {
-                        triggerChecks[6].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
-                        triggerChecks[6].enemyObject.GetComponent<SpriteRenderer>().flipX = true;
-                        createHitEffect(hitAttack);
+                        triggerTemplate(6);
                         return true;
                     }
                 }
@@ -496,9 +508,7 @@ public class Player : MonoBehaviour
                 {
                     if (triggerChecks[7].enemyObject.GetComponent<Enemy>().canBeHurt == true)
                     {
-                        triggerChecks[7].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir);
-                        triggerChecks[7].enemyObject.GetComponent<SpriteRenderer>().flipX = true;
-                        createHitEffect(hitAttack);
+                        triggerTemplate(7);
                         return true;
                     }
                 }
@@ -518,30 +528,6 @@ public class Player : MonoBehaviour
     public void stopJumpAttack()
     {
         StopCoroutine("checkJumpAttacks");
-    }
-
-    public void receiveDamage(char hurtType)
-    {
-        switch (hurtType)
-        {
-            case 'B':
-
-                break;
-            case 'C':
-                break;
-            case 'D':
-                break;
-            case 'E':
-                break;
-            case 'K':
-                break;
-            case 'O':
-                break;
-            case 'F':
-                break;
-            case 'G':
-                break;
-        }
     }
 
     protected IEnumerator runCancelDelay()
@@ -565,7 +551,7 @@ public class Player : MonoBehaviour
                         dir.Normalize();
                         rb.velocity = Vector3.zero;
                         rb.AddForce(dir * -1f, ForceMode2D.Impulse);
-                        Debug.Log(dir);
+                        //PlayerAuthenticator.instance.sendDamagePacket(hurtType, new Vector2(-dir.x, 0));
                     }
                     time = 0.3f;
                 }
@@ -590,6 +576,7 @@ public class Player : MonoBehaviour
                 if (applyDamageToTrigger())
                 {
                     time = 0.6f;
+                    //PlayerAuthenticator.instance.sendDamagePacket(hurtType, new Vector2(-rb.velocity.x, 0));
                 }
                 time += Time.deltaTime;
                 yield return null;
@@ -640,10 +627,26 @@ public class Player : MonoBehaviour
     protected bool isHurt;
     protected bool flyingHurt;
 
-    public void receiveAttack(char hurtType, Vector3 pushDir)
+    public HealthBarHandler healthBar;
+
+    public bool hasDied()
     {
-        isHurt = true;
-        // healthHandler.healthDepleter();
+        if (health <= 0)
+            return true;
+        else
+            return false;
+    }
+
+    public void receiveAttack(char hurtType, Vector3 pushDir, float damage)
+    {
+        healthBar.healthDepleter(damage);
+        health -= damage;
+        
+        if (hasDied())
+        {
+            BattleManager.Instance.gameOver();
+        }
+        
         switch (hurtType)
         {
             case 'B':
@@ -684,6 +687,12 @@ public class Player : MonoBehaviour
                 break;
         }
         rb.AddForce(pushDir, ForceMode2D.Impulse);
+    }
+    
+    public void canNowBeHurt(){
+        isHurt = false;
+        playerAction = playerState.idle;
+        anim.Play("Figher_idle");
     }
 
     protected Stack<bool> combo1Stack = new Stack<bool>();

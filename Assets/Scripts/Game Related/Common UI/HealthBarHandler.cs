@@ -9,19 +9,18 @@ public class HealthBarHandler : MonoBehaviour {
     Material mat;
     Tween currTween;
     float healthVal;
+    public bool isUsed;
 
 	void Start () {
         mat = GetComponent<Image>().material;
         mat.SetFloat("_SecondBar", 0);
         mat.SetFloat("_FirstBar", 0);
     }
-	
-	// Update is called once per frame
 
-    public void healthDepleter()
+    public void healthDepleter(float damage)
     {
         currTween.Kill();
-        healthVal = mat.GetFloat("_SecondBar") + 0.1f;
+        healthVal = mat.GetFloat("_SecondBar") + damage/100f;
         currTween = mat.DOFloat(healthVal, "_SecondBar", 0.5f).OnComplete(updateHealthValue);
     }
 

@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4355051016202258}
   - component: {fileID: 61467721560171932}
   - component: {fileID: 114670500881751240}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: TopLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4495485412709640}
   - component: {fileID: 61601813189143854}
   - component: {fileID: 114100537871811336}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: TopRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4558218408683612}
   - component: {fileID: 61218280124363202}
   - component: {fileID: 114515773370827632}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: RightArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 4474924472084272}
   - component: {fileID: 61266785128029486}
   - component: {fileID: 114501820411701798}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BottomArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 4249862225662534}
   - component: {fileID: 61735663819367882}
   - component: {fileID: 114073033500654952}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: TopArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 4682819626199694}
   - component: {fileID: 61142283840803926}
   - component: {fileID: 114235612174358504}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BottomLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 4555885180984004}
   - component: {fileID: 61557515901549404}
   - component: {fileID: 114685349009034596}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BottomRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 4272342152646744}
   - component: {fileID: 61409671807029036}
   - component: {fileID: 114009642611165516}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LeftArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,9 +158,9 @@ GameObject:
   - component: {fileID: 212523460545434992}
   - component: {fileID: 95214340359523572}
   - component: {fileID: 114454845424322842}
-  - component: {fileID: 70594729445120812}
+  - component: {fileID: 61632946533784054}
   - component: {fileID: 50260901038532480}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Enemy
   m_TagString: enemy
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1964971190981132}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.016934514, y: -0.311, z: 0.08853196}
+  m_LocalPosition: {x: -6.716591, y: -27.364607, z: 0.08853196}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4272342152646744}
@@ -299,19 +299,19 @@ Rigidbody2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1964971190981132}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!61 &61142283840803926
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -487,6 +487,31 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.2, y: 0.13105182}
   m_EdgeRadius: 0
+--- !u!61 &61632946533784054
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1964971190981132}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0036426485, y: 0.010871664}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.45807958, y: 0.50571644}
+    oldSize: {x: 0.64, y: 0.64}
+    newSize: {x: 0.14, y: 0.37}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.15700597, y: 0.3660142}
+  m_EdgeRadius: 0
 --- !u!61 &61735663819367882
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -512,21 +537,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.2, y: 0.13105182}
   m_EdgeRadius: 0
---- !u!70 &70594729445120812
-CapsuleCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1964971190981132}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.0012436509, y: 0.0142335445}
-  m_Size: {x: 0.18137908, y: 0.38696578}
-  m_Direction: 0
 --- !u!95 &95214340359523572
 Animator:
   serializedVersion: 3
@@ -608,7 +618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0a8b136bf46d0d4ea1416b77fce2fa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
+  health: 100
   id: 0
   healthHandler: {fileID: 0}
   canBeHurt: 1

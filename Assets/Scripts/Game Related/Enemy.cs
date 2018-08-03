@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
-    public float health;
+    public float health = 100;
     public int id;
     public HealthBarHandler healthHandler;
     Animator anim;
@@ -13,12 +13,28 @@ public class Enemy : MonoBehaviour {
 
     private void Start()
     {
+        if (BattleManager.Instance != null)
+            healthHandler = BattleManager.Instance.assignHealthBar();
         anim = GetComponent<Animator>();
     }
-
-    public void depleteHealth(char hurtType, Vector3 pushDir)
+    
+    public bool hasDied()
     {
-        // healthHandler.healthDepleter();
+        if (health <= 0)
+            return true;
+        else
+            return false;
+    }
+
+    public void depleteHealth(char hurtType, Vector3 pushDir, float damage)
+    {
+        healthHandler.healthDepleter(damage);
+        health -= damage;
+        if (hasDied())
+        {
+            BattleManager.Instance.gameOver();
+        }
+        
         switch (hurtType)
         {
             case 'B':
@@ -74,5 +90,6 @@ public class Enemy : MonoBehaviour {
 
     public void canNowBeHurt(){
         canBeHurt = true;
+        PlayerAuthenticator.instance.pausePackets = false;
     }
 }

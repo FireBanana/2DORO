@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Fighter : Player
 {
-    
+    private Vector2 currentPos;
     
     private void Start()
     {
@@ -19,7 +19,7 @@ public class Fighter : Player
     private void Update()
     {
 
-        if (isHurt)
+        if (isHurt || flyingHurt)
             return;
 
         if (playerAction == playerState.rolling)
@@ -553,7 +553,7 @@ public class Fighter : Player
                 }
             }
         }
-        print(currentAttackAnim);
+
     }
 
     //Multiplayer packet info
@@ -566,7 +566,7 @@ public class Fighter : Player
     {
         while (PlayerAuthenticator.instance.connectedToSession)
         {
-            print(currentAttackAnim);
+            
             switch (playerAction)
             {
                     case playerState.attacking:
@@ -671,12 +671,15 @@ public class Fighter : Player
             }
             
             yield return new WaitForSeconds(Time.deltaTime * 5);
-            PlayerAuthenticator.instance.sendMovementPacket(transform.position, currentSentAnim, playerFlipped);
+            
+            //if(currentPos != (Vector2)transform.position && currentSentAnim != "null" )
+                PlayerAuthenticator.instance.sendMovementPacket(transform.position, currentSentAnim, playerFlipped);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
         touchingPos = transform.position - new Vector3((-GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
         touchingPos2 = transform.position - new Vector3((GetComponent<BoxCollider2D>().bounds.extents.x), (GetComponent<BoxCollider2D>().bounds.extents.y * 0.5f));
         if (collision.collider.gameObject.layer == 9)
@@ -707,33 +710,43 @@ public class Fighter : Player
         {
 
             touchingFloor = true;
-            
-            if (playerAction != playerState.rolling)
-            {
-                if (hurtType != 'H')
-                {
-                    RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 0.18f, 1 << 8);
-                    RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 0.18f, 1 << 8);
 
-                    if (hit.collider != null || hit2.collider != null)
+            if (!flyingHurt)
+            {
+                if (playerAction != playerState.rolling)
+                {
+                    if (hurtType != 'H')
                     {
-                        playerAction = playerState.idle;
-                        anim.Play("Figher_idle");
-                        prevState = playerState.idle;
-                        anim.SetBool("WalkTrigger", false);
-                        anim.SetBool("RunTrigger", false);
+                        RaycastHit2D hit = Physics2D.Raycast(touchingPos, -Vector3.up, 0.18f, 1 << 8);
+                        RaycastHit2D hit2 = Physics2D.Raycast(touchingPos2, -Vector3.up, 0.18f, 1 << 8);
+
+                        if (hit.collider != null || hit2.collider != null)
+                        {
+                            playerAction = playerState.idle;
+                            anim.Play("Figher_idle");
+                            prevState = playerState.idle;
+                            anim.SetBool("WalkTrigger", false);
+                            anim.SetBool("RunTrigger", false);
+                        }
                     }
                 }
+                else
+                {
+                    prevState = playerState.idle;
+                }
+
+                numbOfJumps = 0;
+                specialCombo = 0;
+                dischargeCombo = 0;
+                if (hurtType != 'H')
+                    stopJumpAttack();
             }
-            else
-            {
-                prevState = playerState.idle;
-            }
-            numbOfJumps = 0;
-            specialCombo = 0;
-            dischargeCombo = 0;
-            if (hurtType != 'H')
-                stopJumpAttack();
+        }
+
+        if(flyingHurt){
+            isHurt = true;
+            anim.Play("Fighter_hurtFloor");
+            flyingHurt = false;
         }
     }
     private void OnCollisionExit2D(Collision2D collision)
@@ -743,7 +756,7 @@ public class Fighter : Player
 
             touchingFloor = false;
             
-            if (playerAction != playerState.rolling)
+            if (playerAction != playerState.rolling && !isHurt)
             {
                 if (playerAction != playerState.jumping)
                 {

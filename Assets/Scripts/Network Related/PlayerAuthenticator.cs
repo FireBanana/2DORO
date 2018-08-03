@@ -363,6 +363,9 @@ public class PlayerAuthenticator : MonoBehaviour
                     print(response.Errors.JSON);
                     return;
                 }
+                fighterScript = DataHolder.Instance.fighter;
+                fighterScript.isAllowedToFight = true;
+                fighterScript.healthBar = BattleManager.Instance.assignHealthBar();
             });
     }
     #endregion
@@ -617,6 +620,8 @@ public class PlayerAuthenticator : MonoBehaviour
 
     }
 
+    public bool pausePackets;
+
     public void packetReceived(RTPacket pack)
     {
         if (pack.OpCode == 100)
@@ -626,13 +631,13 @@ public class PlayerAuthenticator : MonoBehaviour
             if (enemyToChange != null)
             {
                 //Movement code
-                enemyToChange.transform.DOMove((Vector3) pack.Data.GetVector3(1), Time.deltaTime * 5).SetEase(Ease.Linear);
-                
+                if(!pausePackets)
+                    enemyToChange.transform.DOMove((Vector2) pack.Data.GetVector2(1), Time.deltaTime * 10).SetEase(Ease.Linear);
+       
                 //Animation code
                 if (!string.Equals(pack.Data.GetString(2), "null"))
                 {
-                    print(pack.Data.GetString(2));
-                    enemyToChange.GetComponent<Animator>().Play(pack.Data.GetString(2), 0);
+                       enemyToChange.GetComponent<Animator>().Play(pack.Data.GetString(2), 0);
                 }
 
                 //Sprite flip code
@@ -655,7 +660,8 @@ public class PlayerAuthenticator : MonoBehaviour
         {
             var hurtType = pack.Data.GetString(1);
             var dir = (Vector2)pack.Data.GetVector2(2);
-            fighterScript.receiveAttack(Char.Parse(hurtType), dir);
+            var damage = pack.Data.GetFloat(3);
+            fighterScript.receiveAttack(Char.Parse(hurtType), dir, (float)damage);
         }
     }
 
@@ -663,20 +669,21 @@ public class PlayerAuthenticator : MonoBehaviour
     {
         using (RTData data = RTData.Get())
         {
-            data.SetVector3(1, pos);
+            data.SetVector2(1, pos);
             data.SetString(2, animName);
             data.SetInt(3, isFlipped);
-            RTClass.SendData(100, GameSparksRT.DeliveryIntent.RELIABLE, data);
+            RTClass.SendData(100, GameSparksRT.DeliveryIntent.UNRELIABLE_SEQUENCED, data);
         }
     }
 
-    public void sendDamagePacket(char hurtType, Vector2 hitDir)
+    public void sendDamagePacket(char hurtType, Vector2 hitDir, float damage)
     {
         using (RTData data = RTData.Get())
         {
             data.SetString(1, hurtType.ToString());
             data.SetVector2(2, hitDir);
-            RTClass.SendData(110, GameSparksRT.DeliveryIntent.RELIABLE, data);
+            data.SetFloat(3, damage);
+            RTClass.SendData(110, GameSparksRT.DeliveryIntent.UNRELIABLE_SEQUENCED, data);
         }
     }
     

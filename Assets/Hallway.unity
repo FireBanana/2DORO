@@ -2260,10 +2260,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1898142556745172, guid: caf128c00e8a78444bd44cadc94e113f, type: 2}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: caf128c00e8a78444bd44cadc94e113f, type: 2}
   m_IsPrefabParent: 0
@@ -2880,7 +2876,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1748212676}
   - component: {fileID: 1748212677}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: CeilingMain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
