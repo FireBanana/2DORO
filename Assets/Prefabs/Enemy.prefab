@@ -622,6 +622,8 @@ MonoBehaviour:
   id: 0
   healthHandler: {fileID: 0}
   canBeHurt: 1
+  hitEffectObject: {fileID: 1267745269223248, guid: 36a0de960fe53ae49b37c29821e45f82,
+    type: 2}
 --- !u!114 &114501820411701798
 MonoBehaviour:
   m_ObjectHideFlags: 1

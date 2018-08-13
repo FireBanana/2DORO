@@ -217,7 +217,6 @@ public class Player : MonoBehaviour
                     var newObj = Instantiate(hitEffectObject);
                     newObj.transform.position = transform.localPosition + new Vector3(-0.052f, 0.279f);
                     newObj.GetComponent<SpriteRenderer>().flipX = true;
-                   // PlayerAuthenticator.instance.sendDamagePacket('N', hitDir);
                 }
                 else
                 {
@@ -227,7 +226,6 @@ public class Player : MonoBehaviour
                         var newObj = Instantiate(hitEffectObject);
                         newObj.transform.position = transform.localPosition + new Vector3(-0.052f, 0.279f);
                         newObj.GetComponent<SpriteRenderer>().flipX = true;
-                      //  PlayerAuthenticator.instance.sendDamagePacket('N', hitDir);
                     }
                 }
             }
@@ -240,7 +238,6 @@ public class Player : MonoBehaviour
                 {
                     var newObj = Instantiate(hitEffectObject);
                     newObj.transform.position = transform.localPosition + new Vector3(0.052f, 0.279f);
-               //     PlayerAuthenticator.instance.sendDamagePacket('N', hitDir);
                 }
                 else
                 {
@@ -249,7 +246,6 @@ public class Player : MonoBehaviour
                     {
                         var newObj = Instantiate(hitEffectObject);
                         newObj.transform.position = transform.localPosition + new Vector3(0.052f, 0.279f);
-                   //     PlayerAuthenticator.instance.sendDamagePacket('N', hitDir);
                     }
                 }
             }
@@ -412,7 +408,7 @@ public class Player : MonoBehaviour
         {
             if(hurtType != 'C' || hurtType != 'B')
                 PlayerAuthenticator.instance.pausePackets = true;
-            PlayerAuthenticator.instance.sendDamagePacket(hurtType, pushDir, 5f);
+            PlayerAuthenticator.instance.sendDamagePacket(hurtType, pushDir, 5f, returnHitLocation(hitAttack));
             triggerChecks[id].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir, 5f); //change damage
             triggerChecks[id].enemyObject.GetComponent<SpriteRenderer>().flipX = false;
             createHitEffect(hitAttack);
@@ -693,6 +689,7 @@ public class Player : MonoBehaviour
         isHurt = false;
         playerAction = playerState.idle;
         anim.Play("Figher_idle");
+        flyingHurt = false;
     }
 
     protected Stack<bool> combo1Stack = new Stack<bool>();
@@ -824,6 +821,60 @@ public class Player : MonoBehaviour
     }
 
     public GameObject hitEffectObject;
+
+    Vector2 returnHitLocation(string attackName)
+    {
+        switch (attackName)
+        {
+            case "punch1":
+                if (sr.flipX == false)
+                    return transform.localPosition + new Vector3(0.188f, 0.108f);
+                else
+                    return transform.localPosition + new Vector3(-0.188f, 0.108f);
+
+            case "dashkick":
+                if (sr.flipX == false)
+                    return transform.localPosition + new Vector3(0.197f, -0.115f);
+                else
+                    return transform.localPosition + new Vector3(-0.197f, -0.115f);
+
+            case "dashpunch":
+                if (sr.flipX == false)
+                    return transform.localPosition + new Vector3(0.177f, 0.103f);
+                else
+                    return transform.localPosition + new Vector3(-0.177f, 0.103f);
+
+            case "jumpatk1":
+                if (sr.flipX == false)
+                    return transform.localPosition + new Vector3(0.199f, -0.055f);
+                else
+                    return transform.localPosition + new Vector3(-0.199f, -0.055f);
+  
+
+            case "jumpatk2":
+                if (sr.flipX == false)
+                    return transform.localPosition + new Vector3(0.11f, -0.135f);
+                else
+                    return transform.localPosition + new Vector3(-0.11f, -0.135f);
+
+            case "kick1":
+                if (sr.flipX == false)
+                    return transform.localPosition + new Vector3(0.186f, 0.025f);
+                else
+                    return transform.localPosition + new Vector3(-0.186f, 0.025f);
+
+            case "kick3":
+                if (sr.flipX == false)
+                    return transform.localPosition + new Vector3(0.151f, 0.111f);
+                else
+                    return transform.localPosition + new Vector3(-0.151f, 0.111f);
+
+            case "special":
+                return Vector2.zero;
+        }
+        return Vector2.zero;
+    }
+
     public void createHitEffect(string attackName)
     {
         //  punch1 0.188 0.108

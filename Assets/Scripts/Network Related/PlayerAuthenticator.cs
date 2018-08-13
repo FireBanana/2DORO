@@ -621,13 +621,16 @@ public class PlayerAuthenticator : MonoBehaviour
     }
 
     public bool pausePackets;
+    public bool specialRunning;
 
     public void packetReceived(RTPacket pack)
     {
+        
+        GameObject enemyToChange;
+        players.TryGetValue(pack.Sender, out enemyToChange);
+        
         if (pack.OpCode == 100)
         {
-            GameObject enemyToChange;
-            players.TryGetValue(pack.Sender, out enemyToChange);
             if (enemyToChange != null)
             {
                 //Movement code
@@ -637,7 +640,11 @@ public class PlayerAuthenticator : MonoBehaviour
                 //Animation code
                 if (!string.Equals(pack.Data.GetString(2), "null"))
                 {
+                    if(!specialRunning)
                        enemyToChange.GetComponent<Animator>().Play(pack.Data.GetString(2), 0);
+                    
+                    if (pack.Data.GetString(2) == "Enemy_special1")
+                        specialRunning = true;
                 }
 
                 //Sprite flip code
@@ -658,6 +665,7 @@ public class PlayerAuthenticator : MonoBehaviour
         }
             else if (pack.OpCode == 110)
         {
+            enemyToChange.GetComponent<Enemy>().createHitEffect((Vector2)pack.Data.GetVector2(4));
             var hurtType = pack.Data.GetString(1);
             var dir = (Vector2)pack.Data.GetVector2(2);
             var damage = pack.Data.GetFloat(3);
@@ -676,13 +684,14 @@ public class PlayerAuthenticator : MonoBehaviour
         }
     }
 
-    public void sendDamagePacket(char hurtType, Vector2 hitDir, float damage)
+    public void sendDamagePacket(char hurtType, Vector2 hitDir, float damage, Vector2 hitLoc)
     {
         using (RTData data = RTData.Get())
         {
             data.SetString(1, hurtType.ToString());
             data.SetVector2(2, hitDir);
             data.SetFloat(3, damage);
+            data.SetVector2(4, hitLoc);
             RTClass.SendData(110, GameSparksRT.DeliveryIntent.UNRELIABLE_SEQUENCED, data);
         }
     }
