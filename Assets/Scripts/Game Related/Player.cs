@@ -205,6 +205,7 @@ public class Player : MonoBehaviour
 
     public void specialAttackCombo()
     {
+        PlayerAuthenticator.instance.pausePackets = true;
         if (specialCombo == 0)
         {
             if (sr.flipX == true)
@@ -227,6 +228,10 @@ public class Player : MonoBehaviour
                         newObj.transform.position = transform.localPosition + new Vector3(-0.052f, 0.279f);
                         newObj.GetComponent<SpriteRenderer>().flipX = true;
                     }
+                    else
+                    {
+                        PlayerAuthenticator.instance.pausePackets = false;
+                    }
                 }
             }
             else
@@ -246,6 +251,10 @@ public class Player : MonoBehaviour
                     {
                         var newObj = Instantiate(hitEffectObject);
                         newObj.transform.position = transform.localPosition + new Vector3(0.052f, 0.279f);
+                    }
+                    else
+                    {
+                        PlayerAuthenticator.instance.pausePackets = false;
                     }
                 }
             }
@@ -280,6 +289,10 @@ public class Player : MonoBehaviour
                     newObj.GetComponent<SpriteRenderer>().flipX = true;
                 //    PlayerAuthenticator.instance.sendDamagePacket('O', hitDir);
                 }
+                else
+                {
+                    PlayerAuthenticator.instance.pausePackets = false;
+                }
             }
             else
             {
@@ -291,6 +304,10 @@ public class Player : MonoBehaviour
                     var newObj = Instantiate(hitEffectObject);
                     newObj.transform.position = transform.localPosition + new Vector3(0.157f, 0.157f);
                 //    PlayerAuthenticator.instance.sendDamagePacket('O', hitDir);
+                }
+                else
+                {
+                    PlayerAuthenticator.instance.pausePackets = false;
                 }
             }
             specialCombo = 0;
@@ -389,11 +406,11 @@ public class Player : MonoBehaviour
         {
             if (sr.flipX == false)
             {
-                setTriggerForAttack(1, (Vector3.right * 2f) + (Vector3.up * 2f), 'O', "discharge");
+                setTriggerForAttack(1, (Vector3.right * 5f) + (Vector3.up * 4f), 'O', "discharge");
             }
             else
             {
-                setTriggerForAttack(0, (-Vector3.right * 2f) + (Vector3.up * 2f), 'O', "discharge");
+                setTriggerForAttack(0, (-Vector3.right * 5f) + (Vector3.up * 4f), 'O', "discharge");
             }
 
             applyDamageToTrigger();

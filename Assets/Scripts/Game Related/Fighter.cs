@@ -556,6 +556,7 @@ public class Fighter : Player
         {
             if (playerAction == playerState.idle || playerAction == playerState.walking)
             {
+                PlayerAuthenticator.instance.pausePackets = true;
                 anim.Play("Fighter_special1");
                 currentAttackAnim = "Enemy_special1";
                 playerAction = playerState.attacking;
