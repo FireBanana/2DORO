@@ -6,11 +6,13 @@ public class TriggerCheck : MonoBehaviour {
 
     public bool enemyInside = false;
     public GameObject enemyObject;
+    private int totalEnemies;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "enemy")
         {
+            totalEnemies++;
             enemyInside = true;
             enemyObject = collision.gameObject;
         }
@@ -20,7 +22,9 @@ public class TriggerCheck : MonoBehaviour {
     {
         if (collision.tag == "enemy")
         {
-            enemyInside = false;
+            totalEnemies--;
+            if(totalEnemies == 0)
+                enemyInside = false;
             enemyObject = null;
         }
     }

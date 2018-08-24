@@ -98,7 +98,7 @@ public class Enemy : MonoBehaviour
     {
         canBeHurt = true;
         flyingHurt = false;
-        PlayerAuthenticator.instance.pausePackets = false;
+        PlayerAuthenticator.instance.pausePackets[id] = false;
     }
 
     public void endSpecial()

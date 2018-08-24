@@ -10,6 +10,7 @@ public class BattleManager : MonoBehaviour
 
 	public HealthBarHandler[] healthBars;
 	public GameObject exitMenu;
+	private int time = 300;
 
 	public HealthBarHandler assignHealthBar()
 	{
@@ -42,5 +43,16 @@ public class BattleManager : MonoBehaviour
 			Instance = this;
 		else
 			Destroy(this);
+	}
+
+	IEnumerator battleCountDown()
+	{
+		while (time > 0)
+		{
+			yield return new WaitForSeconds(1);
+			time--;
+		}
+		
+		gameOver();
 	}
 }

@@ -363,9 +363,36 @@ public class PlayerAuthenticator : MonoBehaviour
                     print(response.Errors.JSON);
                     return;
                 }
-                fighterScript = DataHolder.Instance.fighter;
-                fighterScript.isAllowedToFight = true;
-                fighterScript.healthBar = BattleManager.Instance.assignHealthBar();
+                new FindPendingMatchesRequest()
+                    .SetMatchGroup(creatId)
+                    .SetMatchShortCode("BATTLE")
+                    .Send(response2 =>
+                    {
+                        if(response2.HasErrors)
+                            print(response2.Errors.JSON);
+
+                        string matchcode = "";
+                        foreach (var match in response2.PendingMatches)
+                        {
+                            if (matchcode.Equals(""))
+                                matchcode = match.Id;
+                        }
+                
+                        new JoinPendingMatchRequest()
+                            .SetMatchGroup(creatId)
+                            .SetMatchShortCode("BATTLE")
+                            .SetPendingMatchId(matchcode)
+                            .Send(response3 =>
+                            {
+                                if(response3.HasErrors)
+                                    print(response3.Errors.JSON);
+                                
+                                fighterScript = DataHolder.Instance.fighter;
+                                fighterScript.isAllowedToFight = true;
+                                fighterScript.healthBar = BattleManager.Instance.assignHealthBar();
+                            });
+                    });
+                
             });
     }
     #endregion
@@ -393,6 +420,7 @@ public class PlayerAuthenticator : MonoBehaviour
             RTClass.Disconnect();
             players.Clear();
             removePlayerFromMatch();
+            pausePackets.Clear();
         }
 
         if (news.name == "FightingRoom")
@@ -500,6 +528,7 @@ public class PlayerAuthenticator : MonoBehaviour
                 }
                 else if (message.ExtCode == "PlayerJoinMatch")
                 {
+                    Debug.LogError(message.Data.GetString("Name") + " joined");
                     var nameToAdd = message.Data.GetString("Name");
                     var createScreenManager =
                         DataHolder.Instance.roomWaitingScreen.GetComponent<CreateBattleMenuManager>();
@@ -514,13 +543,19 @@ public class PlayerAuthenticator : MonoBehaviour
                 {
                     print("Started match");
                     currentCreatorId = message.Data.GetString("CreatorId");
-                    SceneManager.LoadScene(2);
+                    StartCoroutine("startMatchDelay");
                 }
             }
             else
                 Debug.Log(message.Errors);
 
         };
+    }
+
+    IEnumerator startMatchDelay()
+    {
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene(2);
     }
 
     public void removePlayerFromMatch()
@@ -598,17 +633,20 @@ public class PlayerAuthenticator : MonoBehaviour
                 var newEnemy = Instantiate(enemyPrefab);
                 newEnemy.GetComponent<Enemy>().id = enemies;
                 players.Add(enemies, newEnemy);
+                pausePackets.Add(enemies, false);
             }
         }
         sendLoginNotification("joined");
     }
 
+    public Dictionary<int, bool> pausePackets = new Dictionary<int, bool>();
+    
     public void playerConnected(int id)
     {
         var newEnemy = Instantiate(enemyPrefab);
         newEnemy.GetComponent<Enemy>().id = id;
         players.Add(id, newEnemy);
-
+        pausePackets.Add(id, false);
     }
 
     public void playerDisconnected(int id)
@@ -617,10 +655,10 @@ public class PlayerAuthenticator : MonoBehaviour
         players.TryGetValue(id, out discPlayer);
         Destroy(discPlayer);
         players.Remove(id);
+        pausePackets.Remove(id);
 
     }
 
-    public bool pausePackets;
     public bool specialRunning;
 
     public void packetReceived(RTPacket pack)
@@ -634,7 +672,7 @@ public class PlayerAuthenticator : MonoBehaviour
             if (enemyToChange != null)
             {
                 //Movement code
-                if(!pausePackets)
+                if(!pausePackets[pack.Sender])
                     enemyToChange.transform.DOMove((Vector2) pack.Data.GetVector2(1), Time.deltaTime * 10).SetEase(Ease.Linear);
        
                 //Animation code
@@ -684,7 +722,7 @@ public class PlayerAuthenticator : MonoBehaviour
         }
     }
 
-    public void sendDamagePacket(char hurtType, Vector2 hitDir, float damage, Vector2 hitLoc)
+    public void sendDamagePacket(char hurtType, Vector2 hitDir, float damage, Vector2 hitLoc, int player)
     {
         using (RTData data = RTData.Get())
         {
@@ -692,7 +730,7 @@ public class PlayerAuthenticator : MonoBehaviour
             data.SetVector2(2, hitDir);
             data.SetFloat(3, damage);
             data.SetVector2(4, hitLoc);
-            RTClass.SendData(110, GameSparksRT.DeliveryIntent.UNRELIABLE_SEQUENCED, data);
+            RTClass.SendData(110, GameSparksRT.DeliveryIntent.UNRELIABLE_SEQUENCED, data, player);
         }
     }
     

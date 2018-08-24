@@ -205,11 +205,12 @@ public class Player : MonoBehaviour
 
     public void specialAttackCombo()
     {
-        PlayerAuthenticator.instance.pausePackets = true;
         if (specialCombo == 0)
         {
             if (sr.flipX == true)
             {
+                pauseEnemiesInTrigger(7, true);
+     
                 var hitDir = (Vector3.up * 4f) + (-Vector3.right * 1.5f);
                 attackMove(-Vector3.right);
                 setTriggerForAttack(7, hitDir, 'N', "special1");
@@ -230,12 +231,13 @@ public class Player : MonoBehaviour
                     }
                     else
                     {
-                        PlayerAuthenticator.instance.pausePackets = false;
+                        unPauseEnemiesInSpecial();
                     }
                 }
             }
             else
             {
+                pauseEnemiesInTrigger(6, true);
                 var hitDir = (Vector3.up * 4f) + (Vector3.right * 1.5f);
                 setTriggerForAttack(6, hitDir, 'N', "special1");
                 attackMove(Vector3.right);
@@ -254,7 +256,7 @@ public class Player : MonoBehaviour
                     }
                     else
                     {
-                        PlayerAuthenticator.instance.pausePackets = false;
+                        unPauseEnemiesInSpecial();
                     }
                 }
             }
@@ -279,6 +281,7 @@ public class Player : MonoBehaviour
             rb.velocity = Vector3.zero;
             if (sr.flipX == true)
             {
+                pauseEnemiesInTrigger(0, true);
                 var hitDir = (Vector3.up * 4f) + (-Vector3.right * 1.5f);
                 attackMove(-Vector3.right);
                 setTriggerForAttack(0, hitDir, 'O', "special2");
@@ -291,11 +294,12 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    PlayerAuthenticator.instance.pausePackets = false;
+                    unPauseEnemiesInSpecial();
                 }
             }
             else
             {
+                pauseEnemiesInTrigger(1, true);
                 var hitDir = (Vector3.up * 4f) + (Vector3.right * 1.5f);
                 setTriggerForAttack(1, hitDir, 'O', "special2");
                 attackMove(Vector3.right);
@@ -307,7 +311,7 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    PlayerAuthenticator.instance.pausePackets = false;
+                    unPauseEnemiesInSpecial();
                 }
             }
             specialCombo = 0;
@@ -424,12 +428,30 @@ public class Player : MonoBehaviour
         if (triggerChecks[id].enemyObject.GetComponent<Enemy>().canBeHurt)
         {
             if(hurtType != 'C' || hurtType != 'B')
-                PlayerAuthenticator.instance.pausePackets = true;
-            PlayerAuthenticator.instance.sendDamagePacket(hurtType, pushDir, 5f, returnHitLocation(hitAttack));
+                PlayerAuthenticator.instance.pausePackets[triggerChecks[id].enemyObject.GetComponent<Enemy>().id] = true;
+            PlayerAuthenticator.instance.sendDamagePacket(hurtType, pushDir, 5f, returnHitLocation(hitAttack), triggerChecks[id].enemyObject.GetComponent<Enemy>().id);
             triggerChecks[id].enemyObject.GetComponent<Enemy>().depleteHealth(hurtType, pushDir, 5f); //change damage
             triggerChecks[id].enemyObject.GetComponent<SpriteRenderer>().flipX = false;
             createHitEffect(hitAttack);
         }
+    }
+
+    protected void pauseEnemiesInTrigger(int triggerId, bool isSpecial = false)
+    {
+        if (triggerChecks[triggerId].enemyInside)
+        {
+            PlayerAuthenticator.instance.pausePackets[triggerChecks[triggerId].enemyObject.GetComponent<Enemy>().id] =
+                true;
+
+            if (isSpecial)
+                currentSpecialAttackEnemy = triggerChecks[triggerId].enemyObject.GetComponent<Enemy>();
+        }
+    }
+
+    private Enemy currentSpecialAttackEnemy;
+    void unPauseEnemiesInSpecial()
+    {
+        PlayerAuthenticator.instance.pausePackets[currentSpecialAttackEnemy.id] = false;
     }
     
     public bool applyDamageToTrigger()
@@ -650,6 +672,7 @@ public class Player : MonoBehaviour
             return false;
     }
 
+    protected string currentHurtState;
     public void receiveAttack(char hurtType, Vector3 pushDir, float damage)
     {
         healthBar.healthDepleter(damage);
@@ -664,39 +687,49 @@ public class Player : MonoBehaviour
         {
             case 'B':
                 anim.Play("Fighter_hurtB");
+                currentHurtState = "Enemy_hurtB";
                 break;
             case 'C':
                 anim.Play("Fighter_hurtC");
+                currentHurtState = "Enemy_hurtC";
                 break;
             case 'J':
                 flyingHurt = true;
                 anim.Play("Fighter_hurtJ");
+                currentHurtState = "Enemy_hurtJ";
                 break;
             case 'G':
                 isHurt = true;
                 anim.Play("Fighter_hurtG");
+                currentHurtState = "Enemy_hurtG";
                 break;
             case 'H':
                 flyingHurt = true;
                 isHurt = true;
                 anim.Play("Fighter_hurtH");
+                currentHurtState = "Enemy_hurtH";
                 break;
             case 'D':
                 anim.Play("Fighter_hurtD");
+                currentHurtState = "Enemy_hurtD";
                 break;
             case 'N':
                 flyingHurt = true;
                 anim.Play("Fighter_hurtN");
+                currentHurtState = "Enemy_hurtN";
                 break;
             case 'O':
                 flyingHurt = true;
                 anim.Play("Fighter_hurtO");
+                currentHurtState = "Enemy_hurtO";
                 break;
             case 'E':
                 anim.Play("Fighter_hurtE");
+                currentHurtState = "Enemy_hurtE";
                 break;
             case 'F':
                 anim.Play("Fighter_hurtF");
+                currentHurtState = "Enemy_hurtF";
                 break;
         }
         rb.AddForce(pushDir, ForceMode2D.Impulse);

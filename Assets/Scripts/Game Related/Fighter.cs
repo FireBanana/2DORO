@@ -556,18 +556,19 @@ public class Fighter : Player
         {
             if (playerAction == playerState.idle || playerAction == playerState.walking)
             {
-                PlayerAuthenticator.instance.pausePackets = true;
                 anim.Play("Fighter_special1");
                 currentAttackAnim = "Enemy_special1";
                 playerAction = playerState.attacking;
                 isRunning = false;
                 if (sr.flipX == false)
                 {
+                    pauseEnemiesInTrigger(1);
                     setTriggerForAttack(1, Vector3.right, 'C', "special");
                     attackMove(Vector2.right);
                 }
                 else
                 {
+                    pauseEnemiesInTrigger(0);
                     setTriggerForAttack(0, -Vector3.right, 'C', "special");
                     attackMove(-Vector2.right);
                 }
@@ -579,6 +580,7 @@ public class Fighter : Player
     private playerState previousSentState;
     private string currentSentAnim;
     private string previousAttackAnim;
+    private string previousHurtAnim;
     private int playerFlipped;
 
     public IEnumerator positionSendToPacket()
@@ -587,105 +589,116 @@ public class Fighter : Player
         {
             if (isHurt || flyingHurt)
             {
-                yield return null;
-                continue;
+                //yield return null;
+                //continue;
+                if (previousHurtAnim != currentHurtState)
+                {
+                    previousHurtAnim = currentHurtState;
+                    currentSentAnim = currentHurtState;
+                }
+                else
+                {
+                    currentSentAnim = "null";
+                }
+                
             }
-
-            print(currentAttackAnim);
-            switch (playerAction)
+            else
             {
-                case playerState.attacking:
-                    if (previousSentState == playerState.attacking && previousAttackAnim == currentAttackAnim)
-                    {
-                        currentSentAnim = "null";
-                        break;
-                    }
+                switch (playerAction)
+                {
+                    case playerState.attacking:
+                        if (previousSentState == playerState.attacking && previousAttackAnim == currentAttackAnim)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
 
-                    previousSentState = playerState.attacking;
-                    previousAttackAnim = currentSentAnim;
-                    currentSentAnim = currentAttackAnim;
-                    break;
-                case playerState.blocking:
-                    if (previousSentState == playerState.blocking)
-                    {
-                        currentSentAnim = "null";
+                        previousSentState = playerState.attacking;
+                        previousAttackAnim = currentSentAnim;
+                        currentSentAnim = currentAttackAnim;
                         break;
-                    }
+                    case playerState.blocking:
+                        if (previousSentState == playerState.blocking)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
 
-                    previousSentState = playerState.blocking;
-                    currentSentAnim = "Enemy_block";
-                    break;
-                case playerState.idle:
-                    if (previousSentState == playerState.idle)
-                    {
-                        currentSentAnim = "null";
+                        previousSentState = playerState.blocking;
+                        currentSentAnim = "Enemy_block";
                         break;
-                    }
+                    case playerState.idle:
+                        if (previousSentState == playerState.idle)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
 
-                    previousSentState = playerState.idle;
-                    currentSentAnim = "Enemy_idle";
-                    break;
-                case playerState.jumpAttacking:
-                    if (previousSentState == playerState.jumpAttacking && previousAttackAnim == currentAttackAnim)
-                    {
-                        currentSentAnim = "null";
+                        previousSentState = playerState.idle;
+                        currentSentAnim = "Enemy_idle";
                         break;
-                    }
+                    case playerState.jumpAttacking:
+                        if (previousSentState == playerState.jumpAttacking && previousAttackAnim == currentAttackAnim)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
 
-                    previousSentState = playerState.jumpAttacking;
-                    previousAttackAnim = currentAttackAnim;
-                    currentSentAnim = currentAttackAnim;
-                    break;
-                case playerState.jumping:
-                    if (previousSentState == playerState.jumping)
-                    {
-                        currentSentAnim = "null";
+                        previousSentState = playerState.jumpAttacking;
+                        previousAttackAnim = currentAttackAnim;
+                        currentSentAnim = currentAttackAnim;
                         break;
-                    }
+                    case playerState.jumping:
+                        if (previousSentState == playerState.jumping)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
 
-                    previousSentState = playerState.jumping;
-                    currentSentAnim = "Enemy_jump";
-                    break;
-                case playerState.running:
-                    if (previousSentState == playerState.running)
-                    {
-                        currentSentAnim = "null";
+                        previousSentState = playerState.jumping;
+                        currentSentAnim = "Enemy_jump";
                         break;
-                    }
+                    case playerState.running:
+                        if (previousSentState == playerState.running)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
 
-                    previousSentState = playerState.running;
-                    currentSentAnim = "Enemy_run";
-                    break;
-                case playerState.sliding:
-                    if (previousSentState == playerState.sliding)
-                    {
-                        currentSentAnim = "null";
+                        previousSentState = playerState.running;
+                        currentSentAnim = "Enemy_run";
                         break;
-                    }
+                    case playerState.sliding:
+                        if (previousSentState == playerState.sliding)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
 
-                    previousSentState = playerState.sliding;
-                    currentSentAnim = "Enemy_wallSlide";
-                    break;
-                case playerState.walking:
-                    if (previousSentState == playerState.walking)
-                    {
-                        currentSentAnim = "null";
+                        previousSentState = playerState.sliding;
+                        currentSentAnim = "Enemy_wallSlide";
                         break;
-                    }
+                    case playerState.walking:
+                        if (previousSentState == playerState.walking)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
 
-                    previousSentState = playerState.walking;
-                    currentSentAnim = "Enemy_walk";
-                    break;
-                case playerState.rolling:
-                    if (previousSentState == playerState.rolling)
-                    {
-                        currentSentAnim = "null";
+                        previousSentState = playerState.walking;
+                        currentSentAnim = "Enemy_walk";
                         break;
-                    }
+                    case playerState.rolling:
+                        if (previousSentState == playerState.rolling)
+                        {
+                            currentSentAnim = "null";
+                            break;
+                        }
 
-                    previousSentState = playerState.rolling;
-                    currentSentAnim = "Enemy_roll";
-                    break;
+                        previousSentState = playerState.rolling;
+                        currentSentAnim = "Enemy_roll";
+                        break;
+                }
             }
 
             switch (sr.flipX)
