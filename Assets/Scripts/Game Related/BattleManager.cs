@@ -18,6 +18,7 @@ public class BattleManager : MonoBehaviour
 		{
 			if (!healthBars[i].isUsed)
 			{
+				healthBars[i].transform.parent.gameObject.SetActive(true);
 				healthBars[i].isUsed = true;
 				return healthBars[i];
 			}
