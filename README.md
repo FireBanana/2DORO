@@ -4,8 +4,8 @@
 
 ## Screenshots from actual gameplay during a PvP fight
 
-[first](media/1.gif)
-[second](media/2.gif)
+![first](media/1.gif)
+![second](media/2.gif)
 
 ## Contributions
 ---
